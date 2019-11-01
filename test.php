@@ -3,7 +3,7 @@ include_once "vendor/autoload.php";
 use TaskForce\TaskStatus;
 
 $taskStatus = new TaskStatus(1, 1, '10.12.2019');
-//текущий статус новыйgit
+//текущий статус новый
 var_dump(
     $taskStatus->getCurrentStatus(),
     $taskStatus->getActions(),

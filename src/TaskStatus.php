@@ -23,23 +23,23 @@ class TaskStatus
     private $workerId;
     private $employerId;
     private $deadline;
-    private $status;
+    private $currentStatus;
 
     public function __construct($workerId, $employerId, $deadline)
     {
         $this->workerId = $workerId;
         $this->employerId = $employerId;
         $this->deadline = $deadline;
-        $this->status = self::STATUS_NEW;
+        $this->currentStatus = self::STATUS_NEW;
     }
 
     public function getActions()
     {
-        if ($this->status === self::STATUS_NEW) {
+        if ($this->currentStatus === self::STATUS_NEW) {
             return [self::ACTION_CANCEL, self::ACTION_TAKE];
         }
 
-        if ($this->status === self::STATUS_PROCESSING) {
+        if ($this->currentStatus === self::STATUS_PROCESSING) {
             return [self::ACTION_ACCOMPLISH, self::ACTION_REFUSE];
         }
 
@@ -48,11 +48,11 @@ class TaskStatus
 
     public function getStatuses()
     {
-        if ($this->status === self::STATUS_NEW) {
+        if ($this->currentStatus === self::STATUS_NEW) {
             return [self::STATUS_CANCELLED, self::STATUS_PROCESSING];
         }
 
-        if ($this->status === self::STATUS_PROCESSING) {
+        if ($this->currentStatus === self::STATUS_PROCESSING) {
             return [self::STATUS_ACCOMPLISHED, self::STATUS_FAILED];
         }
 
@@ -82,6 +82,6 @@ class TaskStatus
 
     public function getCurrentStatus(): string
     {
-        return $this->status;
+        return $this->currentStatus;
     }
 }
