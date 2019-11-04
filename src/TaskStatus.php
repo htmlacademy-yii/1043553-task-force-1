@@ -17,7 +17,7 @@ class TaskStatus
 
     const ACTION_CANCEL = 'cancel';
     const ACTION_ACCOMPLISH = 'accomplish';
-    const ACTION_TAKE = 'take';
+    const ACTION_RESPOND = 'respond';
     const ACTION_REFUSE = 'refuse';
 
     private $workerId;
@@ -36,7 +36,7 @@ class TaskStatus
     public function getActions()
     {
         if ($this->currentStatus === self::STATUS_NEW) {
-            return [self::ACTION_CANCEL, self::ACTION_TAKE];
+            return [self::ACTION_CANCEL, self::ACTION_RESPOND];
         }
 
         if ($this->currentStatus === self::STATUS_PROCESSING) {
@@ -65,7 +65,7 @@ class TaskStatus
             return self::STATUS_CANCELLED;
         }
 
-        if ($action === self::ACTION_TAKE) {
+        if ($action === self::ACTION_RESPOND) {
             return self::STATUS_PROCESSING;
         }
 
