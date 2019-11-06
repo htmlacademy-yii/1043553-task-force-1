@@ -7,6 +7,7 @@ USE TaskForce;
 CREATE TABLE `TaskForce`.`Users` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `created_at` INT(11) NOT NULL ,
+`last_active` INT(11) NOT NULL ,
 `email` VARCHAR(50) NOT NULL ,
 `name` VARCHAR(50) NOT NULL ,
 `city_id` INT(11) NOT NULL ,
