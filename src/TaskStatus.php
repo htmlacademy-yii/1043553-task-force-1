@@ -7,7 +7,7 @@ namespace TaskForce;
 class TaskStatus
 {
     const ROLE_CUSTOMER = '0';
-    const ROLE_WORKER = '1';
+    const ROLE_EMPLOYEE = '1';
 
     const STATUS_NEW = '1';
     const STATUS_CANCELLED = '2';
@@ -15,32 +15,44 @@ class TaskStatus
     const STATUS_ACCOMPLISHED = '100';
     const STATUS_FAILED = '0';
 
-    const ACTION_CANCEL = '2';
-    const ACTION_ACCOMPLISH = '100';
-    const ACTION_RESPOND = '10';
-    const ACTION_REFUSE = '0';
+    const ACTION_CANCEL = 'ActionCancel';
+    const ACTION_ACCOMPLISH = 'ActionAccomplish';
+    const ACTION_RESPOND = 'ActionRespond';
+    const ACTION_REFUSE = 'ActionRefuse';
 
-    private $workerId;
-    private $customerId;
-    private $deadline;
-    private $currentStatus;
+    protected $employeeId;
+    protected $customerId;
+    protected $deadline;
+    protected $currentStatus;
 
-    public function __construct($workerId, $customerId, $deadline)
+    public function __construct($employeeId, $customerId, $deadline)
     {
-        $this->workerId = $workerId;
+        $this->employeeId = $employeeId;
         $this->customerId = $customerId;
         $this->deadline = $deadline;
         $this->currentStatus = self::STATUS_NEW;
     }
 
-    public function getActions()
+    public function getActions($role)
     {
-        if ($this->currentStatus === self::STATUS_NEW) {
-            return [self::ACTION_CANCEL => "Отменить", self::ACTION_RESPOND => "Откликнуться"];
+        if ($role === self::ROLE_CUSTOMER) {
+            if ($this->currentStatus === self::STATUS_NEW) {
+                return [self::ACTION_CANCEL => "Отменить"];
+            }
+
+            if ($this->currentStatus === self::STATUS_PROCESSING) {
+                return [self::ACTION_ACCOMPLISH => "Завершить"];
+            }
         }
 
-        if ($this->currentStatus === self::STATUS_PROCESSING) {
-            return [self::ACTION_ACCOMPLISH => "Завершить", self::ACTION_REFUSE => "Отказаться"];
+        if ($role === self::ROLE_EMPLOYEE) {
+            if ($this->currentStatus === self::STATUS_NEW) {
+                return [self::ACTION_RESPOND => "Откликнуться"];
+            }
+
+            if ($this->currentStatus === self::STATUS_PROCESSING) {
+                return [self::ACTION_REFUSE => "Отказаться"];
+            }
         }
 
         return null;
@@ -74,9 +86,8 @@ class TaskStatus
         }
 
         if ($action === self::ACTION_REFUSE) {
-            return [self::STATUS_FAILED  => "Провалено"];
+            return [self::STATUS_FAILED => "Провалено"];
         }
-
         return null;
     }
 
