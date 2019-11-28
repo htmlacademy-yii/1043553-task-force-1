@@ -1,0 +1,77 @@
+@startuml
+
+class Task{
+protected title
+protected status
+protected description
+protected location
+protected budget
+protected deadline
+public __construct(
+title, description,
+location, budget, deadline)
+public changeStatus()
+public updateTask()
+public deleteTask(id)
+private addFile()
+}
+
+class User {
+protected name
+protected email
+protected city
+
+public __construct(name, email, city, password)
+public deleteUser()
+public getUsers()
+public getUser(id)
+protected generatePassword()
+
+}
+
+class Profile {
+protected specialisation
+protected phone
+protected skype
+protected other
+public updateUser()
+}
+
+class Correspondence {
+protected taskId
+protected userId
+protected message
+
+public sendMessage()
+public getCorrespondence()
+
+}
+
+class Cities {
+
+public addCity()
+public deleteCity()
+public updateCity()
+
+}
+
+class Review {
+protected userId
+protected review
+protected rating
+public __construct( userId, review, rating)
+
+}
+
+class Responce {
+private taskId
+private userId
+private price
+private message
+__construct(taskId userId price message)
+public getCorrespondence()
+public refuse()
+public respond()
+}
+
+@enduml
