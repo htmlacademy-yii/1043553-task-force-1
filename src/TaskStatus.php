@@ -6,29 +6,29 @@ namespace TaskForce;
 
 class TaskStatus
 {
-    const ROLE_EMPLOYER = 'employer';
-    const ROLE_WORKER = 'worker';
+    const ROLE_CUSTOMER = '0';
+    const ROLE_WORKER = '1';
 
-    const STATUS_NEW = 'new';
-    const STATUS_CANCELLED = 'cancelled';
-    const STATUS_PROCESSING = 'processing';
-    const STATUS_ACCOMPLISHED = 'accomplished';
-    const STATUS_FAILED = 'failed';
+    const STATUS_NEW = '1';
+    const STATUS_CANCELLED = '2';
+    const STATUS_PROCESSING = '10';
+    const STATUS_ACCOMPLISHED = '100';
+    const STATUS_FAILED = '0';
 
-    const ACTION_CANCEL = 'cancel';
-    const ACTION_ACCOMPLISH = 'accomplish';
-    const ACTION_TAKE = 'take';
-    const ACTION_REFUSE = 'refuse';
+    const ACTION_CANCEL = '2';
+    const ACTION_ACCOMPLISH = '100';
+    const ACTION_RESPOND = '10';
+    const ACTION_REFUSE = '0';
 
     private $workerId;
-    private $employerId;
+    private $customerId;
     private $deadline;
     private $currentStatus;
 
-    public function __construct($workerId, $employerId, $deadline)
+    public function __construct($workerId, $customerId, $deadline)
     {
         $this->workerId = $workerId;
-        $this->employerId = $employerId;
+        $this->customerId = $customerId;
         $this->deadline = $deadline;
         $this->currentStatus = self::STATUS_NEW;
     }
@@ -36,11 +36,11 @@ class TaskStatus
     public function getActions()
     {
         if ($this->currentStatus === self::STATUS_NEW) {
-            return [self::ACTION_CANCEL, self::ACTION_TAKE];
+            return [self::ACTION_CANCEL => "Отменить", self::ACTION_RESPOND => "Откликнуться"];
         }
 
         if ($this->currentStatus === self::STATUS_PROCESSING) {
-            return [self::ACTION_ACCOMPLISH, self::ACTION_REFUSE];
+            return [self::ACTION_ACCOMPLISH => "Завершить", self::ACTION_REFUSE => "Отказаться"];
         }
 
         return null;
@@ -49,11 +49,11 @@ class TaskStatus
     public function getStatuses()
     {
         if ($this->currentStatus === self::STATUS_NEW) {
-            return [self::STATUS_CANCELLED, self::STATUS_PROCESSING];
+            return [self::STATUS_CANCELLED => "Отменен", self::STATUS_PROCESSING => "В работе"];
         }
 
         if ($this->currentStatus === self::STATUS_PROCESSING) {
-            return [self::STATUS_ACCOMPLISHED, self::STATUS_FAILED];
+            return [self::STATUS_ACCOMPLISHED => "Выполнено", self::STATUS_FAILED => "Провалено"];
         }
 
         return null;
@@ -62,19 +62,19 @@ class TaskStatus
     public function predictStatus($action)
     {
         if ($action === self::ACTION_CANCEL) {
-            return self::STATUS_CANCELLED;
+            return [self::STATUS_CANCELLED => "Отменен"];
         }
 
-        if ($action === self::ACTION_TAKE) {
-            return self::STATUS_PROCESSING;
+        if ($action === self::ACTION_RESPOND) {
+            return [self::STATUS_PROCESSING => "В работе"];
         }
 
         if ($action === self::ACTION_ACCOMPLISH) {
-            return self::STATUS_ACCOMPLISHED;
+            return [self::STATUS_ACCOMPLISHED => "Выполнено"];
         }
 
         if ($action === self::ACTION_REFUSE) {
-            return self::STATUS_FAILED;
+            return [self::STATUS_FAILED  => "Провалено"];
         }
 
         return null;
