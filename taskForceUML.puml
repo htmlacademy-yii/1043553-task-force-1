@@ -47,7 +47,7 @@ public getCorrespondence()
 
 }
 
-class Cities {
+class City {
 
 public addCity()
 public deleteCity()
@@ -63,7 +63,7 @@ public __construct( userId, review, rating)
 
 }
 
-class Responce {
+class Response {
 private taskId
 private userId
 private price

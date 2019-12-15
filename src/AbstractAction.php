@@ -6,7 +6,7 @@ namespace TaskForce;
 
 abstract class AbstractAction
 {
-    abstract public static function getActionName();
-    abstract public static function getActionCode();
-    abstract public static function getRights($userId1, $userId2);
+    abstract public function getActionName();
+    abstract public function getActionCode();
+    abstract public function checkRights($userId1, $userId2, $userId3);
 }

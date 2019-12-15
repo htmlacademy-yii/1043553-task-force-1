@@ -4,19 +4,19 @@
 namespace TaskForce;
 
 
-class ActionRespond
+class ActionRespond extends AbstractAction
 {
-    public static function getActionName()
+    public function getActionName()
     {
         return "Откликнутся";
     }
 
-    public static function getActionCode()
+    public function getActionCode()
     {
         return "ActionRespond";
     }
 
-    public static function getRights($employeeId, $userId)
+    public function checkRights($customerId, $employeeId, $userId)
     {
         if ($employeeId === $userId) {
             return true;

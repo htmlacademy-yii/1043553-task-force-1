@@ -6,17 +6,17 @@ namespace TaskForce;
 
 class ActionCancel extends AbstractAction
 {
-    public static function getActionName()
+    public function getActionName()
     {
         return "Отменить";
     }
 
-    public static function getActionCode()
+    public function getActionCode()
     {
         return "ActionCancel";
     }
 
-    public static function getRights($customerId, $userId)
+    public function checkRights($customerId, $employeeId, $userId)
     {
         if ($customerId === $userId) {
             return true;
