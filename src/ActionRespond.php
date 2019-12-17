@@ -6,15 +6,8 @@ namespace TaskForce;
 
 class ActionRespond extends AbstractAction
 {
-    public function getActionName()
-    {
-        return "Откликнутся";
-    }
-
-    public function getActionCode()
-    {
-        return "ActionRespond";
-    }
+    protected $actionName = "Откликнутся";
+    protected $actionCode = "actionRespond";
 
     public function checkRights($customerId, $employeeId, $userId)
     {

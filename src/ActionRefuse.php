@@ -6,15 +6,8 @@ namespace TaskForce;
 
 class ActionRefuse extends AbstractAction
 {
-    public function getActionName()
-    {
-        return "Отказаться";
-    }
-
-    public function getActionCode()
-    {
-        return "ActionRefuse";
-    }
+    protected $actionName = "Отказаться";
+    protected $actionCode = "actionRefuse";
 
     public function checkRights($customerId, $employeeId, $userId)
     {

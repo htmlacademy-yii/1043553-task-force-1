@@ -6,15 +6,8 @@ namespace TaskForce;
 
 class ActionAccomplish extends AbstractAction
 {
-    public function getActionName()
-    {
-        return "Завершить";
-    }
-
-    public function getActionCode()
-    {
-        return "ActionAccomplish";
-    }
+    protected $actionName = "Завершить";
+    protected $actionCode = "actionAccomplish";
 
     public function checkRights($customerId, $employeeId, $userId)
     {

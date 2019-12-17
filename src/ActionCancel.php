@@ -6,15 +6,8 @@ namespace TaskForce;
 
 class ActionCancel extends AbstractAction
 {
-    public function getActionName()
-    {
-        return "Отменить";
-    }
-
-    public function getActionCode()
-    {
-        return "ActionCancel";
-    }
+    protected $actionName = "Отменить";
+    protected $actionCode = "actionCancel";
 
     public function checkRights($customerId, $employeeId, $userId)
     {
