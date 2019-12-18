@@ -33,7 +33,7 @@ CREATE TABLE `taskForce`.`tasks` (
 `user_employee_id` INT(11) NOT NULL ,
 `created_at` INT(11) NOT NULL ,
 `title` VARCHAR(50) NOT NULL ,
-`description` VARCHAR(255) NOT NULL ,
+`description` TEXT NOT NULL ,
 `category_id` INT(11) NOT NULL ,
 `city_id` INT(11) NOT NULL ,
 `address` VARCHAR(50) NULL ,

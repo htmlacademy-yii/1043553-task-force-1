@@ -6,29 +6,21 @@ namespace TaskForce;
 
 class Task
 {
-    const ROLE_CUSTOMER = '0';
-    const ROLE_EMPLOYEE = '1';
-
     const STATUS_NEW = 'NEW';
     const STATUS_CANCELLED = 'CANCELLED';
     const STATUS_PROCESSING = 'PROCESSING';
     const STATUS_ACCOMPLISHED = 'ACCOMPLISHED';
     const STATUS_FAILED = 'FAILED';
 
-    /*const ACTION_CANCEL = 'ActionCancel';
-    const ACTION_ACCOMPLISH = 'ActionAccomplish';
-    const ACTION_RESPOND = 'ActionRespond';
-    const ACTION_REFUSE = 'ActionRefuse';*/
+    private $actionCancel;
+    private $actionAccomplish;
+    private $actionRespond ;
+    private $actionRefuse;
 
-    private $action_cancel;
-    private $action_accomplish;
-    private $action_respond ;
-    private $action_refuse;
-
-    protected $employeeId;
-    protected $customerId;
-    protected $deadline;
-    protected $currentStatus;
+    private $employeeId;
+    private $customerId;
+    private $deadline;
+    private $currentStatus;
 
     public function __construct($employeeId, $customerId, $deadline)
     {
@@ -37,49 +29,38 @@ class Task
         $this->deadline = $deadline;
         $this->currentStatus = self::STATUS_NEW;
 
-        $this->action_cancel = new ActionCancel();
-        $this->action_accomplish = new ActionAccomplish();
-        $this->action_respond = new ActionRespond();
-        $this->action_refuse = new ActionRefuse();
+        $this->actionCancel = new ActionCancel();
+        $this->actionAccomplish = new ActionAccomplish();
+        $this->actionRespond = new ActionRespond();
+        $this->actionRefuse = new ActionRefuse();
     }
 
     public function getActions($customerId, $employeeId, $userId)
     {
-        if ($userId === $customerId) {
-            if ($this->currentStatus === self::STATUS_NEW) {
-                return $this->action_cancel;
-            }
+        $actions = [
+            self::STATUS_NEW => [$this->actionCancel, $this->actionRespond],
+            self::STATUS_PROCESSING => [$this->actionAccomplish, $this->actionRefuse]
+        ];
 
-            if ($this->currentStatus === self::STATUS_PROCESSING) {
-                return $this->action_accomplish;
+        if ($actions[$this->currentStatus]) {
+            foreach ($actions[$this->currentStatus] as $key=>$action) {
+                if ($action->checkRights($customerId, $employeeId, $userId) === true){
+                    return $action;
+                }
             }
-
-            return null;
         }
-
-        if ($userId === $employeeId) {
-            if ($this->currentStatus === self::STATUS_NEW) {
-                return $this->action_respond;
-            }
-
-            if ($this->currentStatus === self::STATUS_PROCESSING) {
-                return $this->action_refuse;
-            }
-
-            return null;
-        }
-
         return null;
     }
 
     public function getStatuses()
     {
-        if ($this->currentStatus === self::STATUS_NEW) {
-            return [self::STATUS_CANCELLED => "Отменен", self::STATUS_PROCESSING => "В работе"];
-        }
+        $statuses = [
+            self::STATUS_NEW => ["Отменен" => self::STATUS_CANCELLED, "В работе"  => self::STATUS_PROCESSING],
+            self::STATUS_PROCESSING=>["Выполнено"  => self::STATUS_ACCOMPLISHED, "Провалено" => self::STATUS_FAILED]
+        ];
 
-        if ($this->currentStatus === self::STATUS_PROCESSING) {
-            return [self::STATUS_ACCOMPLISHED => "Выполнено", self::STATUS_FAILED => "Провалено"];
+        if ($statuses[$this->currentStatus]) {
+            return $statuses[$this->currentStatus];
         }
 
         return null;
@@ -87,22 +68,17 @@ class Task
 
     public function predictStatus($action)
     {
-        if ($action == $this->action_cancel) {
-            return [self::STATUS_CANCELLED => "Отменен"];
-        }
+        $statuses = [
+           "actionCancel" => [self::STATUS_CANCELLED => "Отменен"],
+           "actionRespond" => [self::STATUS_PROCESSING => "В работе"],
+            "actionAccomplish"=> [self::STATUS_ACCOMPLISHED => "Выполнено"],
+            "actionRefuse"=> [self::STATUS_FAILED => "Провалено"]
+        ];
 
-        if ($action == $this->action_respond) {
-            return [self::STATUS_PROCESSING => "В работе"];
+        if ($action instanceof AbstractAction && $statuses[$action->getActionCode()]) {
+            return $statuses[$action->getActionCode()];
         }
-
-        if ($action == $this->action_accomplish) {
-            return [self::STATUS_ACCOMPLISHED => "Выполнено"];
-        }
-
-        if ($action == $this->action_refuse) {
-            return [self::STATUS_FAILED => "Провалено"];
-        }
-        return [$action, $this->action_cancel];
+        return null;
     }
 
     public function getCurrentStatus()
@@ -112,38 +88,15 @@ class Task
 
     public function setCurrentStatus($status){
 
-        switch ($status){
-            case ($status === self::STATUS_NEW):
-                $this->currentStatus = self::STATUS_NEW;
-                break;
-            case ($status === self::STATUS_FAILED):
-                if($this->currentStatus === self::STATUS_PROCESSING){
-                $this->currentStatus = self::STATUS_FAILED;
-                } else {
-                    return "cant change status";
-                }
-                break;
-            case ($status === self::STATUS_PROCESSING):
-                if($this->currentStatus === self::STATUS_NEW){
-                $this->currentStatus = self::STATUS_PROCESSING;
-                } else {
-                    return "cant change status";
-                }
-                break;
-            case ($status === self::STATUS_ACCOMPLISHED):
-                if($this->currentStatus === self::STATUS_PROCESSING){
-                $this->currentStatus = self::STATUS_ACCOMPLISHED;
-                } else {
-                    return "cant change status";
-                }
-                break;
-            case ($status === self::STATUS_CANCELLED):
-                if ($this->currentStatus === self::STATUS_NEW) {
-                $this->currentStatus = self::STATUS_CANCELLED;
-                } else {
-                    return "cant change status";
-                }
-                break;
+        $statuses = $this->getStatuses();
+
+        if (!$statuses) {
+            return null;
+        }
+        foreach ($statuses as $key => $value) {
+            if ($status === $value) {
+                $this->currentStatus = $status;
+            }
         }
     }
 }

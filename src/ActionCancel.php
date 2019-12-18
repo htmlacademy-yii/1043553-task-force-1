@@ -11,10 +11,6 @@ class ActionCancel extends AbstractAction
 
     public function checkRights($customerId, $employeeId, $userId)
     {
-        if ($customerId === $userId) {
-            return true;
-        } else {
-            return false;
-        }
+        return $customerId === $userId;
     }
 }
