@@ -1,13 +1,15 @@
 <?php
 
-
 namespace TaskForce;
-
 
 class ActionRespond extends AbstractAction
 {
-    protected $actionName = "Откликнутся";
-    protected $actionCode = "actionRespond";
+
+    public function __construct()
+    {
+        $this->actionName = "Откликнутся";
+        $this->actionCode = "actionRespond";
+    }
 
     public function checkRights($customerId, $employeeId, $userId)
     {

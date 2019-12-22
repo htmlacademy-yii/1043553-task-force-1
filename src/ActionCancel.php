@@ -1,13 +1,14 @@
 <?php
 
-
 namespace TaskForce;
-
 
 class ActionCancel extends AbstractAction
 {
-    protected $actionName = "Отменить";
-    protected $actionCode = "actionCancel";
+    public function __construct()
+    {
+        $this->actionName = "Отменить";
+        $this->actionCode = "actionCancel";
+    }
 
     public function checkRights($customerId, $employeeId, $userId)
     {

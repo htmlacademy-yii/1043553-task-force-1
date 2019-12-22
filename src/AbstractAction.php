@@ -1,19 +1,19 @@
 <?php
 
-
 namespace TaskForce;
-
 
 abstract class AbstractAction
 {
     protected $actionName;
     protected $actionCode;
 
-     public function getActionName(){
+    public function getActionName()
+    {
          return $this->actionName;
-     }
-     public function getActionCode(){
+    }
+    public function getActionCode()
+    {
          return $this->actionCode;
-     }
-    abstract public function checkRights($userId1, $userId2, $userId3);
+    }
+    abstract public function checkRights($customerId, $employeeId, $userId);
 }

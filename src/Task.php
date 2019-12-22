@@ -1,16 +1,14 @@
 <?php
 
-
 namespace TaskForce;
-
 
 class Task
 {
-    const STATUS_NEW = 'NEW';
-    const STATUS_CANCELLED = 'CANCELLED';
-    const STATUS_PROCESSING = 'PROCESSING';
-    const STATUS_ACCOMPLISHED = 'ACCOMPLISHED';
-    const STATUS_FAILED = 'FAILED';
+    public const STATUS_NEW = 'NEW';
+    public const STATUS_CANCELLED = 'CANCELLED';
+    public const STATUS_PROCESSING = 'PROCESSING';
+    public const STATUS_ACCOMPLISHED = 'ACCOMPLISHED';
+    public const STATUS_FAILED = 'FAILED';
 
     private $actionCancel;
     private $actionAccomplish;
@@ -35,7 +33,7 @@ class Task
         $this->actionRefuse = new ActionRefuse();
     }
 
-    public function getActions($customerId, $employeeId, $userId)
+    public function getAction($customerId, $employeeId, $userId)
     {
         $actions = [
             self::STATUS_NEW => [$this->actionCancel, $this->actionRespond],
@@ -43,8 +41,8 @@ class Task
         ];
 
         if ($actions[$this->currentStatus]) {
-            foreach ($actions[$this->currentStatus] as $key=>$action) {
-                if ($action->checkRights($customerId, $employeeId, $userId) === true){
+            foreach ($actions[$this->currentStatus] as $key => $action) {
+                if ($action->checkRights($customerId, $employeeId, $userId) === true) {
                     return $action;
                 }
             }
@@ -56,14 +54,9 @@ class Task
     {
         $statuses = [
             self::STATUS_NEW => ["Отменен" => self::STATUS_CANCELLED, "В работе"  => self::STATUS_PROCESSING],
-            self::STATUS_PROCESSING=>["Выполнено"  => self::STATUS_ACCOMPLISHED, "Провалено" => self::STATUS_FAILED]
+            self::STATUS_PROCESSING => ["Выполнено"  => self::STATUS_ACCOMPLISHED, "Провалено" => self::STATUS_FAILED]
         ];
-
-        if ($statuses[$this->currentStatus]) {
-            return $statuses[$this->currentStatus];
-        }
-
-        return null;
+            return $statuses[$this->currentStatus] ?? null;
     }
 
     public function predictStatus($action)
@@ -71,13 +64,14 @@ class Task
         $statuses = [
            "actionCancel" => [self::STATUS_CANCELLED => "Отменен"],
            "actionRespond" => [self::STATUS_PROCESSING => "В работе"],
-            "actionAccomplish"=> [self::STATUS_ACCOMPLISHED => "Выполнено"],
-            "actionRefuse"=> [self::STATUS_FAILED => "Провалено"]
+            "actionAccomplish" => [self::STATUS_ACCOMPLISHED => "Выполнено"],
+            "actionRefuse" => [self::STATUS_FAILED => "Провалено"]
         ];
 
-        if ($action instanceof AbstractAction && $statuses[$action->getActionCode()]) {
-            return $statuses[$action->getActionCode()];
+        if ($action instanceof AbstractAction) {
+            return $statuses[$action->getActionCode()] ?? null;
         }
+
         return null;
     }
 
@@ -86,17 +80,22 @@ class Task
         return $this->currentStatus;
     }
 
-    public function setCurrentStatus($status){
+    public function setCurrentStatus($customerId, $employeeId, $userId)
+    {
+        $action = $this->getAction($customerId, $employeeId, $userId);
 
-        $statuses = $this->getStatuses();
+        $status = $this->predictStatus($action) ?? [self::STATUS_NEW => "Новый"];
 
-        if (!$statuses) {
-            return null;
-        }
-        foreach ($statuses as $key => $value) {
-            if ($status === $value) {
-                $this->currentStatus = $status;
-            }
-        }
+        $this->currentStatus = array_key_first($status);
+    }
+
+    public function getEmployeeId()
+    {
+        return $this->employeeId;
+    }
+
+    public function getCustomerId()
+    {
+        return $this->customerId;
     }
 }
