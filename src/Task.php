@@ -2,6 +2,8 @@
 
 namespace TaskForce;
 
+use TaskForce\TaskException\TaskException;
+
 class Task
 {
     public const STATUS_NEW = 'NEW';
@@ -20,8 +22,16 @@ class Task
     private $deadline;
     private $currentStatus;
 
-    public function __construct($employeeId, $customerId, $deadline)
+    public function __construct(int $employeeId, int $customerId, int $deadline)
     {
+        if (!is_int($employeeId) or !is_int($customerId)) {
+            throw new TaskException("Айди пользователя должно быть целочисленным");
+        }
+
+        if (!$this->checkDate($deadline)) {
+            throw new TaskException("Введите дату в указанном формате");
+        }
+
         $this->employeeId = $employeeId;
         $this->customerId = $customerId;
         $this->deadline = $deadline;
@@ -33,8 +43,12 @@ class Task
         $this->actionRefuse = new ActionRefuse();
     }
 
-    public function getAction($customerId, $employeeId, $userId)
+    public function getAction(int $customerId, int $employeeId, int $userId): object
     {
+        if (!is_int($employeeId) or !is_int($customerId) or !is_int($userId)) {
+            throw new TaskException("Айди пользователя должно быть целочисленным");
+        }
+
         $actions = [
             self::STATUS_NEW => [$this->actionCancel, $this->actionRespond],
             self::STATUS_PROCESSING => [$this->actionAccomplish, $this->actionRefuse]
@@ -50,7 +64,7 @@ class Task
         return null;
     }
 
-    public function getStatuses()
+    public function getStatuses(): string
     {
         $statuses = [
             self::STATUS_NEW => ["Отменен" => self::STATUS_CANCELLED, "В работе"  => self::STATUS_PROCESSING],
@@ -59,7 +73,7 @@ class Task
             return $statuses[$this->currentStatus] ?? null;
     }
 
-    public function predictStatus($action)
+    public function predictStatus($action): array
     {
         $statuses = [
            "actionCancel" => [self::STATUS_CANCELLED => "Отменен"],
@@ -72,30 +86,44 @@ class Task
             return $statuses[$action->getActionCode()] ?? null;
         }
 
-        return null;
+        throw new TaskException("Класс должен являться наследником AbstractAction");
     }
 
-    public function getCurrentStatus()
+    public function getCurrentStatus(): string
     {
         return $this->currentStatus;
     }
 
-    public function setCurrentStatus($customerId, $employeeId, $userId)
+    public function setCurrentStatus($customerId, $employeeId, $userId): void
     {
-        $action = $this->getAction($customerId, $employeeId, $userId);
+        if (!is_int($employeeId) or !is_int($customerId) or !is_int($userId)) {
+            throw new TaskException("Айди пользователя должно быть целочисленным");
+        }
 
-        $status = $this->predictStatus($action) ?? [self::STATUS_NEW => "Новый"];
+        try {
+            $action = $this->getAction($customerId, $employeeId, $userId);
 
-        $this->currentStatus = array_key_first($status);
+            $status = $this->predictStatus($action) ?? [self::STATUS_NEW => "Новый"];
+
+            $this->currentStatus = array_key_first($status);
+        } catch (TaskException $e) {
+            error_log("Не удалось установить статус. Ошибка: " . $e->getMessage());
+        }
     }
 
-    public function getEmployeeId()
+    public function getEmployeeId(): int
     {
         return $this->employeeId;
     }
 
-    public function getCustomerId()
+    public function getCustomerId(): int
     {
         return $this->customerId;
+    }
+
+    private function checkDate($date): bool
+    {
+        $dateArray = explode('.', $date);
+        return checkdate($dateArray[1], $dateArray[0], $dateArray[2]);
     }
 }
