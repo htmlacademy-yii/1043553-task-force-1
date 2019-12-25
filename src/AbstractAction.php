@@ -2,10 +2,13 @@
 
 namespace TaskForce;
 
+use TaskForce\Exception\TaskException;
+
 abstract class AbstractAction
 {
     protected $actionName;
     protected $actionCode;
+    protected $requiredRole;
 
     public function getActionName(): string
     {
@@ -17,5 +20,14 @@ abstract class AbstractAction
          return $this->actionCode;
     }
 
-    abstract public function checkRights($customerId, $employeeId, $userId): bool;
+    public function checkRights(string $role): bool
+    {
+        try {
+            Task::checkRole($role);
+            return $this->requiredRole === $role;
+        } catch (TaskException $e) {
+            error_log("Error:" . $e->getMessage());
+        }
+        return false;
+    }
 }

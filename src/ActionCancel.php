@@ -8,10 +8,6 @@ class ActionCancel extends AbstractAction
     {
         $this->actionName = "Отменить";
         $this->actionCode = "actionCancel";
-    }
-
-    public function checkRights($customerId, $employeeId, $userId): bool
-    {
-        return $customerId === $userId;
+        $this->requiredRole = Task::ROLE_CUSTOMER;
     }
 }

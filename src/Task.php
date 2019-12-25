@@ -12,6 +12,9 @@ class Task
     public const STATUS_ACCOMPLISHED = 'ACCOMPLISHED';
     public const STATUS_FAILED = 'FAILED';
 
+    public const ROLE_EMPLOYEE = '0';
+    public const ROLE_CUSTOMER = '1';
+
     private $actionCancel;
     private $actionAccomplish;
     private $actionRespond ;
@@ -24,27 +27,29 @@ class Task
 
     public function __construct(int $employeeId, int $customerId, $deadline)
     {
-        if (!$this->checkDate($deadline)) {
-            throw new TaskException("Введите дату в указанном формате");
+        try {
+            $this->checkDate($deadline);
+        } catch (TaskException $e) {
+            error_log("Error:" . $e->getMessage());
         }
+            $this->employeeId = $employeeId;
+            $this->customerId = $customerId;
+            $this->deadline = $deadline;
+            $this->currentStatus = self::STATUS_NEW;
 
-        $this->employeeId = $employeeId;
-        $this->customerId = $customerId;
-        $this->deadline = $deadline;
-        $this->currentStatus = self::STATUS_NEW;
-
-        $this->actionCancel = new ActionCancel();
-        $this->actionAccomplish = new ActionAccomplish();
-        $this->actionRespond = new ActionRespond();
-        $this->actionRefuse = new ActionRefuse();
+            $this->actionCancel = new ActionCancel();
+            $this->actionAccomplish = new ActionAccomplish();
+            $this->actionRespond = new ActionRespond();
+            $this->actionRefuse = new ActionRefuse();
     }
 
-    public function getAction(int $customerId, int $employeeId, int $userId): ?AbstractAction
+    public function getAction(string $role): ?AbstractAction
     {
-        if (!is_int($employeeId) or !is_int($customerId) or !is_int($userId)) {
-            throw new TaskException("Айди пользователя должно быть целочисленным");
+        try {
+            Task::checkRole($role);
+        } catch (TaskException $e) {
+            error_log("Error:" . $e->getMessage());
         }
-
         $actions = [
             self::STATUS_NEW => [$this->actionCancel, $this->actionRespond],
             self::STATUS_PROCESSING => [$this->actionAccomplish, $this->actionRefuse]
@@ -52,7 +57,7 @@ class Task
 
         if ($actions[$this->currentStatus]) {
             foreach ($actions[$this->currentStatus] as $key => $action) {
-                if ($action->checkRights($customerId, $employeeId, $userId) === true) {
+                if ($action->checkRights($role)) {
                     return $action;
                 }
             }
@@ -60,7 +65,7 @@ class Task
         return null;
     }
 
-    public function getStatuses(): string
+    public function getStatuses(): ?string
     {
         $statuses = [
             self::STATUS_NEW => ["Отменен" => self::STATUS_CANCELLED, "В работе"  => self::STATUS_PROCESSING],
@@ -69,7 +74,7 @@ class Task
             return $statuses[$this->currentStatus] ?? null;
     }
 
-    public function predictStatus(AbstractAction $action): array
+    public function predictStatus(?AbstractAction $action): ?array
     {
         $statuses = [
            "actionCancel" => [self::STATUS_CANCELLED => "Отменен"],
@@ -77,7 +82,12 @@ class Task
             "actionAccomplish" => [self::STATUS_ACCOMPLISHED => "Выполнено"],
             "actionRefuse" => [self::STATUS_FAILED => "Провалено"]
         ];
+
+        if ($action) {
             return $statuses[$action->getActionCode()] ?? null;
+        }
+
+        return null;
     }
 
     public function getCurrentStatus(): string
@@ -85,17 +95,18 @@ class Task
         return $this->currentStatus;
     }
 
-    public function setCurrentStatus(int $customerId, int $employeeId, int $userId): void
+    public function setCurrentStatus(string $role): void
     {
         try {
-            $action = $this->getAction($customerId, $employeeId, $userId);
+            Task::checkRole($role);
+        } catch (TaskException $e) {
+            error_log("Cant change status. Error: " . $e->getMessage());
+        }
+            $action = $this->getAction($role);
 
             $status = $this->predictStatus($action) ?? [self::STATUS_NEW => "Новый"];
 
             $this->currentStatus = array_key_first($status);
-        } catch (TaskException $e) {
-            error_log("Не удалось установить статус. Ошибка: " . $e->getMessage());
-        }
     }
 
     public function getEmployeeId(): int
@@ -111,6 +122,26 @@ class Task
     private function checkDate($date): bool
     {
         $dateArray = explode('.', $date);
-        return checkdate($dateArray[1], $dateArray[0], $dateArray[2]);
+
+        if (!$dateArray) {
+            throw new TaskException("Please enter date in format dd.mm.yyyy");
+        }
+
+        $checkDate = checkdate($dateArray[1], $dateArray[0], $dateArray[2]);
+
+        if (!$checkDate) {
+            throw new TaskException("Please enter valid date");
+        }
+
+        return $checkDate;
+    }
+
+    public static function checkRole($role)
+    {
+        if ($role === self::ROLE_EMPLOYEE or $role === self::ROLE_CUSTOMER) {
+            return true;
+        }
+
+        throw new TaskException("please use Task::ROLE_ constant");
     }
 }

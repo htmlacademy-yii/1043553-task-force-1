@@ -4,15 +4,10 @@ namespace TaskForce;
 
 class ActionRespond extends AbstractAction
 {
-
     public function __construct()
     {
         $this->actionName = "Откликнутся";
         $this->actionCode = "actionRespond";
-    }
-
-    public function checkRights($customerId, $employeeId, $userId): bool
-    {
-        return $employeeId === $userId;
+        $this->requiredRole = Task::ROLE_EMPLOYEE;
     }
 }

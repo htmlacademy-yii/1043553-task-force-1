@@ -8,10 +8,6 @@ class ActionAccomplish extends AbstractAction
     {
         $this->actionName = "Завершить";
         $this->actionCode = "actionAccomplish";
-    }
-
-    public function checkRights($customerId, $employeeId, $userId): bool
-    {
-        return $customerId === $userId;
+        $this->requiredRole = Task::ROLE_CUSTOMER;
     }
 }

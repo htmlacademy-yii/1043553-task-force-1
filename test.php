@@ -3,26 +3,25 @@ include_once "vendor/autoload.php";
 use TaskForce\Task;
 use TaskForce\Exception\TaskException;
 
-$task = new Task(1, 2, '10.12.2019');
-
-$employeeId = $task->getEmployeeId();
-$customerId = $task->getCustomerId();
-
 $combinations = [
-    $employeeId,$employeeId,
+    Task::ROLE_EMPLOYEE, Task::ROLE_EMPLOYEE,
 
-    $employeeId,$customerId,
+    Task::ROLE_EMPLOYEE, Task::ROLE_EMPLOYEE,
 
-    $customerId
+    Task::ROLE_CUSTOMER, Task::ROLE_CUSTOMER,
+
+    Task::ROLE_CUSTOMER, Task::ROLE_CUSTOMER
 ];
+
 try {
-    foreach ($combinations as $key => $id) {
+    $task = new Task(1, 2, '10.12.2019');
+    foreach ($combinations as $key => $role) {
         echo $task->getCurrentStatus() . PHP_EOL;
         echo "employee" . PHP_EOL;
-        print_r($task->getAction($customerId, $employeeId, $employeeId));
+        print_r($task->getAction(Task::ROLE_EMPLOYEE));
         echo "customer" . PHP_EOL;
-        print_r($task->getAction($customerId, $employeeId, $customerId));
-        $task->setCurrentStatus($customerId, $employeeId, $id);
+        print_r($task->getAction(Task::ROLE_CUSTOMER));
+        $task->setCurrentStatus($role);
     }
 } catch (TaskException $e) {
     error_log("Ошибка: " . $e->getMessage());
