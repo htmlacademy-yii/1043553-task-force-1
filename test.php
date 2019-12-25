@@ -1,7 +1,7 @@
 <?php
 include_once "vendor/autoload.php";
 use TaskForce\Task;
-use TaskForce\TaskException\TaskException;
+use TaskForce\Exception\TaskException;
 
 $task = new Task(1, 2, '10.12.2019');
 

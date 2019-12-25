@@ -11,7 +11,7 @@ class ActionRefuse extends AbstractAction
         $this->actionCode = "actionRefuse";
     }
 
-    public function checkRights($customerId, $employeeId, $userId)
+    public function checkRights($customerId, $employeeId, $userId): bool
     {
         return $employeeId === $userId;
     }

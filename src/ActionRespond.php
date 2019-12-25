@@ -11,7 +11,7 @@ class ActionRespond extends AbstractAction
         $this->actionCode = "actionRespond";
     }
 
-    public function checkRights($customerId, $employeeId, $userId)
+    public function checkRights($customerId, $employeeId, $userId): bool
     {
         return $employeeId === $userId;
     }

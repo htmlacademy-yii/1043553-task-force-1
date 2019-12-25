@@ -2,7 +2,7 @@
 
 namespace TaskForce;
 
-use TaskForce\TaskException\TaskException;
+use TaskForce\Exception\TaskException;
 
 class Task
 {
@@ -22,12 +22,8 @@ class Task
     private $deadline;
     private $currentStatus;
 
-    public function __construct(int $employeeId, int $customerId, int $deadline)
+    public function __construct(int $employeeId, int $customerId, $deadline)
     {
-        if (!is_int($employeeId) or !is_int($customerId)) {
-            throw new TaskException("Айди пользователя должно быть целочисленным");
-        }
-
         if (!$this->checkDate($deadline)) {
             throw new TaskException("Введите дату в указанном формате");
         }
@@ -43,7 +39,7 @@ class Task
         $this->actionRefuse = new ActionRefuse();
     }
 
-    public function getAction(int $customerId, int $employeeId, int $userId): object
+    public function getAction(int $customerId, int $employeeId, int $userId): ?AbstractAction
     {
         if (!is_int($employeeId) or !is_int($customerId) or !is_int($userId)) {
             throw new TaskException("Айди пользователя должно быть целочисленным");
@@ -73,7 +69,7 @@ class Task
             return $statuses[$this->currentStatus] ?? null;
     }
 
-    public function predictStatus($action): array
+    public function predictStatus(AbstractAction $action): array
     {
         $statuses = [
            "actionCancel" => [self::STATUS_CANCELLED => "Отменен"],
@@ -81,12 +77,7 @@ class Task
             "actionAccomplish" => [self::STATUS_ACCOMPLISHED => "Выполнено"],
             "actionRefuse" => [self::STATUS_FAILED => "Провалено"]
         ];
-
-        if ($action instanceof AbstractAction) {
             return $statuses[$action->getActionCode()] ?? null;
-        }
-
-        throw new TaskException("Класс должен являться наследником AbstractAction");
     }
 
     public function getCurrentStatus(): string
@@ -94,12 +85,8 @@ class Task
         return $this->currentStatus;
     }
 
-    public function setCurrentStatus($customerId, $employeeId, $userId): void
+    public function setCurrentStatus(int $customerId, int $employeeId, int $userId): void
     {
-        if (!is_int($employeeId) or !is_int($customerId) or !is_int($userId)) {
-            throw new TaskException("Айди пользователя должно быть целочисленным");
-        }
-
         try {
             $action = $this->getAction($customerId, $employeeId, $userId);
 

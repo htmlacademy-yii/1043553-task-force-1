@@ -10,7 +10,7 @@ class ActionAccomplish extends AbstractAction
         $this->actionCode = "actionAccomplish";
     }
 
-    public function checkRights($customerId, $employeeId, $userId)
+    public function checkRights($customerId, $employeeId, $userId): bool
     {
         return $customerId === $userId;
     }

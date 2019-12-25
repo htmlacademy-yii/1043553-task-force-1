@@ -10,7 +10,7 @@ class ActionCancel extends AbstractAction
         $this->actionCode = "actionCancel";
     }
 
-    public function checkRights($customerId, $employeeId, $userId)
+    public function checkRights($customerId, $employeeId, $userId): bool
     {
         return $customerId === $userId;
     }
