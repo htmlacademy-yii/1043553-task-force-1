@@ -10,7 +10,7 @@ CREATE TABLE `taskForce`.`users` (
 `last_active` INT(11) NOT NULL ,
 `email` VARCHAR(50) NOT NULL ,
 `name` VARCHAR(50) NOT NULL ,
-`city_id` UNSIGNED INT(11) NOT NULL ,
+`city_id`INT(11)   NOT NULL ,
 `address` VARCHAR(50) NULL ,
 `address_lat` VARCHAR(50) NULL ,
 `address_lon` VARCHAR(50) NULL ,
@@ -20,7 +20,7 @@ CREATE TABLE `taskForce`.`users` (
 `phone` VARCHAR(16)  NULL ,
 `skype` VARCHAR(40)  NULL ,
 `other_app` VARCHAR(40)  NULL ,
-`msg_notification` NOT NULL DEFAULT 0 ,
+`msg_notification` BOOLEAN NOT NULL DEFAULT 0 ,
 `action_notification` BOOLEAN NOT NULL DEFAULT 0 ,
 `review_notification` BOOLEAN NOT NULL DEFAULT 0 ,
 `show_contacts_all` BOOLEAN NOT NULL DEFAULT 0 ,
@@ -34,17 +34,19 @@ CREATE TABLE `taskForce`.`tasks` (
 `created_at` INT(11) NOT NULL ,
 `title` VARCHAR(50) NOT NULL ,
 `description` TEXT NOT NULL ,
-`category_id` INT(11) UNSIGNED NOT NULL ,
-`city_id` INT(11) UNSIGNED NOT NULL ,
+`category_id` INT(11)   NOT NULL ,
+`city_id` INT(11)   NOT NULL ,
 `address` VARCHAR(50) NULL ,
 `budget` INT(11) NOT NULL ,
 `deadline` DATE  NULL ,
+`task_lat` VARCHAR(50) NULL ,
+`task_lon` VARCHAR(50) NULL ,
 `current_status` SMALLINT(3)  NULL ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `taskForce`.`tasks_files` (
 `id` INT NOT NULL AUTO_INCREMENT ,
-`task_id` INT(11) UNSIGNED NOT NULL ,
+`task_id` INT(11)   NOT NULL ,
 `file` VARCHAR(255) NOT NULL ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
@@ -52,7 +54,7 @@ CREATE TABLE `taskForce`.`responses` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `created_at` INT(11) NOT NULL ,
 `your_price` INT(11)  NULL ,
-`task_id` INT(11) UNSIGNED NOT NULL ,
+`task_id` INT(11)   NOT NULL ,
 `user_employee_id` INT(11) NOT NULL ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
@@ -71,7 +73,7 @@ PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `taskForce`.`user_photos` (
 `id` INT NOT NULL AUTO_INCREMENT ,
-`user_id` INT(11) UNSIGNED NOT NULL ,
+`user_id` INT(11)   NOT NULL ,
 `photo` VARCHAR(255) NOT NULL ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
@@ -86,20 +88,20 @@ PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `taskForce`.`notifications` (
 `id` INT NOT NULL AUTO_INCREMENT ,
-`user_id` INT(11) UNSIGNED NOT NULL ,
+`user_id` INT(11)   NOT NULL ,
 `message` VARCHAR(255) NOT NULL ,
 `viewed` BOOLEAN NOT NULL DEFAULT 0 ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `taskForce`.`users_categories` (
-`user_id` INT(11) UNSIGNED NOT NULL ,
-`category_id` INT(11) UNSIGNED NOT NULL ,
+`user_id` INT(11)   NOT NULL ,
+`category_id` INT(11)   NOT NULL ,
 PRIMARY KEY (`user_id`, `category_id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `taskForce`.`correspondence` (
 `id` iNT(11) NOT NULL AUTO_INCREMENT,
-`task_id` INT(11) UNSIGNED NOT NULL ,
-`user_id` INT(11) UNSIGNED NOT NULL ,
+`task_id` INT(11)   NOT NULL ,
+`user_id` INT(11)   NOT NULL ,
 `created_at` INT(11) NOT NULL ,
 `message` VARCHAR(255) NOT NULL ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
@@ -126,8 +128,8 @@ ALTER TABLE `responses` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks`(`id`) ON 
 ALTER TABLE `responses` ADD INDEX( `user_employee_id`);
 ALTER TABLE `responses` ADD FOREIGN KEY (`user_employee_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE `users_photo` ADD INDEX( `user_id`);
-ALTER TABLE `users_photo` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `user_photos` ADD INDEX( `user_id`);
+ALTER TABLE `user_photos` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE `users_review` ADD INDEX( `user_customer_id`);
 ALTER TABLE `users_review` ADD FOREIGN KEY (`user_customer_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -146,3 +148,6 @@ ALTER TABLE `correspondence` ADD INDEX( `task_id`);
 ALTER TABLE `correspondence` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `correspondence` ADD INDEX( `user_id`);
 ALTER TABLE `correspondence` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+
