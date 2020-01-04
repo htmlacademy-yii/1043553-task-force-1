@@ -9,15 +9,13 @@ $pass = 'root';
 $connection = new \mysqli($host, $user, $pass, $db);
 
 $exporter = new \TaskForce\CsvExport\CsvExport();
-$exporter->csvToSql("data/replies.csv");
+$a = $exporter->getData("data/categories.csv");
+
+foreach ($a as $value) {
+    var_dump($value);
+
+}
+
+$exporter->csvToSql("data/categories.csv");
 
 
-
-
-
-
-
-//$open = $open->buildRequest("categories", ["name", "image"], ["Category 1", "Image 1"]);
-
-//var_dump($connection->query($open));
-//echo $open;

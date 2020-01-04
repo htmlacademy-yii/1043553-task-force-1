@@ -46,8 +46,14 @@ class CsvExport
         }
     }
 
-    private function getData($path)
+    public function getData($path)
     {
+
+      /*  $file = new \SplFileObject($path);
+        while (!$file->eof()) {
+            yield ["data" => $file->fgetcsv(), 'path' => $path];
+        }*/
+
         $csvFile = file($path);
         foreach ($csvFile as $line) {
             yield ["data" => str_getcsv($line), 'path' => $path];
