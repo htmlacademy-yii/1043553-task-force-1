@@ -7,7 +7,7 @@ USE taskForce;
 CREATE TABLE `taskForce`.`users` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `created_at` INT(11) NOT NULL ,
-`last_active` INT(11) NOT NULL ,
+`last_active` INT(11) NULL ,
 `email` VARCHAR(50) NOT NULL ,
 `name` VARCHAR(50) NOT NULL ,
 `city_id`INT(11)   NOT NULL ,
@@ -36,11 +36,11 @@ CREATE TABLE `taskForce`.`tasks` (
 `description` TEXT NOT NULL ,
 `category_id` INT(11)   NOT NULL ,
 `city_id` INT(11)   NOT NULL ,
+`lat` VARCHAR(50) NULL ,
+`lon` VARCHAR(50) NULL ,
 `address` VARCHAR(50) NULL ,
 `budget` INT(11) NOT NULL ,
 `deadline` DATE  NULL ,
-`task_lat` VARCHAR(50) NULL ,
-`task_lon` VARCHAR(50) NULL ,
 `current_status` SMALLINT(3)  NULL ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
@@ -83,7 +83,7 @@ CREATE TABLE `taskForce`.`users_review` (
 `user_customer_id` INT(11) NOT NULL ,
 `user_employee_id` INT(11) NOT NULL ,
 `vote` SMALLINT(1) NOT NULL ,
-`review` VARCHAR(255) NOT NULL ,
+`review` TEXT NOT NULL ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `taskForce`.`notifications` (

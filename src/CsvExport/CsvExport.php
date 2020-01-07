@@ -38,29 +38,13 @@ class CsvExport
         ],
         "tasks" => [
             'tasks' => ["created_at", "category_id", "description", "deadline", "title",
-            "address", "budget", "task_lat", "task_lon"]
+            "address", "budget", "lat", "lon"]
         ]
     ];
 
     private $usersEmails = [];
 
     private $emailKey = 0;
-
-    /**
-     * @return array
-     */
-    public function getUsersEmails(): array
-    {
-        return $this->usersEmails;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTables(): array
-    {
-        return $this->tables;
-    }
 
     public function csvToSql($path): string
     {
@@ -116,12 +100,35 @@ class CsvExport
             return $this->updateQuery($table, $keys, $values);
         }
 
+        if ($keys == $this->tables['users']['users']) {
+            $date = array_pop($values);
+            $timestamp = strtotime($date);
+            array_push($values, $timestamp);
+
+            array_push($keys, 'city_id');
+            array_push($values, rand(1, 1000));
+        }
+
+        if (
+            $keys == $this->tables['users_review']['opinions']
+            or $keys == $this->tables['users_review']['replies']
+        ) {
+            $values[0] = strtotime($values[0]);
+            array_push($keys, 'user_customer_id', 'user_employee_id');
+            array_push($values, rand(1, 20), rand(1, 20));
+        }
+
+        if ($keys == $this->tables['tasks']['tasks']) {
+            $values[0] = strtotime($values[0]);
+            array_push($keys, 'city_id', 'user_customer_id', 'user_employee_id');
+            array_push($values, rand(1, 1000), rand(1, 20), rand(1, 20));
+        }
+
         $query = $this->insertQuery($table, $keys, $values);
 
         if ($table == "users") {
             array_push($this->usersEmails, $values[0]);
         }
-
         return $query;
     }
 

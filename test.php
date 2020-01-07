@@ -10,12 +10,10 @@ $connection = new \mysqli($host, $user, $pass, $db);
 
 $exporter = new \TaskForce\CsvExport\CsvExport();
 
-
-
+$exporter->csvToSql("data/categories.csv");
+$exporter->csvToSql("data/cities.csv");
 $exporter->csvToSql("data/users.csv");
-$exporter->csvToSql("data/tasks.csv");
-$exporter->csvToSql("data/replies.csv");
 $exporter->csvToSql("data/profiles.csv");
 $exporter->csvToSql("data/opinions.csv");
-$exporter->csvToSql("data/cities.csv");
-$exporter->csvToSql("data/categories.csv");
+$exporter->csvToSql("data/replies.csv");
+$exporter->csvToSql("data/tasks.csv");
