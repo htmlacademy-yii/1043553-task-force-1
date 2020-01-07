@@ -10,21 +10,57 @@ class CsvExport
         "categories" => "categories",
         "cities" => "cities",
         "opinions" => "users_review",
-        "profiles",
+        "profiles" => "users",
         "replies" => "users_review",
         "tasks" => "tasks",
         "users" => "users"
     ];
 
+    /*$tables = [
+        table_name => [
+        fileName =>[table_key1, table_key2...]
+        ]
+    ]*/
     private $tables = [
-        "categories" => ["name", "image"],
-        "cities" => ["name", "lat", "lon"],
-        "users_review" => ["created_at", "vote", "review"],
-        "users" => ["email", "name", "password_hash", "created_at",
-            "address", "birthday", "description", "phone", "skype"],
-        "tasks" => ["created_at", "category_id", "description", "deadline", "title",
+        "categories" => [
+            'categories' => ["name", "image"]
+        ],
+        "cities" => [
+            'cities' => ["name", "lat", "lon"]
+        ],
+        "users_review" => [
+            'opinions' => ["created_at", "vote", "review"],
+            'replies' => ["created_at", "vote", "review"]
+        ],
+        "users" => [
+            'users' => ["email", "name", "password_hash", "created_at"],
+            'profiles' => ["address", "birthday", "description", "phone", "skype"]
+        ],
+        "tasks" => [
+            'tasks' => ["created_at", "category_id", "description", "deadline", "title",
             "address", "budget", "task_lat", "task_lon"]
+        ]
     ];
+
+    private $usersEmails = [];
+
+    private $emailKey = 0;
+
+    /**
+     * @return array
+     */
+    public function getUsersEmails(): array
+    {
+        return $this->usersEmails;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTables(): array
+    {
+        return $this->tables;
+    }
 
     public function csvToSql($path): string
     {
@@ -40,6 +76,9 @@ class CsvExport
                 $fileName = $file . ".sql";
                 $fp = fopen($fileName, "w");
                 fwrite($fp, $sql);
+                $lines = file($fileName);
+                unset($lines[0]);
+                file_put_contents($fileName, implode('', $lines));
                 fclose($fp);
                 return $fileName;
             }
@@ -48,26 +87,20 @@ class CsvExport
 
     public function getData($path)
     {
-
-      /*  $file = new \SplFileObject($path);
-        while (!$file->eof()) {
-            yield ["data" => $file->fgetcsv(), 'path' => $path];
-        }*/
-
         $csvFile = file($path);
         foreach ($csvFile as $line) {
             yield ["data" => str_getcsv($line), 'path' => $path];
         }
     }
 
-    private function formQuery(array $values)
+    private function formQuery(array $values): string
     {
         $path = $values["path"] ?? null;
         $values = $values["data"] ?? null;
 
         foreach ($this->files as $file => $table) {
-            if (stristr($path, $file)) {
-                $keys = $this->tables[$table];
+            if (stristr($path, $file) && $this->tables[$table][$file]) {
+                $keys = $this->tables[$table][$file];
                 return $this->buildRequest($table, $keys, $values);
             }
         }
@@ -78,10 +111,39 @@ class CsvExport
         if (count($keys) != count($values)) {
             throw new TaskException("arrays must be equal");
         }
+
+        if ($keys == $this->tables['users']['profiles']) {
+            return $this->updateQuery($table, $keys, $values);
+        }
+
+        $query = $this->insertQuery($table, $keys, $values);
+
+        if ($table == "users") {
+            array_push($this->usersEmails, $values[0]);
+        }
+
+        return $query;
+    }
+
+    private function insertQuery(string $table, array $keys, array $values): string
+    {
         $query = "INSERT INTO " . "`" . $table . "` ";
         $query .= "(`" . implode("`, `", $keys) . "`) ";
-        $query .= "VALUES ('" . implode("', '", $values) . "'); ";
+        return $query .= "VALUES ('" . implode("', '", $values) . "'); ";
+    }
+
+    private function updateQuery(string $table, array $keys, array $values): string
+    {
+        $query = "UPDATE " . "`" . $table . "` SET ";
+
+        foreach ($values as $key => $value) {
+            $query .= " `$keys[$key]` = '$value' ,";
+        }
+        $query = substr($query, 0, -1);
+        $query .= "WHERE `email` = " . "'" . $this->usersEmails[$this->emailKey] . "'" . "; ";
+        $this->emailKey = $this->emailKey + 1;
 
         return $query;
     }
 }
+

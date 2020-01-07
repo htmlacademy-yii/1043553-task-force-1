@@ -9,13 +9,13 @@ $pass = 'root';
 $connection = new \mysqli($host, $user, $pass, $db);
 
 $exporter = new \TaskForce\CsvExport\CsvExport();
-$a = $exporter->getData("data/categories.csv");
 
-foreach ($a as $value) {
-    var_dump($value);
 
-}
 
+$exporter->csvToSql("data/users.csv");
+$exporter->csvToSql("data/tasks.csv");
+$exporter->csvToSql("data/replies.csv");
+$exporter->csvToSql("data/profiles.csv");
+$exporter->csvToSql("data/opinions.csv");
+$exporter->csvToSql("data/cities.csv");
 $exporter->csvToSql("data/categories.csv");
-
-
