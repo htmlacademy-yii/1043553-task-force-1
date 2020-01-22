@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "name": "yiisoft/yii2-app-advanced",
     "description": "Yii 2 Advanced Project Template",
     "keywords": ["yii2", "framework", "advanced", "project template"],
@@ -44,3 +45,11 @@
         }
     ]
 }
+=======
+  "autoload": {
+    "psr-4": {
+      "TaskForce\\": "src/"
+    }
+  }
+}
+>>>>>>> fbaf4cb3cc5c415699be162d7f4777e0f994aedd
