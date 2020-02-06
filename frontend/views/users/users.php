@@ -1,5 +1,3 @@
-<?php //var_dump($usersData[1]["tasksCounts"]) ?>
-<?php //var_dump($categories) ?>
 <section class="user__search">
     <div class="user__search-link">
         <p>Сортировать по:</p>
@@ -15,43 +13,40 @@
             </li>
         </ul>
     </div>
-    <?php //foreach ($usersData as $user) : ?>
-        <?php var_dump($usersData[0]["tasksCounts"]).PHP_EOL;
-        echo "<br>";
-        echo "<br>";?>
-   <!-- <div class="content-view__feedback-card user__search-wrapper">
-        <div class="feedback-card__top">
-            <div class="user__search-icon">
-                <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
-                <span><?php /*echo $user['tasksCounts'] */?> заданий</span>
-                <span><?php /*echo $user['reviewsCounts'] */?> отзывов</span>
+    <?php foreach ($usersData as $user) : ?>
+        <div class="content-view__feedback-card user__search-wrapper">
+            <div class="feedback-card__top">
+                <div class="user__search-icon">
+                    <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
+                    <span><?php echo $user['tasksCounts'] ?> заданий</span>
+                    <span><?php echo $user['reviewsCounts'] ?> отзывов</span>
+                </div>
+                <div class="feedback-card__top--name user__search-card">
+                    <p class="link-name"><a href="#" class="link-regular"><?php echo $user['name'] ?></a></p>
+                    <?php for ($i = 1; $i <= floor($user['vote']); $i++) : ?>
+                        <span></span>
+                    <?php endfor; ?>
+                    <?php for ($i = 1; $i <= (5 - floor($user['vote'])); $i++) : ?>
+                        <span class="star-disabled"></span>
+                    <?php endfor; ?>
+                    <b><?php echo substr($user['vote'], 0, 4); ?></b>
+                    <p class="user__search-content">
+                        <?php echo $user['description'] ?>
+                    </p>
+                </div>
+                <span class="new-task__time">Был на сайте 25 минут назад</span>
             </div>
-            <div class="feedback-card__top--name user__search-card">
-                <p class="link-name"><a href="#" class="link-regular"><?php /*echo $user['name'] */?></a></p>
-                <?php /*for ($i = 1; $i <= floor($user['vote']); $i++) :*/?>
-                <span></span>
-                <?php /*endfor;*/?>
-                <?php /*for ($i = 1; $i <= ( 5 - floor($user['vote'])); $i++) :*/?>
-                    <span class="star-disabled"></span>
-                <?php /*endfor;*/?>
-                <b><?php /*echo $user['vote'] */?></b>
-                <p class="user__search-content">
-                    <?php /*echo $user['description'] */?>
-                </p>
+            <div class="link-specialization user__search-link--bottom">
+                <?php foreach ($user['categories'] as $category) : ?>
+                    <a href="#" class="link-regular"><?php echo $category['category_name']; ?></a>
+                <?php endforeach; ?>
+                <a href="#" class="link-regular">Ремонт</a>
+                <a href="#" class="link-regular">Курьер</a>
+                <a href="#" class="link-regular">Оператор ПК</a>
             </div>
-            <span class="new-task__time">Был на сайте 25 минут назад</span>
-        </div>
-        <div class="link-specialization user__search-link--bottom">
-            <?php /*foreach ($user['categories'] as $category) : */?>
-            <a href="#" class="link-regular"><?php /*echo $category['category']; */?></a>
-            <?php /*endforeach;*/?>
-            <a href="#" class="link-regular">Ремонт</a>
-            <a href="#" class="link-regular">Курьер</a>
-            <a href="#" class="link-regular">Оператор ПК</a>
-        </div>
 
-    </div>-->
-    <?php// endforeach; ?>
+        </div>
+    <?php endforeach; ?>
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">

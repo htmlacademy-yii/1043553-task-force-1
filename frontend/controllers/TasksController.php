@@ -35,7 +35,6 @@ class TasksController extends Controller
             $task['created_at'] = 10;
         }
 
-
         return $this->render('browse', ["data" => $data]);
     }
 }
