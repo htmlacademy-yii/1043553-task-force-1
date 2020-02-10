@@ -1,7 +1,6 @@
 <?php
 
 namespace frontend\models;
-
 use Yii;
 use yii\db\Query;
 
@@ -220,13 +219,14 @@ class Users extends \yii\db\ActiveRecord
         return $data = (new Query())->select([
             'users.id',
             'users.name',
-            'users.created_at',
+            'users.last_active',
             'users.description',
             'users.last_active',
             'user_photos.photo as photo',
         ])
             ->from('users')
             ->join('INNER JOIN', 'user_photos', 'users.id = user_photos.user_id')
+            ->where(['current_role' => Task::ROLE_EMPLOYEE])
             ->orderBy(['created_at' => SORT_DESC])->all();
     }
 
@@ -253,6 +253,8 @@ class Users extends \yii\db\ActiveRecord
                     ->join('LEFT JOIN', 'categories', 'users_categories.category_id = categories.id')
                     ->where(['user_id' => $user["id"]])
                     ->all() ?? 0;
+
+            $user['last_active'] = TimeOperations::timePassed($user['last_active']);
         }
 
         return $usersData;

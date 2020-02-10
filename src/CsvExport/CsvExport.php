@@ -107,6 +107,13 @@ class CsvExport
 
             array_push($keys, 'city_id');
             array_push($values, rand(1, 1000));
+
+            array_push($keys, 'current_role');
+            array_push($values, rand(0, 1));
+
+            array_push($keys, 'last_active');
+            $lastActive = time() - rand(1000, 10000);
+            array_push($values, $lastActive);
         }
 
         if (
@@ -120,8 +127,8 @@ class CsvExport
 
         if ($keys == $this->tables['tasks']['tasks']) {
             $values[0] = strtotime($values[0]);
-            array_push($keys, 'city_id', 'user_customer_id', 'user_employee_id');
-            array_push($values, rand(1, 1000), rand(1, 20), rand(1, 20));
+            array_push($keys, 'city_id', 'user_customer_id', 'user_employee_id', 'current_status');
+            array_push($values, rand(1, 1000), rand(1, 20), rand(1, 20), rand(0, 4));
         }
 
         $query = $this->insertQuery($table, $keys, $values);

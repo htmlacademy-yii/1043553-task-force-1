@@ -1,9 +1,22 @@
-
-<?php /*var_dump($data) */?>
-
+<?php //var_dump($data) ?>
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
+        <div class="new-task__card">
+            <div class="new-task__title">
+                <a href="#" class="link-regular"><h2>Перевести войну и мир на клингонский</h2></a>
+                <a  class="new-task__type link-regular" href="#"><p>Переводы</p></a>
+            </div>
+            <div class="new-task__icon new-task__icon--translation"></div>
+            <p class="new-task_description">
+                Значимость этих проблем настолько очевидна, что начало
+                повседневной работы по формированию позиции
+                требуют определения и уточнения позиций…
+            </p>
+            <b class="new-task__price new-task__price--translation">3400<b> ₽</b></b>
+            <p class="new-task__place">Санкт-Петербург, Центральный район</p>
+            <span class="new-task__time">4 часа назад</span>
+        </div>
         <?php foreach ($data as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
@@ -14,12 +27,11 @@
                 <p class="new-task_description">
                     <?php echo $task["description"] ?>
                 </p>
-                <b class="new-task__price new-task__price--translation"><?php echo $task["budget"] ?><b> ₽</b></b>
+                <b class="new-task__price new-task__price--translation"><?php echo $task["budget"] ?><b>₽</b></b>
                 <p class="new-task__place"><?php echo $task["city"] ?></p>
                 <span class="new-task__time"><?php echo $task["created_at"] ?></span>
             </div>
-
-         <?php endforeach; ?>
+        <?php endforeach;?>
     </div>
     <div class="new-task__pagination">
         <ul class="new-task__pagination-list">
