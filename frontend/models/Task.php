@@ -6,14 +6,14 @@ use TaskForce\Exception\TaskException;
 
 class Task
 {
-    public const STATUS_NEW = 'NEW';
-    public const STATUS_CANCELLED = 'CANCELLED';
-    public const STATUS_PROCESSING = 'PROCESSING';
-    public const STATUS_ACCOMPLISHED = 'ACCOMPLISHED';
-    public const STATUS_FAILED = 'FAILED';
+    public const STATUS_NEW = 0;
+    public const STATUS_CANCELLED = 2;
+    public const STATUS_PROCESSING = 1;
+    public const STATUS_ACCOMPLISHED = 3;
+    public const STATUS_FAILED = 4;
 
-    public const ROLE_EMPLOYEE = '0';
-    public const ROLE_CUSTOMER = '1';
+    public const ROLE_EMPLOYEE = 0;
+    public const ROLE_CUSTOMER = 1;
 
     private $actionCancel;
     private $actionAccomplish;

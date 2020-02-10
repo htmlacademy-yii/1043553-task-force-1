@@ -1,3 +1,4 @@
+<?php// var_dump($usersData)?>
 <section class="user__search">
     <div class="user__search-link">
         <p>Сортировать по:</p>

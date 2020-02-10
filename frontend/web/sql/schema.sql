@@ -10,6 +10,7 @@ CREATE TABLE `taskForce`.`users` (
 `last_active` INT(11) NULL ,
 `email` VARCHAR(50) NOT NULL ,
 `name` VARCHAR(50) NOT NULL ,
+`current_role` BOOLEAN NOT NULL DEFAULT 0 ,
 `city_id`INT(11)   NOT NULL ,
 `address` VARCHAR(50) NULL ,
 `address_lat` VARCHAR(50) NULL ,

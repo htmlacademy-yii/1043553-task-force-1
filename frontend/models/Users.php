@@ -216,17 +216,19 @@ class Users extends \yii\db\ActiveRecord
 
     private function getAllUsersAndPhotos()
     {
+        //'user_photos.photo as photo',
         return $data = (new Query())->select([
             'users.id',
             'users.name',
             'users.last_active',
             'users.description',
             'users.last_active',
-            'user_photos.photo as photo',
+            'current_role',
+
         ])
             ->from('users')
-            ->join('INNER JOIN', 'user_photos', 'users.id = user_photos.user_id')
             ->where(['current_role' => Task::ROLE_EMPLOYEE])
+            ->join('INNER JOIN', 'user_photos', 'users.id = user_photos.user_id')
             ->orderBy(['created_at' => SORT_DESC])->all();
     }
 

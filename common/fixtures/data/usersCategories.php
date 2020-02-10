@@ -107,7 +107,7 @@ return [
     ],
     'usersCategories26' => [
         'user_id' => 7,
-        'category_id' => 6,
+        'category_id' => 8,
     ],
     'usersCategories27' => [
         'user_id' => 8,
