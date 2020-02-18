@@ -1,8 +1,8 @@
 <?php
 
 namespace frontend\models;
-
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "users".
@@ -42,6 +42,12 @@ use Yii;
  */
 class Users extends \yii\db\ActiveRecord
 {
+    public function getDataForEmployeesPage()
+    {
+        $data = $this->getAllUsersAndPhotos();
+        return $this->addDataForEachUser($data);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -206,5 +212,53 @@ class Users extends \yii\db\ActiveRecord
     public function getUsersReviews0()
     {
         return $this->hasMany(UsersReview::className(), ['user_employee_id' => 'id']);
+    }
+
+    private function getAllUsersAndPhotos()
+    {
+        //'user_photos.photo as photo',
+        return $data = (new Query())->select([
+            'users.id',
+            'users.name',
+            'users.last_active',
+            'users.description',
+            'users.last_active',
+            'current_role',
+
+        ])
+            ->from('users')
+            ->where(['current_role' => Task::ROLE_EMPLOYEE])
+            ->join('INNER JOIN', 'user_photos', 'users.id = user_photos.user_id')
+            ->orderBy(['created_at' => SORT_DESC])->all();
+    }
+
+    private function addDataForEachUser($usersData)
+    {
+        foreach ($usersData as &$user) {
+            $user['vote'] = (new Query())->select(['vote'])
+                    ->from('users_review')
+                    ->where(['user_employee_id' => $user["id"]])
+                    ->average('vote') ?? 0;
+
+            $user['tasksCounts'] =
+                Tasks::find()
+                    ->where(['user_employee_id' => $user["id"]])
+                    ->count() ?? 0;
+
+            $user['reviewsCounts'] =
+                UsersReview::find()
+                    ->where(['user_employee_id' => $user["id"]])
+                    ->count() ?? 0;
+
+            $user['categories'] = (new Query())->select(['categories.name as category_name'])
+                    ->from('users_categories')
+                    ->join('LEFT JOIN', 'categories', 'users_categories.category_id = categories.id')
+                    ->where(['user_id' => $user["id"]])
+                    ->all() ?? 0;
+
+            $user['last_active'] = TimeOperations::timePassed($user['last_active']);
+        }
+
+        return $usersData;
     }
 }

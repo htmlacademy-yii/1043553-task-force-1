@@ -1,8 +1,8 @@
 <?php
 
 namespace frontend\models;
-
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "tasks".
@@ -46,15 +46,62 @@ class Tasks extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_customer_id', 'user_employee_id', 'created_at', 'title', 'description', 'category_id', 'city_id', 'budget'], 'required'],
-            [['user_customer_id', 'user_employee_id', 'created_at', 'category_id', 'city_id', 'budget', 'current_status'], 'integer'],
+            [
+                [
+                    'user_customer_id',
+                    'user_employee_id',
+                    'created_at',
+                    'title',
+                    'description',
+                    'category_id',
+                    'city_id',
+                    'budget'
+                ],
+                'required'
+            ],
+            [
+                [
+                    'user_customer_id',
+                    'user_employee_id',
+                    'created_at',
+                    'category_id',
+                    'city_id',
+                    'budget',
+                    'current_status'
+                ],
+                'integer'
+            ],
             [['description'], 'string'],
             [['deadline'], 'safe'],
             [['title', 'lat', 'lon', 'address'], 'string', 'max' => 50],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['user_customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_customer_id' => 'id']],
-            [['user_employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_employee_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Categories::className(),
+                'targetAttribute' => ['category_id' => 'id']
+            ],
+            [
+                ['user_customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Users::className(),
+                'targetAttribute' => ['user_customer_id' => 'id']
+            ],
+            [
+                ['user_employee_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Users::className(),
+                'targetAttribute' => ['user_employee_id' => 'id']
+            ],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Cities::className(),
+                'targetAttribute' => ['city_id' => 'id']
+            ],
         ];
     }
 
@@ -149,5 +196,31 @@ class Tasks extends \yii\db\ActiveRecord
     public function getTasksFiles()
     {
         return $this->hasMany(TasksFiles::className(), ['task_id' => 'id']);
+    }
+
+    public static function getDataForTasksPage()
+    {
+        $query = new Query();
+        $data = $query->select([
+            'title',
+            'description',
+            'budget',
+            'created_at',
+            'categories.name as category',
+            'categories.image as image',
+            'cities.name as city'
+
+        ])
+            ->from('tasks')
+            ->join('INNER JOIN', 'categories', 'tasks.category_id = categories.id')
+            ->join('INNER JOIN', 'cities', 'tasks.city_id = cities.id')
+            ->where(['current_status' => Task::STATUS_NEW])
+            ->orderBy(['created_at' => SORT_DESC])->all();
+
+        foreach ($data as &$task) {
+            $task['created_at'] = TimeOperations::timePassed($task['created_at']);
+        }
+
+        return $data;
     }
 }

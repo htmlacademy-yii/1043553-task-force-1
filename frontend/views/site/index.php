@@ -4,8 +4,7 @@
 
 $this->title = 'test scenario';
 
-$a = \frontend\models\Cities::find()->asArray()->all();
+/*$a = \frontend\models\Cities::find()->asArray()->all();
 echo "<pre>";
-var_dump($a);
-?>
+var_dump($a);*/
 
