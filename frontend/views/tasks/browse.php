@@ -1,27 +1,19 @@
-<?php //var_dump($data) ?>
+<?php
+
+use yii\helpers\Html;
+use yii\widgets\ActiveField;
+use yii\widgets\ActiveForm; ?>
+
+
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
-        <div class="new-task__card">
-            <div class="new-task__title">
-                <a href="#" class="link-regular"><h2>Перевести войну и мир на клингонский</h2></a>
-                <a  class="new-task__type link-regular" href="#"><p>Переводы</p></a>
-            </div>
-            <div class="new-task__icon new-task__icon--translation"></div>
-            <p class="new-task_description">
-                Значимость этих проблем настолько очевидна, что начало
-                повседневной работы по формированию позиции
-                требуют определения и уточнения позиций…
-            </p>
-            <b class="new-task__price new-task__price--translation">3400<b> ₽</b></b>
-            <p class="new-task__place">Санкт-Петербург, Центральный район</p>
-            <span class="new-task__time">4 часа назад</span>
-        </div>
-        <?php foreach ($data as $task) : ?>
+        <?php var_dump($_POST);
+        foreach ($data as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
                     <a href="#" class="link-regular"><h2><?php echo $task["title"] ?></h2></a>
-                    <a  class="new-task__type link-regular" href="#"><p><?php echo $task["category"] ?></p></a>
+                    <a class="new-task__type link-regular" href="#"><p><?php echo $task["category"] ?></p></a>
                 </div>
                 <div class="new-task__icon new-task__icon--<?php echo $task["image"] ?>"></div>
                 <p class="new-task_description">
@@ -31,7 +23,7 @@
                 <p class="new-task__place"><?php echo $task["city"] ?></p>
                 <span class="new-task__time"><?php echo $task["created_at"] ?></span>
             </div>
-        <?php endforeach;?>
+        <?php endforeach; ?>
     </div>
     <div class="new-task__pagination">
         <ul class="new-task__pagination-list">
@@ -44,38 +36,69 @@
         </ul>
     </div>
 </section>
-<section  class="search-task">
+<section class="search-task">
     <div class="search-task__wrapper">
-        <form class="search-task__form" name="test" method="post" action="#">
-            <fieldset class="search-task__categories">
-                <legend>Категории</legend>
-                <input class="visually-hidden checkbox__input" id="1" type="checkbox" name="" value="" checked>
-                <label for="1">Курьерские услуги </label>
-                <input class="visually-hidden checkbox__input" id="2" type="checkbox" name="" value="" checked>
-                <label  for="2">Грузоперевозки </label>
-                <input class="visually-hidden checkbox__input" id="3" type="checkbox" name="" value="">
-                <label  for="3">Переводы </label>
-                <input class="visually-hidden checkbox__input" id="4" type="checkbox" name="" value="">
-                <label  for="4">Строительство и ремонт </label>
-                <input class="visually-hidden checkbox__input" id="5" type="checkbox" name="" value="">
-                <label  for="5">Выгул животных </label>
-            </fieldset>
-            <fieldset class="search-task__categories">
-                <legend>Дополнительно</legend>
-                <input class="visually-hidden checkbox__input" id="6" type="checkbox" name="" value="">
-                <label for="6">Без откликов</label>
-                <input class="visually-hidden checkbox__input" id="7" type="checkbox" name="" value="" checked>
-                <label for="7">Удаленная работа </label>
-            </fieldset>
-            <label class="search-task__name" for="8">Период</label>
-            <select class="multiple-select input" id="8"size="1" name="time[]">
-                <option value="day">За день</option>
-                <option selected value="week">За неделю</option>
-                <option value="month">За месяц</option>
-            </select>
-            <label class="search-task__name" for="9">Поиск по названию</label>
-            <input class="input-middle input" id="9" type="search" name="q" placeholder="">
-            <button class="button" type="submit">Искать</button>
-        </form>
+
+        <?php $form = ActiveForm::begin([
+            'options' => [
+                'class' => 'search-task__form',
+                'name' => $model->formName()
+            ]
+        ]); ?>
+        <fieldset class="search-task__categories">
+            <legend>Категории</legend>
+            <?php
+
+            echo $form->field($model, 'categories')->checkboxList(
+                $model->categoriesFields(),
+                [
+                    'tag' => false,
+                    'itemOptions' => [
+
+                    ]
+                ]
+            )->label(false);
+
+            ?>
+        </fieldset>
+
+        <fieldset class="search-task__categories">
+            <legend>Дополнительно</legend>
+            <?php
+
+            echo $form->field($model, 'additional')->checkboxList(
+                $model->additionalFields(),
+                [
+                    'tag' => false,
+                    'itemOptions' => [
+
+                    ]
+                ]
+            )->label(false); ?>
+        </fieldset>
+
+        <label class="search-task__name" for="period">Период</label>
+
+        <?= $form->field($model, 'period', ['template' => "{label}\n{input}"])
+            ->dropDownList(
+                ['all' => 'За все время', 'day' => 'За день', 'week' => 'За неделю', 'month' => 'За месяц'],
+                [
+                    'class' => 'multiple-select input',
+                    'id' => 'period',
+                    'size' => '1'
+                ]
+            )->label(false); ?>
+
+        <label class="search-task__name" for="search"><?= $model->searchField(); ?></label>
+        <?php $options = [
+            'class' => 'input-middle input',
+            'id' => 'search',
+            'tag' => false
+        ]; ?>
+        <?= $form->field($model, 'search', ['template' => "{label}\n{input}"])->input('text',
+            $options)->label(false); ?>
+
+        <?= Html::submitButton('Искать', ['class' => 'button']) ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </section>

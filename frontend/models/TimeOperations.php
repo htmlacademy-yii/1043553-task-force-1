@@ -1,11 +1,11 @@
 <?php
 
 
-namespace  frontend\models;
+namespace frontend\models;
 
 class TimeOperations
 {
-    public static function timePassed($date)
+    public static function timePassed($date): string
     {
         $secInMin = 60;
         $secInHour = 3600;
@@ -45,7 +45,7 @@ class TimeOperations
                 return $fullDate . " в " . $fullTime;
                 break;
         }
-        return null;
+        return "";
     }
 
     private static function getNounPluralForm(int $number, string $one, string $two, string $many): string
@@ -71,7 +71,6 @@ class TimeOperations
                 return $many;
         }
     }
-
 
 
 }

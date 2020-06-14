@@ -75,7 +75,10 @@
     <?php endforeach; ?>
 </section>
 <section class="search-task">
-    <div class="search-task__wrapper">
+
+</section>
+
+<!-- <div class="search-task__wrapper">
         <form class="search-task__form" name="users" method="post" action="#">
             <fieldset class="search-task__categories">
                 <legend>Категории</legend>
@@ -111,6 +114,5 @@
             <input class="input-middle input" id="110" type="search" name="q" placeholder="">
             <button class="button" type="submit">Искать</button>
         </form>
-    </div>
-</section>
+    </div>-->
 
