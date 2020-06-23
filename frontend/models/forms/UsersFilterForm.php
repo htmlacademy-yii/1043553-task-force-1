@@ -1,11 +1,12 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\forms;
 
 use Yii;
 use yii\base\Model;
 use common\models\User;
 use yii\db\ActiveRecord;
+use frontend\models\forms\CategoriesFieldsTrait;
 
 /**
  * Signup form

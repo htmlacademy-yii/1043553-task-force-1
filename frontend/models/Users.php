@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use frontend\models\forms\UsersFilterForm;
 use Yii;
 use yii\db\Query;
 
@@ -149,7 +150,7 @@ class Users extends \yii\db\ActiveRecord
                     ->average('vote') ?? 0;
 
             $user['tasksCounts'] =
-                Tasks::find()
+                Task::find()
                     ->where(['user_employee_id' => $user["id"]])
                     ->count() ?? 0;
 

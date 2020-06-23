@@ -1,5 +1,5 @@
 <?php
-
+namespace frontend\components;
 
 use frontend\models\Task;
 

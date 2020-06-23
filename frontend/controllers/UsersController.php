@@ -4,7 +4,7 @@
 namespace frontend\controllers;
 
 use frontend\models\Users;
-use frontend\models\UsersFilterForm;
+use frontend\models\forms\UsersFilterForm;
 use yii\web\Controller;
 
 class UsersController extends Controller

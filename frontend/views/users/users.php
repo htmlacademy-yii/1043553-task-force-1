@@ -16,9 +16,7 @@ use yii\widgets\ActiveForm; ?>
             </li>
         </ul>
     </div>
-    <?php var_dump($_POST);
-    echo count($data);
-    foreach ($data as $user) : ?>
+    <?php foreach ($data as $user) : ?>
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
