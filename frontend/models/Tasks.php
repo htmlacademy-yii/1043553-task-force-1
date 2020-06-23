@@ -35,30 +35,24 @@ use frontend\models\Responses;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
-    public function getDataForTasksPage($model)
+    public function getDataForTasksPage(TasksFilterForm $model): array
     {
         $query = $this->noFiltersQuery();
         $filters = Yii::$app->request->post() ?? [];
-        if (!$model->load($filters)) {
-            //throw new Exception\TaskException('cant load filters data');
+
+        if ($model->load($filters)) {
+            $query = $this->filterThroughAdditionalFields($model, $query);
+
+            $query = $this->filterThroughChosenCategories($model, $query);
+
+            $query = $this->filterThroughChosenPeriod($model, $query);
+
+            $query = $this->filterThroughSearchField($model, $query);
         }
-
-        $query = $this->filterThroughAdditionalFields($model, $query);
-
-        $query = $this->filterThroughChosenCategories($model, $query);
-
-        $query = $this->filterThroughChosenPeriod($model, $query);
-
-        $query = $this->filterThroughSearchField($model, $query);
-
 
         $data = $query->orderBy(['tasks.created_at' => SORT_DESC])->all();
 
-        foreach ($data as &$task) {
-            $task['created_at'] = TimeOperations::timePassed($task['created_at']);
-        }
-
-        return $data;
+        return $this->addTimeInfo($data);
     }
 
     private function noFiltersQuery(): Query
@@ -81,7 +75,7 @@ class Tasks extends \yii\db\ActiveRecord
             ->where(['current_status' => Task::STATUS_NEW]);
     }
 
-    private function filterThroughChosenCategories($model, $query)
+    private function filterThroughChosenCategories(TasksFilterForm $model, Query $query): Query
     {
         if ($model->categories) {
             $categories = ['or'];
@@ -95,11 +89,11 @@ class Tasks extends \yii\db\ActiveRecord
         return $query;
     }
 
-    private function filterThroughAdditionalFields($model, $query)
+    private function filterThroughAdditionalFields(TasksFilterForm $model, Query $query): Query
     {
         if ($model->additional) {
             foreach ($model->additional as $key => $field) {
-                $model->$field = 1;
+                $model->$field = true;
             }
         }
 
@@ -118,7 +112,7 @@ class Tasks extends \yii\db\ActiveRecord
         return $query;
     }
 
-    private function filterThroughChosenPeriod($model, $query)
+    private function filterThroughChosenPeriod(TasksFilterForm $model, Query $query): Query
     {
         if ($model->period == 'day') {
             return $query->andWhere(['>', 'tasks.created_at',  strtotime("- 1 day")]);
@@ -131,13 +125,22 @@ class Tasks extends \yii\db\ActiveRecord
         return $query;
     }
 
-    private function filterThroughSearchField($model, $query)
+    private function filterThroughSearchField(TasksFilterForm $model, Query $query): Query
     {
         if ($model->search) {
             return $query->andWhere(['like', 'tasks.title', $model->search]);
         }
 
         return $query;
+    }
+
+    private function addTimeInfo(array $data): array
+    {
+        foreach ($data as &$task) {
+            $task['created_at'] = TimeOperations::timePassed($task['created_at']);
+        }
+
+        return $data;
     }
 
     /**

@@ -8,8 +8,7 @@ use yii\widgets\ActiveForm; ?>
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
-        <?php var_dump($_POST);
-        foreach ($data as $task) : ?>
+        <?php foreach ($data as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
                     <a href="#" class="link-regular"><h2><?php echo $task["title"] ?></h2></a>

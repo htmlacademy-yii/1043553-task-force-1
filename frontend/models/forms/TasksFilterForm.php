@@ -1,38 +1,23 @@
 <?php
-namespace frontend\models;
+
+namespace frontend\models\forms;
 
 use Yii;
 use yii\base\Model;
 use common\models\User;
 use yii\db\ActiveRecord;
 
-/**
- * Signup form
- */
-class UsersFilterForm extends ActiveRecord
+
+class TasksFilterForm extends ActiveRecord
 {
+    use CategoriesFieldsTrait;
+
     public $categories;
     public $additional;
-
-    public $nowFree;
-    public $nowOnline;
-    public $responses;
-    public $cities;
-    public $favorite;
-
-    public $search;
-
-    public function categoriesFields()
-    {
-        $categories = Categories::find()->all();
-        $data = [];
-
-        foreach ($categories as $category) {
-            $data[$category['id']] = $category['name'];
-        }
-
-        return $data;
-    }
+    public string $period = "";
+    public string $search = "";
+    public bool $responses = false;
+    public bool $cities = false;
 
     public function additionalFields()
     {

@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\models;
+
 use Yii;
 use yii\db\Query;
 
@@ -42,10 +43,131 @@ use yii\db\Query;
  */
 class Users extends \yii\db\ActiveRecord
 {
-    public function getDataForEmployeesPage()
+    public function getDataForUsersPage(UsersFilterForm $model): array
     {
-        $data = $this->getAllUsersAndPhotos();
+        $query = $this->noFiltersQuery();
+        $filters = Yii::$app->request->post() ?? [];
+
+        if ($model->load($filters)) {
+            $query = $this->filterThroughAdditionalFields($model, $query);
+
+            $query = $this->filterThroughChosenCategories($model, $query);
+
+            $query = $this->filterThroughSearchField($model, $query);
+        }
+
+        $data = $query->join('INNER JOIN', 'user_photos', 'users.id = user_photos.user_id')->all();
+
         return $this->addDataForEachUser($data);
+    }
+
+    private function noFiltersQuery(): Query
+    {
+        return $data = (new Query())->select([
+            'users.id',
+            'users.name',
+            'users.last_active',
+            'users.description',
+            'users.last_active',
+            'current_role',
+
+        ])
+            ->from('users')->distinct()
+            ->where(['current_role' => Task::ROLE_EMPLOYEE]);
+    }
+
+    private function filterThroughAdditionalFields(UsersFilterForm $model, Query $query): Query
+    {
+        if ($model->additional) {
+            foreach ($model->additional as $key => $field) {
+                $model->$field = true;
+            }
+        }
+
+        if ($model->nowFree) {
+            $query->leftJoin('tasks', 'tasks.user_employee_id = users.id');
+            $query->andWhere([
+                'or',
+                ['tasks.user_employee_id' => null],
+                ['users.id' => null],
+                ['<>', 'tasks.current_status', Task::STATUS_PROCESSING]
+            ]);
+        }
+
+        if ($model->nowOnline) {
+            $query->andWhere(['>', 'last_active', strtotime("- 30 minutes")]);
+        }
+
+        if ($model->reviews) {
+            $query->rightJoin('users_review', 'users_review.user_employee_id = users.id');
+        }
+
+        if ($model->remote) {
+            if (!$model->nowFree) {
+                $query->innerJoin('tasks', 'tasks.user_employee_id = users.id');
+            }
+            $query->andWhere(['tasks.address' => null]);
+        }
+
+        /*if ($model->favorite) {
+
+        }*/
+
+        return $query;
+    }
+
+    private function filterThroughChosenCategories(UsersFilterForm $model, Query $query): Query
+    {
+        if ($model->categories) {
+            $query->leftJoin('users_categories', 'users_categories.user_id = users.id');
+            $categories = ['or'];
+            foreach ($model->categories as $categoryId) {
+                $categories[] = [
+                    'users_categories.category_id' => intval($categoryId)
+                ];
+            }
+            return $query->andWhere($categories);
+        }
+        return $query;
+    }
+
+    private function filterThroughSearchField(UsersFilterForm $model, Query $query): Query
+    {
+        if ($model->search) {
+            return $query->andWhere(['like', 'users.name', $model->search]);
+        }
+
+        return $query;
+    }
+
+    private function addDataForEachUser(array $usersData): array
+    {
+        foreach ($usersData as &$user) {
+            $user['vote'] = (new Query())->select(['vote'])
+                    ->from('users_review')
+                    ->where(['user_employee_id' => $user["id"]])
+                    ->average('vote') ?? 0;
+
+            $user['tasksCounts'] =
+                Tasks::find()
+                    ->where(['user_employee_id' => $user["id"]])
+                    ->count() ?? 0;
+
+            $user['reviewsCounts'] =
+                UsersReview::find()
+                    ->where(['user_employee_id' => $user["id"]])
+                    ->count() ?? 0;
+
+            $user['categories'] = (new Query())->select(['categories.name as category_name'])
+                    ->from('users_categories')
+                    ->join('LEFT JOIN', 'categories', 'users_categories.category_id = categories.id')
+                    ->where(['user_id' => $user["id"]])
+                    ->all() ?? 0;
+
+            $user['last_active'] = TimeOperations::timePassed($user['last_active']);
+        }
+
+        return $usersData;
     }
 
     /**
@@ -63,7 +185,19 @@ class Users extends \yii\db\ActiveRecord
     {
         return [
             [['created_at', 'email', 'name', 'city_id', 'password_hash'], 'required'],
-            [['created_at', 'last_active', 'city_id', 'msg_notification', 'action_notification', 'review_notification', 'show_contacts_all', 'hide_profile'], 'integer'],
+            [
+                [
+                    'created_at',
+                    'last_active',
+                    'city_id',
+                    'msg_notification',
+                    'action_notification',
+                    'review_notification',
+                    'show_contacts_all',
+                    'hide_profile'
+                ],
+                'integer'
+            ],
             [['birthday'], 'safe'],
             [['email', 'name', 'address', 'address_lat', 'address_lon'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 255],
@@ -71,7 +205,13 @@ class Users extends \yii\db\ActiveRecord
             [['phone'], 'string', 'max' => 16],
             [['skype', 'other_app'], 'string', 'max' => 40],
             [['email'], 'unique'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Cities::className(),
+                'targetAttribute' => ['city_id' => 'id']
+            ],
         ];
     }
 
@@ -191,7 +331,8 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getCategories()
     {
-        return $this->hasMany(Categories::className(), ['id' => 'category_id'])->viaTable('users_categories', ['user_id' => 'id']);
+        return $this->hasMany(Categories::className(), ['id' => 'category_id'])->viaTable('users_categories',
+            ['user_id' => 'id']);
     }
 
     /**
@@ -212,53 +353,5 @@ class Users extends \yii\db\ActiveRecord
     public function getUsersReviews0()
     {
         return $this->hasMany(UsersReview::className(), ['user_employee_id' => 'id']);
-    }
-
-    private function getAllUsersAndPhotos()
-    {
-        //'user_photos.photo as photo',
-        return $data = (new Query())->select([
-            'users.id',
-            'users.name',
-            'users.last_active',
-            'users.description',
-            'users.last_active',
-            'current_role',
-
-        ])
-            ->from('users')
-            ->where(['current_role' => Task::ROLE_EMPLOYEE])
-            ->join('INNER JOIN', 'user_photos', 'users.id = user_photos.user_id')
-            ->orderBy(['created_at' => SORT_DESC])->all();
-    }
-
-    private function addDataForEachUser($usersData)
-    {
-        foreach ($usersData as &$user) {
-            $user['vote'] = (new Query())->select(['vote'])
-                    ->from('users_review')
-                    ->where(['user_employee_id' => $user["id"]])
-                    ->average('vote') ?? 0;
-
-            $user['tasksCounts'] =
-                Tasks::find()
-                    ->where(['user_employee_id' => $user["id"]])
-                    ->count() ?? 0;
-
-            $user['reviewsCounts'] =
-                UsersReview::find()
-                    ->where(['user_employee_id' => $user["id"]])
-                    ->count() ?? 0;
-
-            $user['categories'] = (new Query())->select(['categories.name as category_name'])
-                    ->from('users_categories')
-                    ->join('LEFT JOIN', 'categories', 'users_categories.category_id = categories.id')
-                    ->where(['user_id' => $user["id"]])
-                    ->all() ?? 0;
-
-            $user['last_active'] = TimeOperations::timePassed($user['last_active']);
-        }
-
-        return $usersData;
     }
 }
