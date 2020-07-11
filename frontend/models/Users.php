@@ -5,6 +5,8 @@ namespace frontend\models;
 use frontend\models\forms\UsersFilterForm;
 use Yii;
 use yii\db\Query;
+use frontend\models\Task;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "users".
@@ -33,8 +35,8 @@ use yii\db\Query;
  * @property Correspondence[] $correspondences
  * @property Notifications[] $notifications
  * @property Responses[] $responses
- * @property Tasks[] $tasks
- * @property Tasks[] $tasks0
+ * @property Task[] $tasks
+ * @property Task[] $tasks0
  * @property UserPhotos[] $userPhotos
  * @property Cities $city
  * @property UsersCategories[] $usersCategories
@@ -44,6 +46,66 @@ use yii\db\Query;
  */
 class Users extends \yii\db\ActiveRecord
 {
+
+    public static function getDataForSelectedUserPage(int $id) : array
+    {
+        $user = Users::find()
+            ->joinWith('tasks')
+            ->joinWith('userPhotos')
+            ->joinWith('usersReviews')
+            ->joinWith('categories')
+            ->where(['users.id' => $id])
+            ->asArray()
+            ->one();
+        if (!$user) {
+            throw new NotFoundHttpException("Пользователь с ID $id не найдено");
+        }
+
+        $user['vote'] = UsersReview::find()
+                ->select(['vote'])
+                ->where(['user_employee_id' => $id])
+                ->average('vote') ?? 0;
+
+        $user['last_active'] = TimeOperations::timePassed($user['last_active']);
+
+        $user["usersReviews"] = self::addDataForEachReview($user["usersReviews"]);
+
+        $user['photo'] = $user['userPhotos'][0]['photo'] ?? 'default.jpg';
+
+        $data = ['user' => $user];
+
+        return $data;
+    }
+
+    private static function addDataForEachReview(array $reviews): array
+    {
+        foreach ($reviews as &$review) {
+            $task = Task::find()
+                ->andwhere(['tasks.user_employee_id' => $review['user_employee_id']])
+                ->andwhere(['tasks.user_customer_id' => $review['user_customer_id']])
+                ->andwhere(['<', 'tasks.created_at', $review['created_at']])
+                ->orderBy(['tasks.created_at' => SORT_DESC])
+                ->asArray()
+                ->one();
+
+            $review['taskTitle'] = $task['title'];
+
+            $customer = Users::find()
+                ->where(['users.id' => $task['user_customer_id']])
+                ->joinWith('userPhotos')
+                ->asArray()
+                ->one();
+
+            $review['customerPhoto'] = $customer["userPhotos"]['photo'] ?? 'default.jpg';
+
+
+            $review['customerName'] = $customer['name'];
+
+        }
+
+        return $reviews;
+    }
+
     public function getDataForUsersPage(UsersFilterForm $model): array
     {
         $query = $this->noFiltersQuery();
@@ -57,7 +119,7 @@ class Users extends \yii\db\ActiveRecord
             $query = $this->filterThroughSearchField($model, $query);
         }
 
-        $data = $query->join('INNER JOIN', 'user_photos', 'users.id = user_photos.user_id')->all();
+        $data = $query->join('LEFT JOIN', 'user_photos', 'users.id = user_photos.user_id')->all();
 
         return $this->addDataForEachUser($data);
     }
@@ -71,6 +133,7 @@ class Users extends \yii\db\ActiveRecord
             'users.description',
             'users.last_active',
             'current_role',
+            'user_photos.photo'
 
         ])
             ->from('users')->distinct()
@@ -164,6 +227,8 @@ class Users extends \yii\db\ActiveRecord
                     ->join('LEFT JOIN', 'categories', 'users_categories.category_id = categories.id')
                     ->where(['user_id' => $user["id"]])
                     ->all() ?? 0;
+
+            $user['photo'] = $user['photo'] ?? 'default.jpg';
 
             $user['last_active'] = TimeOperations::timePassed($user['last_active']);
         }
@@ -276,23 +341,23 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[Task]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getTasks()
     {
-        return $this->hasMany(Tasks::className(), ['user_customer_id' => 'id']);
+        return $this->hasMany(Task::className(), ['user_customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tasks0]].
+     * Gets query for [[Task0]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getTasks0()
     {
-        return $this->hasMany(Tasks::className(), ['user_employee_id' => 'id']);
+        return $this->hasMany(Task::className(), ['user_employee_id' => 'id']);
     }
 
     /**

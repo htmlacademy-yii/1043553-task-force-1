@@ -2,6 +2,9 @@
 namespace frontend\components;
 
 use frontend\models\Task;
+use frontend\models\Categories;
+use frontend\models\TasksFiles;
+use frontend\models\Responses;
 
 class BaseTask extends \yii\db\ActiveRecord
 {
@@ -15,7 +18,7 @@ class BaseTask extends \yii\db\ActiveRecord
     private $deadline;
     private $currentStatus;
 
-    public function __construct(int $employeeId, int $customerId, $deadline)
+   /* public function __construct(int $employeeId, int $customerId, $deadline)
     {
         try {
             $this->checkDate($deadline);
@@ -31,7 +34,7 @@ class BaseTask extends \yii\db\ActiveRecord
         $this->actionAccomplish = new ActionAccomplish();
         $this->actionRespond = new ActionRespond();
         $this->actionRefuse = new ActionRefuse();
-    }
+    }*/
 
     /**
      * {@inheritdoc}

@@ -1,9 +1,9 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveField;
 use yii\widgets\ActiveForm; ?>
-
 
 <section class="new-task">
     <div class="new-task__wrapper">
@@ -11,7 +11,8 @@ use yii\widgets\ActiveForm; ?>
         <?php foreach ($data as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
-                    <a href="#" class="link-regular"><h2><?php echo $task["title"] ?></h2></a>
+                    <a href="tasks/<?= Url::to(['tasks/show', 'id' => $task['id']]); ?>" class="link-regular">
+                        <h2><?php echo $task["title"] ?></h2></a>
                     <a class="new-task__type link-regular" href="#"><p><?php echo $task["category"] ?></p></a>
                 </div>
                 <div class="new-task__icon new-task__icon--<?php echo $task["image"] ?>"></div>
