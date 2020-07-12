@@ -2,7 +2,6 @@
 
 use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\widgets\ActiveField;
 use yii\widgets\ActiveForm; ?>
 
 <section class="new-task">
@@ -11,7 +10,7 @@ use yii\widgets\ActiveForm; ?>
         <?php foreach ($data as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
-                    <a href="tasks/<?= Url::to(['tasks/show', 'id' => $task['id']]); ?>" class="link-regular">
+                    <a href="<?= Url::to(['/tasks/show', 'id' => $task['id']]); ?>" class="link-regular">
                         <h2><?php echo $task["title"] ?></h2></a>
                     <a class="new-task__type link-regular" href="#"><p><?php echo $task["category"] ?></p></a>
                 </div>

@@ -3,9 +3,9 @@
 namespace frontend\models;
 
 use frontend\models\forms\UsersFilterForm;
+use frontend\models\Task;
 use Yii;
 use yii\db\Query;
-use frontend\models\Task;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -47,24 +47,33 @@ use yii\web\NotFoundHttpException;
 class Users extends \yii\db\ActiveRecord
 {
 
-    public static function getDataForSelectedUserPage(int $id) : array
+    public static function getDataForSelectedUserPage(int $id): array
     {
         $user = Users::find()
-            ->joinWith('tasks')
-            ->joinWith('userPhotos')
-            ->joinWith('usersReviews')
-            ->joinWith('categories')
             ->where(['users.id' => $id])
+            ->joinWith('userPhotos')
+            ->joinWith('categories')
             ->asArray()
             ->one();
         if (!$user) {
             throw new NotFoundHttpException("Пользователь с ID $id не найдено");
         }
 
+        $user['tasksCount'] =
+            Task::find()
+                ->where(['user_employee_id' => $id])
+                ->count() ?? 0;
+
         $user['vote'] = UsersReview::find()
                 ->select(['vote'])
                 ->where(['user_employee_id' => $id])
                 ->average('vote') ?? 0;
+
+        $user['usersReviews'] =
+            UsersReview::find()
+                ->where(['user_employee_id' => $user["id"]])
+                ->asArray()
+                ->all();
 
         $user['last_active'] = TimeOperations::timePassed($user['last_active']);
 
@@ -80,18 +89,9 @@ class Users extends \yii\db\ActiveRecord
     private static function addDataForEachReview(array $reviews): array
     {
         foreach ($reviews as &$review) {
-            $task = Task::find()
-                ->andwhere(['tasks.user_employee_id' => $review['user_employee_id']])
-                ->andwhere(['tasks.user_customer_id' => $review['user_customer_id']])
-                ->andwhere(['<', 'tasks.created_at', $review['created_at']])
-                ->orderBy(['tasks.created_at' => SORT_DESC])
-                ->asArray()
-                ->one();
-
-            $review['taskTitle'] = $task['title'];
 
             $customer = Users::find()
-                ->where(['users.id' => $task['user_customer_id']])
+                ->where(['users.id' => $review['user_customer_id']])
                 ->joinWith('userPhotos')
                 ->asArray()
                 ->one();
@@ -100,6 +100,21 @@ class Users extends \yii\db\ActiveRecord
 
 
             $review['customerName'] = $customer['name'];
+
+            $task = Task::find()
+                ->andwhere(['tasks.user_employee_id' => $review['user_employee_id']])
+                ->andwhere(['tasks.user_customer_id' => $review['user_customer_id']])
+                ->andwhere(['<', 'tasks.created_at', $review['created_at']])
+                ->orderBy(['tasks.created_at' => SORT_DESC])
+                ->asArray()
+                ->one();
+
+            if (is_null($task)) {
+                $review['taskTitle'] =
+                    'Отзыв добавлен без привязки к заданию';
+            } else {
+                $review['taskTitle'] = $task['title'];
+            }
 
         }
 

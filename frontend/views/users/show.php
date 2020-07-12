@@ -4,6 +4,7 @@ use yii\helpers\Url;
 
 ?>
 
+
 <section class="content-view">
     <div class="user__card-wrapper">
         <div class="user__card">
@@ -16,7 +17,7 @@ use yii\helpers\Url;
                     <?= $this->render('../components/stars',
                         ['vote' => $user['vote']]); ?>
                 </div>
-                <b class="done-task">Выполнил <?= count($user['tasks']) ?> заказов</b>
+                <b class="done-task">Выполнил <?= $user['tasksCount'] ?> заказов</b>
                 <b class="done-review">Получил <?= count($user['usersReviews']) ?> отзывов</b>
             </div>
             <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
@@ -60,7 +61,7 @@ use yii\helpers\Url;
                                 <?= $review['taskTitle'] ?> </a>
                         </p>
                         <div class="card__review">
-                            <a href="#"><img src="./img/<?= $review['customerPhoto'] ?>" width="55" height="54"></a>
+                            <a href="#"><img src="../img/<?= $review['customerPhoto'] ?>" width="55" height="54"></a>
                             <div class="feedback-card__reviews-content">
                                 <p class="link-name link">
                                     <a href="#" class="link-regular"><?= $review['customerName'] ?></a>
