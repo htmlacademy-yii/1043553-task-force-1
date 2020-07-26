@@ -13,9 +13,9 @@ use Yii;
  * @property string|null $lon
  *
  * @property Tasks[] $tasks
- * @property Users[] $users
+ * @property User[] $users
  */
-class Cities extends \yii\db\ActiveRecord
+class City extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -66,6 +66,6 @@ class Cities extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasMany(Users::className(), ['city_id' => 'id']);
+        return $this->hasMany(User::className(), ['city_id' => 'id']);
     }
 }

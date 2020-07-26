@@ -1,7 +1,9 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\pivot;
 
+use frontend\models\Category;
+use frontend\models\User;
 use Yii;
 
 /**
@@ -9,12 +11,14 @@ use Yii;
  *
  * @property int $user_id
  * @property int $category_id
+
  *
  * @property Users $user
  * @property Categories $category
  */
 class UsersCategories extends \yii\db\ActiveRecord
 {
+    public $name;
     /**
      * {@inheritdoc}
      */
@@ -55,7 +59,7 @@ class UsersCategories extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**
@@ -63,8 +67,8 @@ class UsersCategories extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCategory()
+    public function getCategories()
     {
-        return $this->hasOne(Categories::className(), ['id' => 'category_id']);
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 }

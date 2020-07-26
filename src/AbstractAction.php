@@ -22,12 +22,6 @@ abstract class AbstractAction
 
     public function checkRights(string $role): bool
     {
-        try {
-            Task::checkRole($role);
-            return $this->requiredRole === $role;
-        } catch (TaskException $e) {
-            error_log("Error:" . $e->getMessage());
-        }
-        return false;
+        return $this->requiredRole === $role;
     }
 }

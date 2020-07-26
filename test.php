@@ -1,3 +1,3 @@
 <?php
 
-\frontend\models\Cities::getDb();
+\frontend\models\City::getDb();

@@ -6,18 +6,29 @@ use TaskForce\Exception\TaskException;
 
 class Task
 {
-    public const STATUS_NEW = 'NEW';
-    public const STATUS_CANCELLED = 'CANCELLED';
-    public const STATUS_PROCESSING = 'PROCESSING';
-    public const STATUS_ACCOMPLISHED = 'ACCOMPLISHED';
-    public const STATUS_FAILED = 'FAILED';
+    public const STATUS_NEW_CODE = 0;
+    public const STATUS_CANCELLED_CODE = 2;
+    public const STATUS_PROCESSING_CODE = 1;
+    public const STATUS_ACCOMPLISHED_CODE = 3;
+    public const STATUS_FAILED_CODE = 4;
 
-    public const ROLE_EMPLOYEE = '0';
-    public const ROLE_CUSTOMER = '1';
+    public const STATUS_NEW_NAME = "Новый";
+    public const STATUS_CANCELLED_NAME = "Отменен";
+    public const STATUS_PROCESSING_NAME = "В работе";
+    public const STATUS_ACCOMPLISHED_NAME = "Выполнено";
+    public const STATUS_FAILED_NAME = "Провалено";
+
+    private const GET_POSSIBLE_STATUSES_EXCEPTION = 'Неизвестный индекc в функции getPossibleStatuses';
+    private const GET_POSSIBLE_ACTIONS_EXCEPTION = 'Неизвестный индекc в функции getPossibleActions';
+    private const PREDICT_STATUS_EXCEPTION = 'Неизвестный индекc в функции predictStatus';
+    private const SET_CURRENT_STATUS_EXCEPTION = 'Невозможно поменять статус. Ошибка: ';
+
+    public const ROLE_EMPLOYEE = 0;
+    public const ROLE_CUSTOMER = 1;
 
     private $actionCancel;
     private $actionAccomplish;
-    private $actionRespond ;
+    private $actionRespond;
     private $actionRefuse;
 
     private $employeeId;
@@ -27,67 +38,83 @@ class Task
 
     public function __construct(int $employeeId, int $customerId, $deadline)
     {
-        try {
-            $this->checkDate($deadline);
-        } catch (TaskException $e) {
-            error_log("Error:" . $e->getMessage());
-        }
-            $this->employeeId = $employeeId;
-            $this->customerId = $customerId;
-            $this->deadline = $deadline;
-            $this->currentStatus = self::STATUS_NEW;
+        $this->employeeId = $employeeId;
+        $this->customerId = $customerId;
+        $this->deadline = $deadline;
+        $this->currentStatus = self::STATUS_NEW_CODE;
 
-            $this->actionCancel = new ActionCancel();
-            $this->actionAccomplish = new ActionAccomplish();
-            $this->actionRespond = new ActionRespond();
-            $this->actionRefuse = new ActionRefuse();
+        $this->actionCancel = new ActionCancel();
+        $this->actionAccomplish = new ActionAccomplish();
+        $this->actionRespond = new ActionRespond();
+        $this->actionRefuse = new ActionRefuse();
     }
 
-    public function getAction(string $role): ?AbstractAction
+    public function getAction(int $role): AbstractAction
     {
         try {
-            Task::checkRole($role);
-        } catch (TaskException $e) {
-            error_log("Error:" . $e->getMessage());
-        }
-        $actions = [
-            self::STATUS_NEW => [$this->actionCancel, $this->actionRespond],
-            self::STATUS_PROCESSING => [$this->actionAccomplish, $this->actionRefuse]
-        ];
+            $actions = $this->getPossibleActions();
 
-        if ($actions[$this->currentStatus]) {
             foreach ($actions[$this->currentStatus] as $key => $action) {
                 if ($action->checkRights($role)) {
                     return $action;
                 }
             }
+        } catch (TaskException $e) {
+            error_log("Error:" . $e->getMessage());
         }
-        return null;
     }
 
-    public function getStatuses(): ?string
+    public function getPossibleStatuses(): array
     {
         $statuses = [
-            self::STATUS_NEW => ["Отменен" => self::STATUS_CANCELLED, "В работе"  => self::STATUS_PROCESSING],
-            self::STATUS_PROCESSING => ["Выполнено"  => self::STATUS_ACCOMPLISHED, "Провалено" => self::STATUS_FAILED]
-        ];
-            return $statuses[$this->currentStatus] ?? null;
-    }
+            self::STATUS_NEW_CODE => [
+                self::STATUS_CANCELLED_NAME => self::STATUS_CANCELLED_CODE,
+                self::STATUS_PROCESSING_NAME => self::STATUS_PROCESSING_CODE
+            ],
 
-    public function predictStatus(?AbstractAction $action): ?array
-    {
-        $statuses = [
-           "actionCancel" => [self::STATUS_CANCELLED => "Отменен"],
-           "actionRespond" => [self::STATUS_PROCESSING => "В работе"],
-            "actionAccomplish" => [self::STATUS_ACCOMPLISHED => "Выполнено"],
-            "actionRefuse" => [self::STATUS_FAILED => "Провалено"]
+            self::STATUS_PROCESSING_CODE => [
+                self::STATUS_ACCOMPLISHED_NAME => self::STATUS_ACCOMPLISHED_CODE,
+                self::STATUS_FAILED_NAME => self::STATUS_FAILED_CODE
+            ]
         ];
 
-        if ($action) {
-            return $statuses[$action->getActionCode()] ?? null;
+        if ($statuses[$this->currentStatus]) {
+            return $statuses[$this->currentStatus];
         }
 
-        return null;
+        throw new TaskException(self::GET_POSSIBLE_STATUSES_EXCEPTION);
+    }
+
+    public function getPossibleActions(): array
+    {
+        $actions = [
+            self::STATUS_NEW_CODE => [$this->actionCancel, $this->actionRespond],
+            self::STATUS_PROCESSING_CODE => [$this->actionAccomplish, $this->actionRefuse]
+        ];
+        if ($actions[$this->currentStatus]) {
+            return $actions[$this->currentStatus];
+        }
+
+        throw new TaskException(self::GET_POSSIBLE_ACTIONS_EXCEPTION);
+    }
+
+    public function predictStatus(AbstractAction $action): array
+    {
+        $statuses = [
+            ActionCancel::ACTION_CODE => [self::STATUS_CANCELLED_CODE => self::STATUS_CANCELLED_NAME],
+            ActionRespond::ACTION_CODE => [self::STATUS_PROCESSING_CODE => self::STATUS_PROCESSING_NAME],
+            ActionAccomplish::ACTION_CODE => [self::STATUS_ACCOMPLISHED_CODE => self::STATUS_ACCOMPLISHED_NAME],
+            ActionRefuse::ACTION_CODE => [self::STATUS_FAILED_CODE => self::STATUS_FAILED_NAME]
+        ];
+
+        $actionCode = $action->getActionCode();
+        $possibleStatuses = $statuses[$actionCode] ?? false;
+
+        if ($possibleStatuses) {
+            return $possibleStatuses;
+        }
+
+        throw new TaskException(self::PREDICT_STATUS_EXCEPTION);
     }
 
     public function getCurrentStatus(): string
@@ -95,18 +122,15 @@ class Task
         return $this->currentStatus;
     }
 
-    public function setCurrentStatus(string $role): void
+    public function setCurrentStatus(int $role): void
     {
         try {
-            Task::checkRole($role);
-        } catch (TaskException $e) {
-            error_log("Cant change status. Error: " . $e->getMessage());
-        }
             $action = $this->getAction($role);
-
-            $status = $this->predictStatus($action) ?? [self::STATUS_NEW => "Новый"];
-
+            $status = $this->predictStatus($action);
             $this->currentStatus = array_key_first($status);
+        } catch (TaskException $e) {
+            error_log(self::SET_CURRENT_STATUS_EXCEPTION . $e->getMessage());
+        }
     }
 
     public function getEmployeeId(): int
@@ -117,31 +141,5 @@ class Task
     public function getCustomerId(): int
     {
         return $this->customerId;
-    }
-
-    private function checkDate($date): bool
-    {
-        $dateArray = explode('.', $date);
-
-        if (!$dateArray) {
-            throw new TaskException("Please enter date in format dd.mm.yyyy");
-        }
-
-        $checkDate = checkdate($dateArray[1], $dateArray[0], $dateArray[2]);
-
-        if (!$checkDate) {
-            throw new TaskException("Please enter valid date");
-        }
-
-        return $checkDate;
-    }
-
-    public static function checkRole($role)
-    {
-        if ($role === self::ROLE_EMPLOYEE or $role === self::ROLE_CUSTOMER) {
-            return true;
-        }
-
-        throw new TaskException("please use Task::ROLE_ constant");
     }
 }

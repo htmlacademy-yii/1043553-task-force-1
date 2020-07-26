@@ -13,9 +13,9 @@ use Yii;
  *
  * @property Tasks[] $tasks
  * @property UsersCategories[] $usersCategories
- * @property Users[] $users
+ * @property User[] $users
  */
-class Categories extends \yii\db\ActiveRecord
+class Category extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -75,6 +75,7 @@ class Categories extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasMany(Users::className(), ['id' => 'user_id'])->viaTable('users_categories', ['category_id' => 'id']);
+        return $this->hasMany(
+            User::className(), ['id' => 'user_id'])->viaTable('users_categories', ['category_id' => 'id']);
     }
 }

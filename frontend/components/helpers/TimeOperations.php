@@ -1,7 +1,7 @@
 <?php
 
 
-namespace frontend\models;
+namespace frontend\components\helpers;
 
 class TimeOperations
 {

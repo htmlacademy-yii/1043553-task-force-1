@@ -3,9 +3,7 @@
 use yii\helpers\Url;
 
 ?>
-
-
-<section class="content-view">
+<section class="content-view main-container">
     <div class="user__card-wrapper">
         <div class="user__card">
             <img src="../img/<?= $user['photo'] ?>" width="120" height="120" alt="Аватар пользователя">
@@ -32,10 +30,15 @@ use yii\helpers\Url;
             <div class="user__card-info">
                 <h3 class="content-view__h3">Специализации</h3>
                 <div class="link-specialization">
+                <?php if ($user['categories']) : ?>
                     <?php foreach ($user['categories'] as $category) : ?>
                         <a href="#" class="link-regular"><?= $category['name'] ?></a>
-                    <?php endforeach; ?>
-                </div>
+                    <?php endforeach;
+                else :
+                    ?>
+                    <p class="">специализаций нет</p>
+                <?php endif; ?>
+                    </div>
                 <h3 class="content-view__h3">Контакты</h3>
                 <div class="user__card-link">
                     <a class="user__card-link--tel link-regular" href="#"><?= $user['phone'] ?></a>
@@ -45,9 +48,9 @@ use yii\helpers\Url;
             </div>
             <div class="user__card-photo">
                 <h3 class="content-view__h3">Фото работ</h3>
-                <a href="#"><img src="./img/rome-photo.jpg" width="85" height="86" alt="Фото работы"></a>
-                <a href="#"><img src="./img/smartphone-photo.png" width="85" height="86" alt="Фото работы"></a>
-                <a href="#"><img src="./img/dotonbori-photo.png" width="85" height="86" alt="Фото работы"></a>
+                <a href="#"><img src="../img/rome-photo.jpg" width="85" height="86" alt="Фото работы"></a>
+                <a href="#"><img src="../img/smartphone-photo.png" width="85" height="86" alt="Фото работы"></a>
+                <a href="#"><img src="../img/dotonbori-photo.png" width="85" height="86" alt="Фото работы"></a>
             </div>
         </div>
     </div>

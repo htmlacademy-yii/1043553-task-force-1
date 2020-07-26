@@ -14,10 +14,11 @@ use Yii;
  * @property int $user_employee_id
  *
  * @property Tasks $task
- * @property Users $userEmployee
+ * @property User $userEmployee
  */
-class Responses extends \yii\db\ActiveRecord
+class Response extends \yii\db\ActiveRecord
 {
+    public $userEmployee;
     /**
      * {@inheritdoc}
      */
@@ -35,7 +36,7 @@ class Responses extends \yii\db\ActiveRecord
             [['created_at', 'task_id', 'user_employee_id'], 'required'],
             [['created_at', 'your_price', 'task_id', 'user_employee_id'], 'integer'],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
-            [['user_employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_employee_id' => 'id']],
+            [['user_employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_employee_id' => 'id']],
         ];
     }
 
@@ -70,6 +71,6 @@ class Responses extends \yii\db\ActiveRecord
      */
     public function getUserEmployee()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_employee_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
     }
 }

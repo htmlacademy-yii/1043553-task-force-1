@@ -5,8 +5,8 @@ namespace frontend\models\forms;
 use TaskForce\Exception\TaskException;
 use Yii;
 use yii\db\Query;
-use frontend\models\Responses;
-use frontend\models\Categories;
+use frontend\models\Response;
+use frontend\models\Category;
 
 /**
  * This is the model class for table "tasks".
@@ -27,8 +27,8 @@ use frontend\models\Categories;
  * @property int|null $current_status
  *
  * @property Correspondence[] $correspondences
- * @property Responses[] $responses
- * @property Categories $category
+ * @property Response[] $responses
+ * @property Category $category
  * @property Users $userCustomer
  * @property Users $userEmployee
  * @property Cities $city
@@ -38,7 +38,7 @@ trait CategoriesFieldsTrait
 {
     public function categoriesFields()
     {
-        $categories = Categories::find()->all();
+        $categories = Category::find()->all();
         $data = [];
 
         foreach ($categories as $category) {

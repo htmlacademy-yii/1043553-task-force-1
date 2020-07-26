@@ -24,8 +24,8 @@ use yii\widgets\ActiveForm;
             <div class="feedback-card__top">
                 <div class="user__search-icon">
                     <a href="#"><img src="./img/<?= $user['photo'] ?>" width="65" height="65"></a>
-                    <span><?php echo $user['tasksCounts'] ?> заданий</span>
-                    <span><?php echo $user['reviewsCounts'] ?> отзывов</span>
+                    <span><?= $user['tasksCount'] ?> заданий</span>
+                    <span><?= $user['reviewsCount'] ?> отзывов</span>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
                         <p class="link-name">
@@ -42,7 +42,7 @@ use yii\widgets\ActiveForm;
             </div>
             <div class="link-specialization user__search-link--bottom">
                 <?php foreach ($user['categories'] as $category) : ?>
-                    <a href="#" class="link-regular"><?php echo $category['category_name']; ?></a>
+                    <a href="#" class="link-regular"><?= $category['name']; ?></a>
                 <?php endforeach; ?>
                 <a href="#" class="link-regular">Ремонт</a>
                 <a href="#" class="link-regular">Курьер</a>

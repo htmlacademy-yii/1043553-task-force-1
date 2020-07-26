@@ -19,6 +19,9 @@ use Yii;
  */
 class UsersReview extends \yii\db\ActiveRecord
 {
+    public $customerPhoto;
+    public $customerName;
+    public $taskTitle;
     /**
      * {@inheritdoc}
      */

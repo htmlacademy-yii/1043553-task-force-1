@@ -14,7 +14,7 @@ use Yii;
  * @property string $message
  *
  * @property Tasks $task
- * @property Users $user
+ * @property User $user
  */
 class Correspondence extends \yii\db\ActiveRecord
 {
@@ -36,7 +36,7 @@ class Correspondence extends \yii\db\ActiveRecord
             [['task_id', 'user_id', 'created_at'], 'integer'],
             [['message'], 'string', 'max' => 255],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -71,6 +71,6 @@ class Correspondence extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }

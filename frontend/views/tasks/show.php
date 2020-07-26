@@ -8,12 +8,12 @@ use yii\helpers\Url;
         <div class="content-view__card-wrapper">
             <div class="content-view__header">
                 <div class="content-view__headline">
-                    <h1><?php echo $task['title']; ?></h1>
+                    <h1><?= $task['title']; ?></h1>
                     <span>Размещено в категории
-                                    <a href="#" class="link-regular"><?php echo $task['category']['name']; ?></a>
-                                    <?php echo $task['created_at']; ?></span>
+                                    <a href="#" class="link-regular"><?= $task['category']['name']; ?></a>
+                                    <?= $task['created_at']; ?></span>
                 </div>
-                <b class="new-task__price new-task__price--clean content-view-price"><?php echo $task['budget']; ?><b>
+                <b class="new-task__price new-task__price--clean content-view-price"><?= $task['budget']; ?><b>
                         ₽</b></b>
                 <div class="new-task__icon new-task__icon--clean content-view-icon"></div>
             </div>
@@ -33,7 +33,6 @@ use yii\helpers\Url;
                 else : ?>
                     <h3 class="content-view__h3">Вложений нет</h3>
                 <?php endif; ?>
-
             </div>
             <div class="content-view__location">
                 <h3 class="content-view__h3">Расположение</h3>
@@ -69,18 +68,20 @@ use yii\helpers\Url;
                 <?php foreach ($responses as $response) : ?>
                     <div class="content-view__feedback-card">
                         <div class="feedback-card__top">
-                            <a href="#"><img src="../img/<?php echo $response['user_employee']['photo'] ?>"
+                            <a href="#"><img src="../img/<?php echo $response['userEmployee']['photo'] ?>"
                                              width="55" height="55">
                             </a>
                             <div class="feedback-card__top--name">
                                 <p>
                                     <a href="<?= Url::to(['users/show', 'id' => $response['user_employee_id']]); ?>"
-                                       class="link-regular"><?php echo $response['user_employee']['name'] ?></a>
+                                       class="link-regular"><?php echo $response['userEmployee']['name'] ?></a>
                                 </p>
 
                                 <?=
-                                $this->render('../components/stars',
-                                    ['vote' => $response['user_employee']['vote']]);
+                                $this->render(
+                                    '../components/stars',
+                                    ['vote' => $response['userEmployee']['vote']]
+                                );
                                 ?>
 
                             </div>
@@ -88,9 +89,9 @@ use yii\helpers\Url;
                         </div>
                         <div class="feedback-card__content">
                             <p>
-                                <?php echo $response['comment'] ?>
+                                <?= $response['comment'] ?>
                             </p>
-                            <span><?php echo $response['your_price'] ?></span>
+                            <span><?= $response['your_price'] ?></span>
                         </div>
                         <div class="feedback-card__actions">
                             <a class="button__small-color request-button button"
@@ -111,14 +112,14 @@ use yii\helpers\Url;
         <div class="profile-mini__wrapper">
             <h3>Заказчик</h3>
             <div class="profile-mini__top">
-                <img src="../img/<?php echo $customer['photo'] ?>" width="62" height="62"
+                <img src="../img/<?= $customer['photo'] ?>" width="62" height="62"
                      alt="Аватар заказчика">
                 <div class="profile-mini__name five-stars__rate">
-                    <p><?php echo $customer['name'] ?></p>
+                    <p><?= $customer['name'] ?></p>
                 </div>
             </div>
-            <p class="info-customer"><span><?php echo count($customer['tasks']) ?> заданий</span>
-                <span class="last-"> Зарегистрирован на сайте <?php echo $customer['created_at'] ?></span>
+            <p class="info-customer"><span><?= count($customer['tasks']) ?> заданий</span>
+                <span class="last-"> Зарегистрирован на сайте <?= $customer['created_at'] ?></span>
             </p>
             <a href="#" class="link-regular">Смотреть профиль</a>
         </div>
