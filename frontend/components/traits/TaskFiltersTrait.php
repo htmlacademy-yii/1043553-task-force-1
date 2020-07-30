@@ -9,7 +9,10 @@ use yii\db\ActiveQuery;
 
 trait TaskFiltersTrait
 {
-    private static function noFiltersQuery(): ActiveQuery
+    /**
+     * @return ActiveQuery
+     */
+    private static function findNewTasksWithCategoryCityQuery(): ActiveQuery
     {
         return Task::find()
             ->select([
@@ -28,6 +31,11 @@ trait TaskFiltersTrait
             ->where(['current_status' => Task::STATUS_NEW_CODE]);
     }
 
+    /**
+     * @param TasksFilterForm $model
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     */
     private static function filterThroughChosenCategories(TasksFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->categories) {
@@ -42,6 +50,11 @@ trait TaskFiltersTrait
         return $query;
     }
 
+    /**
+     * @param TasksFilterForm $model
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     */
     private static function filterThroughAdditionalFields(TasksFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->additional) {
@@ -66,6 +79,11 @@ trait TaskFiltersTrait
         return $query;
     }
 
+    /**
+     * @param TasksFilterForm $model
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     */
     private static function filterThroughChosenPeriod(TasksFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->period == 'day') {
@@ -79,6 +97,11 @@ trait TaskFiltersTrait
         return $query;
     }
 
+    /**
+     * @param TasksFilterForm $model
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     */
     private static function filterThroughSearchField(TasksFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->search) {
@@ -88,6 +111,37 @@ trait TaskFiltersTrait
         return $query;
     }
 
+    /**
+     * @param TasksFilterForm $model
+     * @param array $filters
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     *
+     * Функция добавляет в SQL запрос новые параметры в зависмости от выбранных фильтров
+     */
+    private static function applyFilters(TasksFilterForm $model, array $filters, ActiveQuery $query): ActiveQuery
+    {
+        if ($model->load($filters)) {
+            $query = self::filterThroughAdditionalFields($model, $query);
+
+            $query = self::filterThroughChosenCategories($model, $query);
+
+            $query = self::filterThroughChosenPeriod($model, $query);
+
+            $query = self::filterThroughSearchField($model, $query);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     *
+     * Функция заменяет таймстемп на информацию о количестве прошедшего времени начиная с этого тайстемпа,
+     * в переданном ей массиве.
+     * Наример: 5 минут назад, вчера в 10:15 и тд
+     */
     private static function addTimeInfo(array $data): array
     {
         foreach ($data as &$item) {

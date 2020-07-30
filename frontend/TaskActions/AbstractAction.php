@@ -1,8 +1,6 @@
 <?php
 
-namespace TaskForce;
-
-use TaskForce\Exception\TaskException;
+namespace frontend\TaskActions;
 
 abstract class AbstractAction
 {

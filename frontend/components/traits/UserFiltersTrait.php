@@ -14,7 +14,7 @@ trait UserFiltersTrait
     /**
      * @return \yii\db\ActiveQuery
      */
-    private static function noFiltersQuery(): ActiveQuery
+    private static function findEmploeesQuery(): ActiveQuery
     {
         return User::find()
             ->select([
@@ -24,12 +24,16 @@ trait UserFiltersTrait
                 'users.description',
                 'users.last_active',
                 'current_role',
-                'user_photos.photo'
             ])
             ->distinct()
             ->where(['current_role' => Task::ROLE_EMPLOYEE]);
     }
 
+    /**
+     * @param UsersFilterForm $model
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     */
     private static function filterThroughAdditionalFields(UsersFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->additional) {
@@ -70,6 +74,11 @@ trait UserFiltersTrait
         return $query;
     }
 
+    /**
+     * @param UsersFilterForm $model
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     */
     private static function filterThroughChosenCategories(UsersFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->categories) {
@@ -85,10 +94,36 @@ trait UserFiltersTrait
         return $query;
     }
 
+    /**
+     * @param UsersFilterForm $model
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     */
     private static function filterThroughSearchField(UsersFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->search) {
             return $query->andWhere(['like', 'users.name', $model->search]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param UsersFilterForm $model
+     * @param array $filters
+     * @param ActiveQuery $query
+     * @return ActiveQuery
+     *
+     * Функция добавляет в SQL запрос новые параметры в зависмости от выбранных фильтров
+     */
+    private static function applyFilters(UsersFilterForm $model, array $filters, ActiveQuery $query): ActiveQuery
+    {
+        if ($model->load($filters)) {
+            $query = self::filterThroughAdditionalFields($model, $query);
+
+            $query = self::filterThroughChosenCategories($model, $query);
+
+            $query = self::filterThroughSearchField($model, $query);
         }
 
         return $query;

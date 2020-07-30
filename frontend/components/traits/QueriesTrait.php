@@ -6,12 +6,18 @@ use frontend\components\UserComponent;
 use frontend\models\pivot\UsersCategories;
 use frontend\models\Task;
 use frontend\models\User;
-use frontend\models\UsersReview;
+use frontend\models\UserPhoto;
+use frontend\models\UserReview;
 use yii\web\NotFoundHttpException;
 
 trait QueriesTrait
 {
-    public static function findUserWithPhotosAndCategories(int $id): User
+    /**
+     * @param int $id
+     * @return User
+     * @throws NotFoundHttpException
+     */
+    private static function findUserWithPhotosAndCategories(int $id): User
     {
         $user = User::find()
             ->where(['users.id' => $id])
@@ -19,21 +25,32 @@ trait QueriesTrait
             ->joinWith('categories')
             ->one();
         if (!$user) {
-            throw new NotFoundHttpException("Юзер с ID $id не найден");
+            throw new NotFoundHttpException("Не найден пользователь с ID: " . $id);
         }
 
         return $user;
     }
 
-    public static function findUserWithPhotos(int $userId): User
+    /**
+     * @param int $userId
+     * @return User
+     */
+    private static function findUser(int $userId): User
     {
         return User::find()
             ->where(['users.id' => $userId])
-            ->joinWith('userPhotos')
             ->one();
     }
 
-    public static function findTaskTitleRelatedToReview(int $employee_id, int $customer_id, int $created_at): string
+    /**
+     * @param int $employee_id
+     * @param int $customer_id
+     * @param int $created_at
+     * @return string
+     *
+     * Функция ищет задание относящееся к отклику, и если оно есть возващает его название
+     */
+    private static function findTaskTitleRelatedToReview(int $employee_id, int $customer_id, int $created_at): string
     {
         $task = Task::find()
             ->select('title')
@@ -50,14 +67,32 @@ trait QueriesTrait
         }
     }
 
-    public static function findUsersReview(int $userId): array
+    /**
+     * @param int $userId
+     * @return array
+     */
+    private static function findUsersReview(int $userId): array
     {
-        return UsersReview::find()
+        return UserReview::find()
             ->where(['user_employee_id' => $userId])
             ->all();
     }
 
-    public static function findUsersCategories(int $userId): array
+    /**
+     * @param int $userId
+     * @return string
+     */
+    private static function findUsersPhoto(int $userId): string
+    {
+        $photo = UserPhoto::find()->select(['photo'])->where(['user_id' => $userId])->one();
+        return $photo['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
+    }
+
+    /**
+     * @param int $userId
+     * @return array
+     */
+    private static function findUsersWithCategories(int $userId): array
     {
         return UsersCategories::find()
             ->select(['categories.name as name'])
@@ -66,15 +101,23 @@ trait QueriesTrait
             ->all();
     }
 
-    public static function countAverageUsersRate(int $userId): int
+    /**
+     * @param int $userId
+     * @return int
+     */
+    private static function countAverageUsersRate(int $userId): int
     {
-        return UsersReview::find()
+        return UserReview::find()
                 ->select(['vote'])
                 ->where(['user_employee_id' => $userId])
                 ->average('vote') ?? 0;
     }
 
-    public static function countAccomplishedTasks(int $userId): int
+    /**
+     * @param int $userId
+     * @return int
+     */
+    private static function countAccomplishedTasks(int $userId): int
     {
         return Task::find()
                 ->where(['user_employee_id' => $userId])
@@ -82,24 +125,39 @@ trait QueriesTrait
                 ->count() ?? 0;
     }
 
-    public static function countUsersReviews(int $userId): int
+    /**
+     * @param int $userId
+     * @return int
+     */
+    private static function countUsersReviews(int $userId): int
     {
-        return UsersReview::find()
+        return UserReview::find()
                 ->where(['user_employee_id' => $userId])
                 ->count() ?? 0;
     }
 
-    public static function getSelectedTaskData(int $id): Task
+    /**
+     * @param int $id
+     * @return Task
+     * @throws NotFoundHttpException
+     *
+     */
+    private static function getTaskWithResponsesCategoriesFiles(int $id): Task
     {
         $task = Task::find()
+            ->select(['*',
+                'tasks.id as id',
+                'categories.name as category',
+                'categories.image as image',
+            ])
+            ->joinWith('responses')
             ->joinWith('category')
             ->joinWith('tasksFiles')
-            ->joinWith('responses')
             ->where(['tasks.id' => $id])
             ->one();
 
         if (!$task) {
-            throw new NotFoundHttpException("Задание с ID $id не найдено");
+            throw new NotFoundHttpException("Не найдено задание с ID: " . $id);
         }
 
         return $task;

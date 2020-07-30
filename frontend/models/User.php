@@ -35,8 +35,8 @@ namespace frontend\models;
  * @property City $city
  * @property UsersCategories[] $usersCategories
  * @property Category[] $categories
- * @property UsersReview[] $usersReviews
- * @property UsersReview[] $usersReviews0
+ * @property UserReview[] $usersReviews
+ * @property UserReview[] $usersReviews0
  */
 class User extends \yii\db\ActiveRecord
 {
@@ -46,6 +46,7 @@ class User extends \yii\db\ActiveRecord
     public $categories;
     public $photo;
     public $usersReviews;
+    public $userPhotos;
 
 
     /**
@@ -179,7 +180,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getUserPhotos()
     {
-        return $this->hasMany(pivot\UserPhotos::className(), ['user_id' => 'id']);
+        return $this->hasMany(UserPhoto::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -230,6 +231,6 @@ class User extends \yii\db\ActiveRecord
      */
     public function getUsersReviews()
     {
-        return $this->hasMany(UsersReview::className(), ['user_employee_id' => 'id']);
+        return $this->hasMany(UserReview::className(), ['user_employee_id' => 'id']);
     }
 }

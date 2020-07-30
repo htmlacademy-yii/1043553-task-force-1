@@ -15,24 +15,29 @@ class UserComponent
     public const DEFAULT_USER_PHOTO = 'default.jpg';
     public const NO_TASK_FOUND_MESSAGE = 'Отзыв добавлен без привязки к заданию';
 
+    /**
+     * @param UsersFilterForm $model
+     * @return array
+     *
+     * Функция возвращает массив пользователей, фильтруя их по выбранным на странице параметрам
+     */
     public static function getDataForUsersPage(UsersFilterForm $model): array
     {
-        $query = self::noFiltersQuery();
+        $query = self::findEmploeesQuery();
         $filters = Yii::$app->request->post() ?? [];
 
-        if ($model->load($filters)) {
-            $query = self::filterThroughAdditionalFields($model, $query);
+        self::applyFilters($model, $filters, $query);
 
-            $query = self::filterThroughChosenCategories($model, $query);
-
-            $query = self::filterThroughSearchField($model, $query);
-        }
-
-        $data = $query->joinWith(['userPhotos'])->all();
+        $data = $query->all();
 
         return self::addRelatedDataForEachUser($data);
     }
 
+    /**
+     * @param int $id
+     * @return array
+     * @throws \yii\web\NotFoundHttpException
+     */
     public static function getDataForUserProfilePage(int $id): array
     {
         $user = self::findUserWithPhotosAndCategories($id);

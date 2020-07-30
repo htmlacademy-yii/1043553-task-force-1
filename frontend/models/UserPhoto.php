@@ -1,8 +1,6 @@
 <?php
 
-namespace frontend\models\pivot;
-
-use Yii;
+namespace frontend\models;
 
 /**
  * This is the model class for table "user_photos".
@@ -13,7 +11,7 @@ use Yii;
  *
  * @property Users $user
  */
-class UserPhotos extends \yii\db\ActiveRecord
+class UserPhoto extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}

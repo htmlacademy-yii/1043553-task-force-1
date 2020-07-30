@@ -3,40 +3,33 @@
 namespace frontend\components\traits;
 
 use frontend\components\helpers\TimeOperations;
-use frontend\components\UserComponent;
 use frontend\models\User;
-use frontend\models\UsersReview;
+use frontend\models\UserReview;
 
 trait UserProfileTrait
 {
     use QueriesTrait;
 
-
-    private static function addDataRelatedToReview(UsersReview $review): UsersReview
+    /**
+     * @param array $usersData
+     * @return array
+     */
+    private static function addRelatedDataForEachUser(array $usersData): array
     {
-        $customer = self::findUserWithPhotos($review['user_customer_id']);
-
-        $review['customerPhoto'] = $customer["userPhotos"]['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
-
-        $review['customerName'] = $customer['name'];
-
-        $review['taskTitle'] = self::findTaskTitleRelatedToReview(
-            $review['user_employee_id'],
-            $review['user_customer_id'],
-            $review['created_at']
-        );
-
-        return $review;
-    }
-
-    private static function addRelatedDataForEachReview(array $reviews): array
-    {
-        foreach ($reviews as &$review) {
-            $review = self::addDataRelatedToReview($review);
+        foreach ($usersData as &$user) {
+            $user = self::addDataRelatedToUser($user, $user["id"]);
         }
-        return $reviews;
+
+        return $usersData;
     }
 
+    /**
+     * @param User $user
+     * @param int $userId
+     * @return User
+     *
+     * Функция дополняет массив с данными пользователя необходимой информацией
+     */
     private static function addDataRelatedToUser(User $user, int $userId): User
     {
         $user['vote'] = self::countAverageUsersRate($userId);
@@ -47,9 +40,9 @@ trait UserProfileTrait
 
         $user['usersReviews'] = self::findUsersReview($userId);
 
-        $user['categories'] = self::findUsersCategories($userId);
+        $user['categories'] = self::findUsersWithCategories($userId);
 
-        $user['photo'] = $user['userPhotos'][0]['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
+        $user['photo'] = self::findUsersPhoto($userId);
 
         $user['last_active'] = TimeOperations::timePassed($user['last_active']);
 
@@ -58,12 +51,39 @@ trait UserProfileTrait
         return $user;
     }
 
-    private static function addRelatedDataForEachUser(array $usersData): array
+    /**
+     * @param array $reviews
+     * @return array
+     *
+     */
+    private static function addRelatedDataForEachReview(array $reviews): array
     {
-        foreach ($usersData as &$user) {
-            $user = self::addDataRelatedToUser($user, $user["id"]);
+        foreach ($reviews as &$review) {
+            $review = self::addDataRelatedToReview($review);
         }
+        return $reviews;
+    }
 
-        return $usersData;
+    /**
+     * @param UserReview $review
+     * @return UserReview
+     *
+     * Функция дополняет массив с данными об отзыве необходимой информацией
+     */
+    private static function addDataRelatedToReview(UserReview $review): UserReview
+    {
+        $customer = self::findUser($review['user_customer_id']);
+
+        $review['customerPhoto'] = self::findUsersPhoto($review['user_customer_id']);
+
+        $review['customerName'] = $customer['name'];
+
+        $review['taskTitle'] = self::findTaskTitleRelatedToReview(
+            $review['user_employee_id'],
+            $review['user_customer_id'],
+            $review['created_at']
+        );
+
+        return $review;
     }
 }

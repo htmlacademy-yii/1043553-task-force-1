@@ -5,7 +5,13 @@ namespace frontend\components\helpers;
 
 class TimeOperations
 {
-    public static function timePassed($date): string
+    /**
+     * @param $date
+     * @return string
+     *
+     * Фнкция возвращает информацию о количестве прошедшего времени с момента переданного таймстемпа
+     */
+    public static function timePassed(int $date): string
     {
         $secInMin = 60;
         $secInHour = 3600;

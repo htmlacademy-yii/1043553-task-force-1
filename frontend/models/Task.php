@@ -1,6 +1,12 @@
 <?php
 
 namespace frontend\models;
+
+use frontend\TaskActions\AbstractAction;
+use frontend\TaskActions\ActionAccomplish;
+use frontend\TaskActions\ActionCancel;
+use frontend\TaskActions\ActionRefuse;
+use frontend\TaskActions\ActionRespond;
 use TaskForce\Exception\TaskException;
 
 class Task extends \yii\db\ActiveRecord
@@ -17,32 +23,42 @@ class Task extends \yii\db\ActiveRecord
     public const STATUS_ACCOMPLISHED_NAME = "Выполнено";
     public const STATUS_FAILED_NAME = "Провалено";
 
-    private const GET_POSSIBLE_STATUSES_EXCEPTION = 'Неизвестный индекc в функции getPossibleStatuses';
+    private const GET_POSSIBLE_STATUSES_EXCEPTION = 'Неизвестный индекc в функции getPossibleTaskStatuses';
     private const GET_POSSIBLE_ACTIONS_EXCEPTION = 'Неизвестный индекc в функции getPossibleActions';
-    private const PREDICT_STATUS_EXCEPTION = 'Неизвестный индекc в функции predictStatus';
+    private const PREDICT_STATUS_EXCEPTION = 'Неизвестный индекc в функции predictTaskStatus';
     private const SET_CURRENT_STATUS_EXCEPTION = 'Невозможно поменять статус. Ошибка: ';
 
     public const ROLE_EMPLOYEE = 0;
     public const ROLE_CUSTOMER = 1;
 
-    private $actionCancel;
-    private $actionAccomplish;
-    private $actionRespond ;
-    private $actionRefuse;
+    private ActionCancel $actionCancel;
+    private ActionAccomplish $actionAccomplish;
+    private ActionRespond $actionRespond ;
+    private ActionRefuse $actionRefuse;
 
-    private $employeeId;
-    private $customerId;
-    private $deadline;
-    private $currentStatus;
+    private int $employeeId;
+    private int $customerId;
+    private $taskDeadline;
+    private int $currentTaskStatusCode;
 
     public $image;
+    public $city;
+    public $category;
 
+    /**
+     * @param int $role
+     * @return AbstractAction
+     *
+     * Функция служит для определения доступного действия над заданием,
+     * в зависимости от его текущего статуса и роли пользователя
+     *
+     */
     public function getNextAction(int $role): AbstractAction
     {
         try {
             $actions = $this->getPossibleActions();
 
-            foreach ($actions[$this->currentStatus] as $key => $action) {
+            foreach ($actions[$this->currentTaskStatusCode] as $key => $action) {
                 if ($action->checkRights($role)) {
                     return $action;
                 }
@@ -52,41 +68,63 @@ class Task extends \yii\db\ActiveRecord
         }
     }
 
-    public function getPossibleStatuses(): array
+    /**
+     * @return array
+     * @throws TaskException
+     *
+     * Функция возвращает массив с доступными для задания статусами, в зависимости от его текущего.
+     * Каждый элемент возаращаемого массива представляет пару : код статуса => его развание
+     */
+    public function getPossibleTaskStatuses(): array
     {
         $statuses = [
             self::STATUS_NEW_CODE => [
-                self::STATUS_CANCELLED_NAME => self::STATUS_CANCELLED_CODE,
-                self::STATUS_PROCESSING_NAME => self::STATUS_PROCESSING_CODE
+                self::STATUS_CANCELLED_CODE => self::STATUS_CANCELLED_NAME,
+                self::STATUS_PROCESSING_CODE => self::STATUS_PROCESSING_NAME
             ],
 
             self::STATUS_PROCESSING_CODE => [
-                self::STATUS_ACCOMPLISHED_NAME => self::STATUS_ACCOMPLISHED_CODE,
-                self::STATUS_FAILED_NAME => self::STATUS_FAILED_CODE
+                self::STATUS_ACCOMPLISHED_CODE => self::STATUS_ACCOMPLISHED_NAME,
+                self::STATUS_FAILED_CODE => self::STATUS_FAILED_NAME
             ]
         ];
 
-        if ($statuses[$this->currentStatus]) {
-            return $statuses[$this->currentStatus];
+        if ($statuses[$this->currentTaskStatusCode]) {
+            return $statuses[$this->currentTaskStatusCode];
         }
 
         throw new TaskException(self::GET_POSSIBLE_STATUSES_EXCEPTION);
     }
 
+    /**
+     * @return array
+     * @throws TaskException
+     *
+     * Функция возваоащем массив с доступными действиями над заданием, в зависимости от его текущего статуса.
+     * Каждый элемент возвращаемого массива представляет собой экземпляр класса действия
+     */
     public function getPossibleActions(): array
     {
         $actions = [
             self::STATUS_NEW_CODE => [$this->actionCancel, $this->actionRespond],
             self::STATUS_PROCESSING_CODE => [$this->actionAccomplish, $this->actionRefuse]
         ];
-        if ($actions[$this->currentStatus]) {
-            return $actions[$this->currentStatus];
+        if ($actions[$this->currentTaskStatusCode]) {
+            return $actions[$this->currentTaskStatusCode];
         }
 
         throw new TaskException(self::GET_POSSIBLE_ACTIONS_EXCEPTION);
     }
 
-    public function predictStatus(AbstractAction $action): array
+    /**
+     * @param AbstractAction $action
+     * @return array
+     * @throws TaskException
+     *
+     * Функия возвращает статус задания, в которое оно перейдет после совершонного над ним того или иного  действия.
+     * Возвращаемый массив состоит из одно элемента представляющего пару : код статуса => его название
+     */
+    public function predictTaskStatus(AbstractAction $action): array
     {
         $statuses = [
             ActionCancel::ACTION_CODE => [self::STATUS_CANCELLED_CODE => self::STATUS_CANCELLED_NAME],
@@ -96,36 +134,49 @@ class Task extends \yii\db\ActiveRecord
         ];
 
         $actionCode = $action->getActionCode();
-        $possibleStatuses = $statuses[$actionCode] ?? false;
+        $possibleStatus = $statuses[$actionCode] ?? false;
 
-        if ($possibleStatuses) {
-            return $possibleStatuses;
+        if ($possibleStatus) {
+            return $possibleStatus;
         }
 
         throw new TaskException(self::PREDICT_STATUS_EXCEPTION);
     }
 
-    public function getCurrentStatus(): string
+    /**
+     * @return string
+     */
+    public function getCurrentTaskStatusCode(): string
     {
-        return $this->currentStatus;
+        return $this->currentTaskStatusCode;
     }
 
-    public function setCurrentStatus(int $role): void
+    /**
+     * @param int $role
+     *
+     */
+    public function updateCurrentStatus(int $role): void
     {
         try {
-            $action = $this->getAction($role);
-            $status = $this->predictStatus($action);
-            $this->currentStatus = array_key_first($status);
+            $action = $this->getNextAction($role);
+            $status = $this->predictTaskStatus($action);
+            $this->currentTaskStatusCode = array_key_first($status);
         } catch (TaskException $e) {
             error_log(self::SET_CURRENT_STATUS_EXCEPTION . $e->getMessage());
         }
     }
 
+    /**
+     * @return int
+     */
     public function getEmployeeId(): int
     {
         return $this->employeeId;
     }
 
+    /**
+     * @return int
+     */
     public function getCustomerId(): int
     {
         return $this->customerId;
@@ -294,7 +345,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getTasksFiles()
     {
-        return $this->hasMany(pivot\TasksFiles::className(), ['task_id' => 'id']);
+        return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
     }
 
     /*public function __construct(int $employeeId, int $customerId, $deadline)
@@ -302,7 +353,7 @@ class Task extends \yii\db\ActiveRecord
         $this->employeeId = $employeeId;
         $this->customerId = $customerId;
         $this->deadline = $deadline;
-        $this->currentStatus = self::STATUS_NEW_CODE;
+        $this->currentTaskStatusCode = self::STATUS_NEW_CODE;
 
         $this->actionCancel = new ActionCancel();
         $this->actionAccomplish = new ActionAccomplish();

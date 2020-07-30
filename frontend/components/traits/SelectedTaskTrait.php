@@ -12,43 +12,71 @@ trait SelectedTaskTrait
 {
     use QueriesTrait;
 
+    /**
+     * @param $customerId
+     * @return User
+     */
     private static function getCustomerData($customerId): User
     {
         $customer = User::find()
             ->joinWith('tasks')
-            ->joinWith('userPhotos')
             ->where(['users.id' => $customerId])
-            ->asArray()
             ->one();
 
-        $customer['photo'] = $customer['userPhotos'][0]['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
+        $customer['photo'] = self::findUsersPhoto($customerId);
 
         return $customer;
     }
 
-    private static function getTaskResponses(Task $task): Response
+    /**
+     * @param Task $task
+     * @return array
+     *
+     * Функция дополняет информацию об откликах необходимыми данными.
+     */
+    private static function addDataToTaskResponses(Task $task): array
     {
         $responses = $task['responses'];
 
         return self::addDataForEachResponse($responses, $task);
     }
 
+    /**
+     * @param array $responses
+     * @param Task $task
+     * @return array
+     */
     private static function addDataForEachResponse(array $responses, Task $task): array
     {
         foreach ($responses as &$response) {
-            $response['userEmployee'] = self::findUserWithPhotos($response['user_employee_id']);
-
-            $response['userEmployee']['vote'] = self::countAverageUsersRate($response['user_employee_id']);
-
-            $response['userEmployee']['photo'] = $response['user_employee']['userPhotos'][0]['photo'] ?? 'default.jpg';
-
-            $response['userEmployee']['password_hash'] = '';
-
-            $response['your_price'] = $response['your_price'] ?? $task['budget'];
-
-            $response['created_at'] = TimeOperations::timePassed($response['created_at']);
+            $response = self::addDataRelatedToResponse($response, $task['budget']);
         }
 
         return $responses;
+    }
+
+    /**
+     * @param Response $response
+     * @param $budget
+     * @return Response
+     *
+     * Функция дополняет массив с данными отклика необходимой информацией
+     */
+    private static function addDataRelatedToResponse(Response $response, $budget): Response
+    {
+
+        $response['userEmployee'] = self::findUser($response['user_employee_id']);
+
+        $response['userEmployee']['vote'] = self::countAverageUsersRate($response['user_employee_id']);
+
+        $response['userEmployee']['photo'] = self::findUsersPhoto($response['user_employee_id']);
+
+        $response['userEmployee']['password_hash'] = '';
+
+        $response['your_price'] = $response['your_price'] ?? $budget;
+
+        $response['created_at'] = TimeOperations::timePassed($response['created_at']);
+
+        return $response;
     }
 }

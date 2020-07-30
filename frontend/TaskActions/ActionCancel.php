@@ -1,11 +1,11 @@
 <?php
 
-namespace TaskForce;
+namespace frontend\TaskActions;
 
-class ActionAccomplish extends AbstractAction
+class ActionCancel extends AbstractAction
 {
-    public const ACTION_CODE = 20;
-    private const ACTION_NAME = "Завершить";
+    public const ACTION_CODE = 40;
+    private const ACTION_NAME = "Отменить";
     public function __construct()
     {
         $this->actionName = self::ACTION_NAME;

@@ -2,8 +2,6 @@
 
 namespace frontend\models;
 
-use Yii;
-
 /**
  * This is the model class for table "users_review".
  *
@@ -17,7 +15,7 @@ use Yii;
  * @property Users $userCustomer
  * @property Users $userEmployee
  */
-class UsersReview extends \yii\db\ActiveRecord
+class UserReview extends \yii\db\ActiveRecord
 {
     public $customerPhoto;
     public $customerName;

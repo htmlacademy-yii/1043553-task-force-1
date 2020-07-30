@@ -1,8 +1,6 @@
 <?php
 
-namespace frontend\models\pivot;
-
-use Yii;
+namespace frontend\models;
 
 /**
  * This is the model class for table "tasks_files".
@@ -13,7 +11,7 @@ use Yii;
  *
  * @property Tasks $task
  */
-class TasksFiles extends \yii\db\ActiveRecord
+class TaskFile extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
