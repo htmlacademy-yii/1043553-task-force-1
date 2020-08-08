@@ -3,6 +3,8 @@
 namespace frontend\components\traits;
 
 use frontend\components\helpers\TimeOperations;
+use frontend\components\UserComponent;
+use frontend\models\Task;
 use frontend\models\User;
 use frontend\models\UserReview;
 
@@ -78,11 +80,7 @@ trait UserProfileTrait
 
         $review['customerName'] = $customer['name'];
 
-        $review['taskTitle'] = self::findTaskTitleRelatedToReview(
-            $review['user_employee_id'],
-            $review['user_customer_id'],
-            $review['created_at']
-        );
+        $review['taskTitle'] = self::getTaskTitle($review['task_id']) ?? UserComponent::NO_TASK_FOUND_MESSAGE;
 
         return $review;
     }

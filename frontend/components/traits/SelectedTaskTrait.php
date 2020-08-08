@@ -12,6 +12,8 @@ trait SelectedTaskTrait
 {
     use QueriesTrait;
 
+    public $abra;
+
     /**
      * @param $customerId
      * @return User

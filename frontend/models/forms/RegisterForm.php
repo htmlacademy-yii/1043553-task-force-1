@@ -2,20 +2,25 @@
 
 namespace frontend\models\forms;
 
+use frontend\models\City;
 use Yii;
 use yii\base\Model;
-use common\models\User;
+use frontend\models\User;
 
 /**
  * Signup form
  */
 class RegisterForm extends Model
 {
-    public $name;
-    public $email;
-    public $password;
+    public string $name;
+    public string $email;
+    public string $password;
     public $city;
 
+    public static function tableName()
+    {
+        return 'users';
+    }
 
     /**
      * {@inheritdoc}
@@ -23,52 +28,34 @@ class RegisterForm extends Model
     public function rules()
     {
         return [
-            ['name', 'trim'],
-            ['name', 'required'],
-            [
-                'name',
-                'unique',
-                'targetClass' => '\common\models\User',
-                'message' => 'This username has already been taken.'
-            ],
-            ['name', 'string', 'min' => 2, 'max' => 255],
-
-            ['email', 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            [
-                'email',
-                'unique',
-                'targetClass' => '\common\models\User',
-                'message' => 'This email address has already been taken.'
-            ],
-
-            ['password', 'required'],
-            ['password', 'string', 'min' => 8],
+            [['email', 'name', 'city', 'password'], 'safe'],
+            [['email', 'name', 'city', 'password'], 'required'],
+            [['email'], 'email'],
+            [['email'], 'unique', 'targetClass' => User::className()],
+            [['name'], 'string', 'min' => 1],
+            [['city'], 'integer'],
+            [['city'], 'exist', 'targetClass' => City::className(), 'targetAttribute' => ['city' => 'id']],
+            [['password'], 'string', 'min' => 8]
         ];
     }
 
-    /**
-     * Signs user up.
-     *
-     * @return bool whether the creating new account was successful and email was sent
-     */
-    public function register()
-    {
-        if (!$this->validate()) {
-            return null;
-        }
 
+    /**
+     * @return bool
+     */
+    public function register(): bool
+    {
         $user = new User();
-        $user->name = $this->username;
+        $user->attributes = $this->attributes;
+        $user->name = $this->name;
         $user->email = $this->email;
-        $user->city = $this->city;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        $user->generateEmailVerificationToken();
-        return $user->save() && $this->sendEmail($user);
+        $user->city_id = $this->city;
+        $user->created_at = time();
+        $user->last_active = time();
+        $user->password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+        return $user->save(false);
     }
+
 
     /**
      * Sends confirmation email to user
@@ -89,6 +76,9 @@ class RegisterForm extends Model
             ->send();
     }
 
+    /**
+     * @return array
+     */
     public function attributeLabels()
     {
         return [

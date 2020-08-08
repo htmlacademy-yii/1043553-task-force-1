@@ -5,7 +5,8 @@ if ($user['usersReviews']) : ?>
     <?php foreach ($user['usersReviews'] as $review) : ?>
         <div class="content-view__feedback-wrapper reviews-wrapper">
             <div class="feedback-card__reviews">
-                <p class="link-task link">Задание <a href="#" class="link-regular">
+                <p class="link-task link">Задание <a href="<?= Url::to(['/tasks/show', 'id' => $review['task_id']]); ?>"
+                                                     class="link-regular">
                         <?= $review['taskTitle'] ?> </a>
                 </p>
                 <div class="card__review">

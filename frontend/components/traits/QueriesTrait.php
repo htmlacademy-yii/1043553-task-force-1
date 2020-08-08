@@ -43,31 +43,6 @@ trait QueriesTrait
     }
 
     /**
-     * @param int $employee_id
-     * @param int $customer_id
-     * @param int $created_at
-     * @return string
-     *
-     * Функция ищет задание относящееся к отклику, и если оно есть возващает его название
-     */
-    private static function findTaskTitleRelatedToReview(int $employee_id, int $customer_id, int $created_at): string
-    {
-        $task = Task::find()
-            ->select('title')
-            ->andwhere(['tasks.user_employee_id' => $employee_id])
-            ->andwhere(['tasks.user_customer_id' => $customer_id])
-            ->andwhere(['<', 'tasks.created_at', $created_at])
-            ->orderBy(['tasks.created_at' => SORT_DESC])
-            ->one();
-
-        if (is_null($task)) {
-            return UserComponent::NO_TASK_FOUND_MESSAGE;
-        } else {
-            return strval($task['title']);
-        }
-    }
-
-    /**
      * @param int $userId
      * @return array
      */
@@ -161,5 +136,15 @@ trait QueriesTrait
         }
 
         return $task;
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    private static function getTaskTitle(int $id): string
+    {
+        $taskTitle = Task::find()->select(['title'])->where(['id' => $id])->asArray()->one();
+        return $taskTitle['title'];
     }
 }

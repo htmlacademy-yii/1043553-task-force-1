@@ -1,3 +1,8 @@
+<?php
+
+use yii\helpers\Url;
+
+?>
 <div class="connect-desk__profile-mini">
     <div class="profile-mini__wrapper">
         <h3>Заказчик</h3>
@@ -5,7 +10,7 @@
             <img src="../img/<?= $customer['photo'] ?>" width="62" height="62"
                  alt="Аватар заказчика">
             <div class="profile-mini__name five-stars__rate">
-                <p><?= $customer['name'] ?></p>
+                <a class="link-regular" href="<?= Url::to(['/users/show', 'id' => $customer['id']]); ?>"><p><?= $customer['name'] ?></p></a>
             </div>
         </div>
         <p class="info-customer"><span><?= count($customer['tasks']) ?> заданий</span>

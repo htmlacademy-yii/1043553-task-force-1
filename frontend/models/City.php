@@ -18,6 +18,22 @@ use Yii;
 class City extends \yii\db\ActiveRecord
 {
     /**
+     * @return array
+     *
+     * Возращаем массив городов в формате ['city id' => 'city name']
+     */
+    public static function getCities(): array
+    {
+        $citiesList = City::find()->orderBy(['name' => SORT_ASC])->all();
+
+        $cities = [];
+        foreach ($citiesList as $city) {
+            $cities[$city->id] = $city->name;
+        }
+
+        return $cities;
+    }
+    /**
      * {@inheritdoc}
      */
     public static function tableName()

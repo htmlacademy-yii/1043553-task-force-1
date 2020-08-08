@@ -45,8 +45,13 @@ class User extends \yii\db\ActiveRecord
     public $reviewsCount;
     public $categories;
     public $photo;
+    //public $city;
+    //public $name;
+   // public $email;
+    public $createdAt;
     public $usersReviews;
     public $userPhotos;
+    public $passwordHash;
 
 
     /**
