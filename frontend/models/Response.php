@@ -24,7 +24,7 @@ class Response extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'responses';
+         return 'responses';
     }
 
     /**
@@ -32,7 +32,7 @@ class Response extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [['created_at', 'task_id', 'user_employee_id'], 'required'],
             [['created_at', 'your_price', 'task_id', 'user_employee_id'], 'integer'],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
@@ -45,7 +45,7 @@ class Response extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'id' => 'ID',
             'created_at' => 'Created At',
             'your_price' => 'Your Price',
@@ -61,7 +61,7 @@ class Response extends \yii\db\ActiveRecord
      */
     public function getTask()
     {
-        return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
+         return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
     }
 
     /**
@@ -71,6 +71,6 @@ class Response extends \yii\db\ActiveRecord
      */
     public function getUserEmployee()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
+         return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
     }
 }

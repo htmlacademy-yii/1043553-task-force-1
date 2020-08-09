@@ -29,7 +29,7 @@ class TaskComponent
 
         $data = ['task' => $task, 'customer' => $customer, 'responses' => $responses];
 
-        return $data = self::addTimeInfo($data);
+         return $data = self::addTimeInfo($data);
     }
 
     /**
@@ -48,6 +48,6 @@ class TaskComponent
 
         $data = $query->orderBy(['tasks.created_at' => SORT_DESC])->all();
 
-        return self::addTimeInfo($data);
+         return self::addTimeInfo($data);
     }
 }

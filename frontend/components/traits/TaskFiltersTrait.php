@@ -45,9 +45,9 @@ trait TaskFiltersTrait
                     'tasks.category_id' => intval($categoryId)
                 ];
             }
-            return $query->andWhere($categories);
+             return $query->andWhere($categories);
         }
-        return $query;
+         return $query;
     }
 
     /**
@@ -76,7 +76,7 @@ trait TaskFiltersTrait
             $query->andWhere(['tasks.address' => null]);
         }
 
-        return $query;
+         return $query;
     }
 
     /**
@@ -87,14 +87,14 @@ trait TaskFiltersTrait
     private static function filterThroughChosenPeriod(TasksFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         if ($model->period == 'day') {
-            return $query->andWhere(['>', 'tasks.created_at', strtotime("- 1 day")]);
+             return $query->andWhere(['>', 'tasks.created_at', strtotime("- 1 day")]);
         } elseif ($model->period == 'week') {
-            return $query->andWhere(['>', 'tasks.created_at', strtotime("- 1 week")]);
+             return $query->andWhere(['>', 'tasks.created_at', strtotime("- 1 week")]);
         } elseif ($model->period == 'month') {
-            return $query->andWhere(['>', 'tasks.created_at', strtotime("- 1 month")]);
+             return $query->andWhere(['>', 'tasks.created_at', strtotime("- 1 month")]);
         }
 
-        return $query;
+         return $query;
     }
 
     /**
@@ -108,7 +108,7 @@ trait TaskFiltersTrait
             return $query->andWhere(['like', 'tasks.title', $model->search]);
         }
 
-        return $query;
+          return $query;
     }
 
     /**
@@ -131,7 +131,7 @@ trait TaskFiltersTrait
             $query = self::filterThroughSearchField($model, $query);
         }
 
-        return $query;
+         return $query;
     }
 
     /**
@@ -140,7 +140,7 @@ trait TaskFiltersTrait
      *
      * Функция заменяет таймстемп на информацию о количестве прошедшего времени начиная с этого тайстемпа,
      * в переданном ей массиве.
-     * Наример: 5 минут назад, вчера в 10:15 и тд
+     * Наример: 5 минут назад, вчера в 10:15 и тп
      */
     private static function addTimeInfo(array $data): array
     {
@@ -150,6 +150,6 @@ trait TaskFiltersTrait
             }
         }
 
-        return $data;
+         return $data;
     }
 }

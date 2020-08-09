@@ -28,7 +28,7 @@ class UsersFilterForm extends ActiveRecord
 
     public function additionalFields()
     {
-        return [
+         return [
             'nowFree' => 'Свободен',
             'nowOnline' => 'Сейчас онлайн',
             'reviews' => 'Есть отзывы',
@@ -39,17 +39,17 @@ class UsersFilterForm extends ActiveRecord
 
     public function periodFields()
     {
-        return ['За день', 'За неделю', 'За месяц'];
+         return ['За день', 'За неделю', 'За месяц'];
     }
 
     public function searchField()
     {
-        return 'Поиск по имени';
+         return 'Поиск по имени';
     }
 
     public function rules()
     {
-        return [
+         return [
             [['categories', 'additional', 'period', 'search'], 'safe'],
         ];
     }

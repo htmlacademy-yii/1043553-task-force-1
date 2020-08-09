@@ -13,9 +13,9 @@ class RegisterController extends Controller
         $model = new RegisterForm();
 
         if (RegisterComponent::register($model)) {
-            return $this->redirect('/tasks');
+             return $this->redirect('/tasks');
         }
 
-        return $this->render('index', RegisterComponent::getDataForRegisterPage($model));
+         return $this->render('index', RegisterComponent::getDataForRegisterPage($model));
     }
 }

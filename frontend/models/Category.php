@@ -20,7 +20,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'categories';
+         return 'categories';
     }
 
     /**
@@ -28,7 +28,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [['name', 'image'], 'required'],
             [['name', 'image'], 'string', 'max' => 50],
         ];
@@ -39,7 +39,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'id' => 'ID',
             'name' => 'Name',
             'image' => 'Image',
@@ -53,7 +53,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getTasks()
     {
-        return $this->hasMany(Tasks::className(), ['category_id' => 'id']);
+         return $this->hasMany(Tasks::className(), ['category_id' => 'id']);
     }
 
     /**
@@ -63,7 +63,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getUsersCategories()
     {
-        return $this->hasMany(UsersCategories::className(), ['category_id' => 'id']);
+         return $this->hasMany(UsersCategories::className(), ['category_id' => 'id']);
     }
 
     /**
@@ -73,7 +73,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasMany(
+         return $this->hasMany(
             User::className(), ['id' => 'user_id'])->viaTable('users_categories', ['category_id' => 'id']);
     }
 }

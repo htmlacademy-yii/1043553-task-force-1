@@ -28,7 +28,7 @@ trait QueriesTrait
             throw new NotFoundHttpException("Не найден пользователь с ID: " . $id);
         }
 
-        return $user;
+         return $user;
     }
 
     /**
@@ -60,7 +60,7 @@ trait QueriesTrait
     private static function findUsersPhoto(int $userId): string
     {
         $photo = UserPhoto::find()->select(['photo'])->where(['user_id' => $userId])->one();
-        return $photo['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
+         return $photo['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
     }
 
     /**
@@ -135,7 +135,7 @@ trait QueriesTrait
             throw new NotFoundHttpException("Не найдено задание с ID: " . $id);
         }
 
-        return $task;
+          return $task;
     }
 
     /**
@@ -145,6 +145,6 @@ trait QueriesTrait
     private static function getTaskTitle(int $id): string
     {
         $taskTitle = Task::find()->select(['title'])->where(['id' => $id])->asArray()->one();
-        return $taskTitle['title'];
+         return $taskTitle['title'];
     }
 }

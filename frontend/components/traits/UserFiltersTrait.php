@@ -71,7 +71,7 @@ trait UserFiltersTrait
 
         }*/
 
-        return $query;
+         return $query;
     }
 
     /**
@@ -91,7 +91,7 @@ trait UserFiltersTrait
             }
             return $query->andWhere($categories);
         }
-        return $query;
+         return $query;
     }
 
     /**
@@ -105,7 +105,7 @@ trait UserFiltersTrait
             return $query->andWhere(['like', 'users.name', $model->search]);
         }
 
-        return $query;
+         return $query;
     }
 
     /**
@@ -126,6 +126,6 @@ trait UserFiltersTrait
             $query = self::filterThroughSearchField($model, $query);
         }
 
-        return $query;
+         return $query;
     }
 }

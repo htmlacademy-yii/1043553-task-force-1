@@ -18,7 +18,7 @@ class PasswordResetRequestForm extends Model
      */
     public function rules()
     {
-        return [
+         return [
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
@@ -44,17 +44,17 @@ class PasswordResetRequestForm extends Model
         ]);
 
         if (!$user) {
-            return false;
+             return false;
         }
         
         if (!User::isPasswordResetTokenValid($user->password_reset_token)) {
             $user->generatePasswordResetToken();
             if (!$user->save()) {
-                return false;
+                 return false;
             }
         }
 
-        return Yii::$app
+         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],

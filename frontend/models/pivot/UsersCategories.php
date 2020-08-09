@@ -24,7 +24,7 @@ class UsersCategories extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'users_categories';
+         return 'users_categories';
     }
 
     /**
@@ -32,7 +32,7 @@ class UsersCategories extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [['user_id', 'category_id'], 'required'],
             [['user_id', 'category_id'], 'integer'],
             [['user_id', 'category_id'], 'unique', 'targetAttribute' => ['user_id', 'category_id']],
@@ -46,7 +46,7 @@ class UsersCategories extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'user_id' => 'User ID',
             'category_id' => 'Category ID',
         ];
@@ -59,7 +59,7 @@ class UsersCategories extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**
@@ -69,6 +69,6 @@ class UsersCategories extends \yii\db\ActiveRecord
      */
     public function getCategories()
     {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 }

@@ -16,12 +16,12 @@ class TasksController extends Controller
         $model = new TasksFilterForm();
         $data = TaskComponent::getDataForTasksPage($model);
 
-        return $this->render('index', ['data' => $data, 'model' => $model]);
+         return $this->render('index', ['data' => $data, 'model' => $model]);
     }
 
     public function actionShow(int $id)
     {
         $data = TaskComponent::getDataForSelectedTaskPage($id);
-        return $this->render('show', $data);
+         return $this->render('show', $data);
     }
 }

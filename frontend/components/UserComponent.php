@@ -30,7 +30,7 @@ class UserComponent
 
         $data = $query->all();
 
-        return self::addRelatedDataForEachUser($data);
+         return self::addRelatedDataForEachUser($data);
     }
 
     /**
@@ -44,6 +44,6 @@ class UserComponent
 
         $user = self::addDataRelatedToUser($user, $id);
 
-        return ['user' => $user];
+         return ['user' => $user];
     }
 }

@@ -60,7 +60,7 @@ class Task extends \yii\db\ActiveRecord
 
             foreach ($actions[$this->currentTaskStatusCode] as $key => $action) {
                 if ($action->checkRights($role)) {
-                    return $action;
+                     return $action;
                 }
             }
         } catch (TaskException $e) {
@@ -90,7 +90,7 @@ class Task extends \yii\db\ActiveRecord
         ];
 
         if ($statuses[$this->currentTaskStatusCode]) {
-            return $statuses[$this->currentTaskStatusCode];
+             return $statuses[$this->currentTaskStatusCode];
         }
 
         throw new TaskException(self::GET_POSSIBLE_STATUSES_EXCEPTION);
@@ -110,7 +110,7 @@ class Task extends \yii\db\ActiveRecord
             self::STATUS_PROCESSING_CODE => [$this->actionAccomplish, $this->actionRefuse]
         ];
         if ($actions[$this->currentTaskStatusCode]) {
-            return $actions[$this->currentTaskStatusCode];
+             return $actions[$this->currentTaskStatusCode];
         }
 
         throw new TaskException(self::GET_POSSIBLE_ACTIONS_EXCEPTION);
@@ -137,7 +137,7 @@ class Task extends \yii\db\ActiveRecord
         $possibleStatus = $statuses[$actionCode] ?? false;
 
         if ($possibleStatus) {
-            return $possibleStatus;
+             return $possibleStatus;
         }
 
         throw new TaskException(self::PREDICT_STATUS_EXCEPTION);
@@ -148,7 +148,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getCurrentTaskStatusCode(): string
     {
-        return $this->currentTaskStatusCode;
+         return $this->currentTaskStatusCode;
     }
 
     /**
@@ -171,7 +171,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getEmployeeId(): int
     {
-        return $this->employeeId;
+         return $this->employeeId;
     }
 
     /**
@@ -179,7 +179,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getCustomerId(): int
     {
-        return $this->customerId;
+         return $this->customerId;
     }
 
     /**
@@ -195,7 +195,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [
                 [
                     'user_customer_id',
@@ -260,7 +260,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'id' => 'ID',
             'user_customer_id' => 'User Customer ID',
             'user_employee_id' => 'User Employee ID',
@@ -285,7 +285,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getCorrespondences()
     {
-        return $this->hasMany(Correspondence::className(), ['task_id' => 'id']);
+         return $this->hasMany(Correspondence::className(), ['task_id' => 'id']);
     }
 
     /**
@@ -295,7 +295,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getResponses()
     {
-        return $this->hasMany(Response::className(), ['task_id' => 'id']);
+         return $this->hasMany(Response::className(), ['task_id' => 'id']);
     }
 
     /**
@@ -305,7 +305,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
+         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
     /**
@@ -315,7 +315,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getUserCustomer()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_customer_id']);
+         return $this->hasOne(User::className(), ['id' => 'user_customer_id']);
     }
 
     /**
@@ -325,7 +325,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getUserEmployee()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
+         return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
     }
 
     /**
@@ -335,7 +335,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getCity()
     {
-        return $this->hasOne(City::className(), ['id' => 'city_id']);
+         return $this->hasOne(City::className(), ['id' => 'city_id']);
     }
 
     /**
@@ -345,7 +345,7 @@ class Task extends \yii\db\ActiveRecord
      */
     public function getTasksFiles()
     {
-        return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
+         return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
     }
 
     /*public function __construct(int $employeeId, int $customerId, $deadline)

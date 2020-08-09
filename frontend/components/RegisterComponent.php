@@ -23,12 +23,12 @@ class RegisterComponent
             'city' => $model->city ?? ''
             ];
 
-        return [
+         return [
             'model' => $model,
             'cities' => $cities,
             'errors' => $model->getErrors() ?? [],
             'values' => $previousValues
-        ];
+         ];
     }
 
     /**
@@ -40,14 +40,14 @@ class RegisterComponent
         $formData = Yii::$app->request->post() ?? [];
 
         if (!$model->load($formData) or !$model->validate()) {
-            return false;
+             return false;
         }
 
         if ($model->register()) {
-            return true;
+             return true;
         }
 
-        return false;
+         return false;
     }
 
 }

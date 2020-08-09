@@ -19,7 +19,7 @@ class RegisterForm extends Model
 
     public static function tableName()
     {
-        return 'users';
+         return 'users';
     }
 
     /**
@@ -53,7 +53,7 @@ class RegisterForm extends Model
         $user->created_at = time();
         $user->last_active = time();
         $user->password_hash = password_hash($this->password, PASSWORD_DEFAULT);
-        return $user->save(false);
+         return $user->save(false);
     }
 
 
@@ -64,7 +64,7 @@ class RegisterForm extends Model
      */
     protected function sendEmail($user)
     {
-        return Yii::$app
+         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
@@ -81,7 +81,7 @@ class RegisterForm extends Model
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'email' => 'Электронная почта',
             'name' => 'Ваше имя',
             'city' => 'Город проживания',

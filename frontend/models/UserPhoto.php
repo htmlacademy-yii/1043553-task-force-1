@@ -18,7 +18,7 @@ class UserPhoto extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'user_photos';
+         return 'user_photos';
     }
 
     /**
@@ -26,7 +26,7 @@ class UserPhoto extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [['user_id', 'photo'], 'required'],
             [['user_id'], 'integer'],
             [['photo'], 'string', 'max' => 255],
@@ -39,7 +39,7 @@ class UserPhoto extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'id' => 'ID',
             'user_id' => 'User ID',
             'photo' => 'Photo',
@@ -53,6 +53,6 @@ class UserPhoto extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 }

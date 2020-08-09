@@ -20,7 +20,7 @@ class ResendVerificationEmailForm extends Model
      */
     public function rules()
     {
-        return [
+         return [
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
@@ -45,10 +45,10 @@ class ResendVerificationEmailForm extends Model
         ]);
 
         if ($user === null) {
-            return false;
+             return false;
         }
 
-        return Yii::$app
+         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],

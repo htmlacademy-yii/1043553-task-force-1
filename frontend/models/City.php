@@ -31,14 +31,14 @@ class City extends \yii\db\ActiveRecord
             $cities[$city->id] = $city->name;
         }
 
-        return $cities;
+         return $cities;
     }
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'cities';
+         return 'cities';
     }
 
     /**
@@ -46,7 +46,7 @@ class City extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [['name'], 'required'],
             [['name', 'lat', 'lon'], 'string', 'max' => 50],
         ];
@@ -57,7 +57,7 @@ class City extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'id' => 'ID',
             'name' => 'Name',
             'lat' => 'Lat',
@@ -72,7 +72,7 @@ class City extends \yii\db\ActiveRecord
      */
     public function getTasks()
     {
-        return $this->hasMany(Tasks::className(), ['city_id' => 'id']);
+         return $this->hasMany(Tasks::className(), ['city_id' => 'id']);
     }
 
     /**
@@ -82,6 +82,6 @@ class City extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasMany(User::className(), ['city_id' => 'id']);
+         return $this->hasMany(User::className(), ['city_id' => 'id']);
     }
 }

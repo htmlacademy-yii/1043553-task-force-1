@@ -22,7 +22,7 @@ trait UserProfileTrait
             $user = self::addDataRelatedToUser($user, $user["id"]);
         }
 
-        return $usersData;
+         return $usersData;
     }
 
     /**
@@ -50,7 +50,7 @@ trait UserProfileTrait
 
         $user["usersReviews"] = self::addRelatedDataForEachReview($user["usersReviews"]);
 
-        return $user;
+         return $user;
     }
 
     /**
@@ -63,7 +63,7 @@ trait UserProfileTrait
         foreach ($reviews as &$review) {
             $review = self::addDataRelatedToReview($review);
         }
-        return $reviews;
+         return $reviews;
     }
 
     /**
@@ -82,6 +82,6 @@ trait UserProfileTrait
 
         $review['taskTitle'] = self::getTaskTitle($review['task_id']) ?? UserComponent::NO_TASK_FOUND_MESSAGE;
 
-        return $review;
+         return $review;
     }
 }

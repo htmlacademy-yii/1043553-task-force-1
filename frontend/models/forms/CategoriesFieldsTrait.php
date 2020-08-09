@@ -45,6 +45,6 @@ trait CategoriesFieldsTrait
             $data[$category['id']] = $category['name'];
         }
 
-        return $data;
+         return $data;
     }
 }

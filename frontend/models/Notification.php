@@ -21,7 +21,7 @@ class Notification extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'notifications';
+         return 'notifications';
     }
 
     /**
@@ -29,7 +29,7 @@ class Notification extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+         return [
             [['user_id', 'message'], 'required'],
             [['user_id', 'viewed'], 'integer'],
             [['message'], 'string', 'max' => 255],
@@ -42,7 +42,7 @@ class Notification extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+         return [
             'id' => 'ID',
             'user_id' => 'User ID',
             'message' => 'Message',
@@ -57,6 +57,6 @@ class Notification extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }

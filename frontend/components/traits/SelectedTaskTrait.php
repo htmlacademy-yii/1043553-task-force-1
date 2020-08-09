@@ -27,7 +27,7 @@ trait SelectedTaskTrait
 
         $customer['photo'] = self::findUsersPhoto($customerId);
 
-        return $customer;
+         return $customer;
     }
 
     /**
@@ -40,7 +40,7 @@ trait SelectedTaskTrait
     {
         $responses = $task['responses'];
 
-        return self::addDataForEachResponse($responses, $task);
+         return self::addDataForEachResponse($responses, $task);
     }
 
     /**
@@ -54,7 +54,7 @@ trait SelectedTaskTrait
             $response = self::addDataRelatedToResponse($response, $task['budget']);
         }
 
-        return $responses;
+         return $responses;
     }
 
     /**
@@ -79,6 +79,6 @@ trait SelectedTaskTrait
 
         $response['created_at'] = TimeOperations::timePassed($response['created_at']);
 
-        return $response;
+         return $response;
     }
 }
