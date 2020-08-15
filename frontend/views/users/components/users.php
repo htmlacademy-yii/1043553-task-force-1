@@ -16,7 +16,7 @@ foreach ($data as $user) :?>
                        class="link-regular"><?php echo $user['name'] ?>
                     </a>
                 </p>
-                <?= $this->render('../components/stars', ['vote' => $user['vote']]); ?>
+                <?= $this->render('../../components/stars', ['vote' => $user['vote']]); ?>
                 <p class="user__search-content">
                     <?= $user['description'] ?>
                 </p>

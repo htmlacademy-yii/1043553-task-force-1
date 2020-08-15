@@ -1,14 +1,14 @@
 <?php
 
-namespace frontend\components\traits;
+namespace frontend\components\user;
 
 use frontend\components\helpers\TimeOperations;
+use frontend\components\traits\QueriesTrait;
 use frontend\components\UserComponent;
-use frontend\models\Task;
 use frontend\models\User;
 use frontend\models\UserReview;
 
-trait UserProfileTrait
+class SelectedUser
 {
     use QueriesTrait;
 
@@ -16,13 +16,13 @@ trait UserProfileTrait
      * @param array $usersData
      * @return array
      */
-    private static function addRelatedDataForEachUser(array $usersData): array
+    public static function addRelatedDataForEachUser(array $usersData): array
     {
         foreach ($usersData as &$user) {
             $user = self::addDataRelatedToUser($user, $user["id"]);
         }
 
-         return $usersData;
+        return $usersData;
     }
 
     /**
@@ -32,13 +32,13 @@ trait UserProfileTrait
      *
      * Функция дополняет массив с данными пользователя необходимой информацией
      */
-    private static function addDataRelatedToUser(User $user, int $userId): User
+    public static function addDataRelatedToUser(User $user, int $userId): User
     {
-        $user['vote'] = self::countAverageUsersRate($userId);
+        //$user['vote'] = self::countAverageUsersRate($userId);
 
-        $user['tasksCount'] = self::countAccomplishedTasks($userId);
+        //$user['tasksCount'] = self::countAccomplishedTasks($userId);
 
-        $user['reviewsCount'] = self::countUsersReviews($userId);
+        //$user['reviewsCount'] = self::countUsersReviews($userId);
 
         $user['usersReviews'] = self::findUsersReview($userId);
 
@@ -50,7 +50,7 @@ trait UserProfileTrait
 
         $user["usersReviews"] = self::addRelatedDataForEachReview($user["usersReviews"]);
 
-         return $user;
+        return $user;
     }
 
     /**
@@ -63,7 +63,7 @@ trait UserProfileTrait
         foreach ($reviews as &$review) {
             $review = self::addDataRelatedToReview($review);
         }
-         return $reviews;
+        return $reviews;
     }
 
     /**
@@ -82,6 +82,6 @@ trait UserProfileTrait
 
         $review['taskTitle'] = self::getTaskTitle($review['task_id']) ?? UserComponent::NO_TASK_FOUND_MESSAGE;
 
-         return $review;
+        return $review;
     }
 }

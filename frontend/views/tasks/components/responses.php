@@ -23,7 +23,7 @@ use yii\helpers\Url;
 
                             <?=
                             $this->render(
-                                '../components/stars',
+                                '../../components/stars',
                                 ['vote' => $response['userEmployee']['vote']]
                             );
                             ?>

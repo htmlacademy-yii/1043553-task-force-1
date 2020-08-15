@@ -6,7 +6,7 @@
             <p>Россия, Санкт-Петербург,
                 <?= date_diff(date_create(), date_create($user['birthday']))->format("%y лет"); ?></p>
             <div class="profile-mini__name five-stars__rate">
-                <?= $this->render('../components/stars',
+                <?= $this->render('../../components/stars',
                     ['vote' => $user['vote']]); ?>
             </div>
             <b class="done-task">Выполнил <?= $user['tasksCount'] ?> заказов</b>

@@ -47,7 +47,7 @@ class User extends \yii\db\ActiveRecord
     public $photo;
     //public $city;
     //public $name;
-   // public $email;
+    // public $email;
     public $createdAt;
     public $usersReviews;
     public $userPhotos;
@@ -59,7 +59,7 @@ class User extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-         return 'users';
+        return 'users';
     }
 
     /**
@@ -67,7 +67,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-         return [
+        return [
             [['created_at', 'email', 'name', 'city_id', 'password_hash'], 'required'],
             [
                 [
@@ -104,7 +104,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-         return [
+        return [
             'id' => 'ID',
             'created_at' => 'Created At',
             'last_active' => 'Last Active',
@@ -135,7 +135,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getCorrespondences()
     {
-         return $this->hasMany(Correspondence::className(), ['user_id' => 'id']);
+        return $this->hasMany(Correspondence::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -145,7 +145,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getNotifications()
     {
-         return $this->hasMany(Notification::className(), ['user_id' => 'id']);
+        return $this->hasMany(Notification::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -155,7 +155,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getResponses()
     {
-         return $this->hasMany(Response::className(), ['user_employee_id' => 'id']);
+        return $this->hasMany(Response::className(), ['user_employee_id' => 'id']);
     }
 
     /**
@@ -163,9 +163,9 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getTasks0()
     {
-         return $this->hasMany(Task::className(), ['user_customer_id' => 'id']);
+        return $this->hasMany(Task::className(), ['user_customer_id' => 'id']);
     }
 
     /**
@@ -173,9 +173,9 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getTasks()
     {
-         return $this->hasMany(Task::className(), ['user_employee_id' => 'id']);
+        return $this->hasMany(Task::className(), ['user_employee_id' => 'id']);
     }
 
     /**
@@ -185,7 +185,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getUserPhotos()
     {
-         return $this->hasMany(UserPhoto::className(), ['user_id' => 'id']);
+        return $this->hasMany(UserPhoto::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -195,7 +195,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getCity()
     {
-         return $this->hasOne(City::className(), ['id' => 'city_id']);
+        return $this->hasOne(City::className(), ['id' => 'city_id']);
     }
 
     /**
@@ -205,7 +205,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getUsersCategories()
     {
-         return $this->hasMany(pivot\UsersCategories::className(), ['user_id' => 'id']);
+        return $this->hasMany(pivot\UsersCategories::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -215,7 +215,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getCategories()
     {
-         return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('users_categories',
+        return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('users_categories',
             ['user_id' => 'id']);
     }
 
@@ -224,10 +224,10 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    /*public function getUsersReviews0()
+    public function getUsersReviews0()
     {
         return $this->hasMany(UsersReview::className(), ['user_customer_id' => 'id']);
-    }*/
+    }
 
     /**
      * Gets query for [[UsersReviews0]].
@@ -236,6 +236,6 @@ class User extends \yii\db\ActiveRecord
      */
     public function getUsersReviews()
     {
-         return $this->hasMany(UserReview::className(), ['user_employee_id' => 'id']);
+        return $this->hasMany(UserReview::className(), ['user_employee_id' => 'id']);
     }
 }

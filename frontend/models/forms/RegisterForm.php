@@ -19,7 +19,7 @@ class RegisterForm extends Model
 
     public static function tableName()
     {
-         return 'users';
+        return 'users';
     }
 
     /**
@@ -29,13 +29,13 @@ class RegisterForm extends Model
     {
         return [
             [['email', 'name', 'city', 'password'], 'safe'],
-            [['email', 'name', 'city', 'password'], 'required'],
-            [['email'], 'email'],
-            [['email'], 'unique', 'targetClass' => User::className()],
-            [['name'], 'string', 'min' => 1],
+            [['email', 'name', 'city', 'password'], 'required', 'message' => 'Пожалуста заполните поле {attribute} .'],
+            [['email'], 'email', 'message' => 'Пожалуйста введите валидный имейл.'],
+            [['email'], 'unique', 'targetClass' => User::className(), 'message' => 'Данный имейл уже используется'],
+            [['name'], 'string', 'min' => 1, 'message' => 'Ведите правильное имя'],
             [['city'], 'integer'],
             [['city'], 'exist', 'targetClass' => City::className(), 'targetAttribute' => ['city' => 'id']],
-            [['password'], 'string', 'min' => 8]
+            [['password'], 'string', 'min' => 8, 'message' => 'Пароль должен быть 8 или больше символов']
         ];
     }
 
@@ -53,7 +53,7 @@ class RegisterForm extends Model
         $user->created_at = time();
         $user->last_active = time();
         $user->password_hash = password_hash($this->password, PASSWORD_DEFAULT);
-         return $user->save(false);
+        return $user->save(false);
     }
 
 
@@ -64,7 +64,7 @@ class RegisterForm extends Model
      */
     protected function sendEmail($user)
     {
-         return Yii::$app
+        return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
@@ -81,7 +81,7 @@ class RegisterForm extends Model
      */
     public function attributeLabels()
     {
-         return [
+        return [
             'email' => 'Электронная почта',
             'name' => 'Ваше имя',
             'city' => 'Город проживания',

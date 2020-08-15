@@ -3,7 +3,8 @@
     <?php $form = yii\widgets\ActiveForm::begin([
         'options' => [
             'class' => 'search-task__form',
-            'name' => $model->formName()
+            'name' => $model->formName(),
+            'id' => 'usersFilterForm'
         ]
     ]); ?>
     <fieldset class="search-task__categories">
@@ -31,6 +32,7 @@
             $model->additionalFields(),
             [
                 'tag' => false,
+                'value' => Yii::$app->request->post()["UsersFilterForm"]['additional'] ?? [],
                 'itemOptions' => [
 
                 ]
@@ -48,7 +50,7 @@
     <?= $form->field($model, 'search', ['template' => "{label}\n{input}"])->input('text',
         $options)->label(false); ?>
 
-    <?= yii\helpers\Html::submitButton('Искать', ['class' => 'button']) ?>
+    <?= yii\helpers\Html::submitButton('Искать', ['class' => 'button', 'id' =>'submitButton' ]) ?>
     <?php yii\widgets\ActiveForm::end(); ?>
 
 </div>

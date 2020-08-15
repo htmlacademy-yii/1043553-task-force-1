@@ -2,15 +2,15 @@
 
 namespace frontend\components;
 
-use frontend\components\traits\SelectedTaskTrait;
-use frontend\components\traits\TaskFiltersTrait;
+use frontend\components\helpers\TimeOperations;
+use frontend\components\traits\QueriesTrait;
+use frontend\components\task\SelectedTask;
+use frontend\components\task\TaskFilter;
 use frontend\models\forms\TasksFilterForm;
-use Yii;
 
 class TaskComponent
 {
-    use TaskFiltersTrait;
-    use SelectedTaskTrait;
+    use QueriesTrait;
 
     /**
      * @param int $id
@@ -22,14 +22,12 @@ class TaskComponent
     public static function getDataForSelectedTaskPage(int $id): array
     {
         $task = self::getTaskWithResponsesCategoriesFiles($id);
-
-        $customer = self::getCustomerData($task['user_customer_id']);
-
-        $responses = self::addDataToTaskResponses($task);
-
+        $selectedTask = new SelectedTask($task);
+        $customer = $selectedTask->getCustomerData();
+        $responses = $selectedTask->addDataToTaskResponses();
         $data = ['task' => $task, 'customer' => $customer, 'responses' => $responses];
 
-         return $data = self::addTimeInfo($data);
+        return TimeOperations::addTimeInfo($data);
     }
 
     /**
@@ -41,13 +39,9 @@ class TaskComponent
     public static function getDataForTasksPage(TasksFilterForm $model): array
     {
         $query = self::findNewTasksWithCategoryCityQuery();
-
-        $filters = Yii::$app->request->post() ?? [];
-
-        $query = self::applyFilters($model, $filters, $query);
-
+        $query = TaskFilter::applyFilters($model, $query);
         $data = $query->orderBy(['tasks.created_at' => SORT_DESC])->all();
 
-         return self::addTimeInfo($data);
+        return TimeOperations::addTimeInfo($data);
     }
 }

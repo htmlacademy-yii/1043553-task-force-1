@@ -78,5 +78,22 @@ class TimeOperations
         }
     }
 
+    /**
+     * @param array $data
+     * @return array
+     *
+     * Функция заменяет таймстемп на информацию о количестве прошедшего времени начиная с этого тайстемпа,
+     * в переданном ей массиве.
+     * Наример: 5 минут назад, вчера в 10:15 и тп
+     */
+    public static function addTimeInfo(array $data): array
+    {
+        foreach ($data as &$item) {
+            if (isset($item['created_at'])) {
+                $item['created_at'] = TimeOperations::timePassed($item['created_at']);
+            }
+        }
 
+        return $data;
+    }
 }

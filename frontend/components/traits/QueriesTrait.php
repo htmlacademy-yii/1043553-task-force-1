@@ -8,6 +8,7 @@ use frontend\models\Task;
 use frontend\models\User;
 use frontend\models\UserPhoto;
 use frontend\models\UserReview;
+use yii\db\ActiveQuery;
 use yii\web\NotFoundHttpException;
 
 trait QueriesTrait
@@ -117,7 +118,7 @@ trait QueriesTrait
      * @throws NotFoundHttpException
      *
      */
-    private static function getTaskWithResponsesCategoriesFiles(int $id): Task
+    public static function getTaskWithResponsesCategoriesFiles(int $id): Task
     {
         $task = Task::find()
             ->select(['*',
@@ -146,5 +147,50 @@ trait QueriesTrait
     {
         $taskTitle = Task::find()->select(['title'])->where(['id' => $id])->asArray()->one();
          return $taskTitle['title'];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public static function findNewTasksWithCategoryCityQuery(): ActiveQuery
+    {
+        return Task::find()
+            ->select([
+                'tasks.id',
+                'title',
+                'description',
+                'budget',
+                'tasks.created_at',
+                'categories.name as category',
+                'categories.image as image',
+                'cities.name as city'
+
+            ])
+            ->joinWith('category')
+            ->joinWith('city')
+            ->where(['current_status' => Task::STATUS_NEW_CODE]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    private static function findEmploeesQuery(): ActiveQuery
+    {
+        return User::find()
+            ->select([
+                'users.id',
+                'users.name',
+                'users.last_active',
+                'users.description',
+                'current_role',
+                'AVG(users_review.vote) as vote',
+                'COUNT(tasks.id) as tasksCount',
+                'COUNT(users_review.id) as reviewsCount'
+            ])
+            ->distinct()
+            ->joinWith('usersReviews')
+            ->joinWith('tasks')
+            ->where(['current_role' => Task::ROLE_EMPLOYEE])
+            ->groupBy(['users.id']);
     }
 }
