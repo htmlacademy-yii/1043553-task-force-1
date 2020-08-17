@@ -12,11 +12,12 @@ use yii\web\Controller;
 class LandingController extends Controller
 {
     public $layout = 'landing';
-    public $model;
+    public UserLoginForm $model;
 
     public function actionIndex()
     {
         $this->model = new UserLoginForm();
+
 
         if (LandingComponent::login($this->model)) {
             return $this->redirect('/tasks');
@@ -24,7 +25,9 @@ class LandingController extends Controller
 
         $data = LandingComponent::getDataForLandingPage($this->model);
 
-        return $this->render('index', $data);
+         //$this->renderAjax('index', $data);
+
+        return $this->render('index', $data, false, true);
     }
 }
 

@@ -36,9 +36,9 @@ class SelectedUser
     {
         //$user['vote'] = self::countAverageUsersRate($userId);
 
-        //$user['tasksCount'] = self::countAccomplishedTasks($userId);
+        $user['tasksCount'] = self::countAccomplishedTasks($userId);
 
-        //$user['reviewsCount'] = self::countUsersReviews($userId);
+        $user['reviewsCount'] = self::countUsersReviews($userId);
 
         $user['usersReviews'] = self::findUsersReview($userId);
 

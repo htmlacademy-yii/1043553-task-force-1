@@ -20,11 +20,13 @@ trait QueriesTrait
      */
     private static function findUserWithPhotosAndCategories(int $id): User
     {
-        $user = User::find()
+        /*$user = User::find()
             ->where(['users.id' => $id])
             ->joinWith('userPhotos')
             ->joinWith('categories')
-            ->one();
+            ->one();*/
+
+        $user = self::findEmploeesQuery()->where(['users.id' => $id]) ->one();
         if (!$user) {
             throw new NotFoundHttpException("Не найден пользователь с ID: " . $id);
         }
@@ -97,7 +99,7 @@ trait QueriesTrait
     {
         return Task::find()
                 ->where(['user_employee_id' => $userId])
-                ->where(['current_status' => Task::STATUS_ACCOMPLISHED_CODE])
+                //->where(['current_status' => Task::STATUS_ACCOMPLISHED_CODE])
                 ->count() ?? 0;
     }
 
@@ -174,7 +176,7 @@ trait QueriesTrait
     /**
      * @return \yii\db\ActiveQuery
      */
-    private static function findEmploeesQuery(): ActiveQuery
+    private static function findEmployeesQuery(): ActiveQuery
     {
         return User::find()
             ->select([

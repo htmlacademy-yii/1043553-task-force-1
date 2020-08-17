@@ -32,6 +32,8 @@ class LandingComponent
         if (Yii::$app->request->getIsPost()) {
             $userLoginForm->load(Yii::$app->request->post());
             if (Yii::$app->request->isAjax) {
+                var_dump(ActiveForm::validate($userLoginForm));
+                die;
                 return ActiveForm::validate($userLoginForm);
             }
             if ($userLoginForm->validate()) {
