@@ -2,6 +2,8 @@
 
 namespace frontend\models;
 
+use yii\web\IdentityInterface;
+
 /**
  * This is the model class for table "users".
  *
@@ -38,20 +40,47 @@ namespace frontend\models;
  * @property UserReview[] $usersReviews
  * @property UserReview[] $usersReviews0
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public $vote;
     public $tasksCount;
     public $reviewsCount;
     public $categories;
     public $photo;
-    //public $city;
-    //public $name;
-    // public $email;
     public $createdAt;
     public $usersReviews;
     public $userPhotos;
     public $passwordHash;
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
+    }
+
+    public function validatePassword($password)
+    {
+        return \Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
 
 
     /**
@@ -237,5 +266,15 @@ class User extends \yii\db\ActiveRecord
     public function getUsersReviews()
     {
         return $this->hasMany(UserReview::className(), ['user_employee_id' => 'id']);
+    }
+
+
+    public function getUser()
+    {
+        if ($this->user === null) {
+            $this->user = User::findOne(['email' => $this->email]);
+        }
+
+        return $this->user;
     }
 }

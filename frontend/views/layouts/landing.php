@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
@@ -11,6 +12,7 @@ use yii\widgets\ActiveForm;
     <title>TaskForce</title>
     <link rel="stylesheet" type="text/css" href="/css/normalize.css">
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
 </head>
 <body class="landing">
 <div class="table-layout">
@@ -117,10 +119,15 @@ use yii\widgets\ActiveForm;
     </footer>
     <section class="modal enter-form form-modal" id="enter-form" name='login'>
         <h2>Вход на сайт</h2>
+        <?php \yii\widgets\Pjax::begin() ?>
         <?php $form = ActiveForm::begin([
             'options' => [
+                'id' => 'loginForm',
                 'name' => $this->context->model->formName(),
                 'enableAjaxValidation' => true,
+                'validationUrl' => '/landing',
+                'action' => 'index',
+                'method' => 'POST'
             ],
             'fieldConfig' => [
                 'options' => [
@@ -140,9 +147,7 @@ use yii\widgets\ActiveForm;
             <?= $form->field($this->context->model, 'email', ['template' => "{label}\n{input}"])->input('email',
                 $options)->label(false); ?>
         </p>
-        <?php if ($this->context->model->getErrors()) : ?>
-            <p style="margin: -35px 0 0 90px; width: max-content; color: red ">Неверный логин либо пароль</p>
-        <?php endif; ?>
+        <p id ='errorMessage' style="margin: -35px 0 0 90px; width: max-content; color: red; display: none ">Неверный логин либо пароль</p>
         <p>
             <label class="form-modal-description"
                    for="enter-password"><?= $this->context->model->attributeLabels()['password']; ?></label>
@@ -155,24 +160,18 @@ use yii\widgets\ActiveForm;
                 $options)->label(false); ?>
         </p>
 
-        <button class="button" type="submit">Войти</button>
+        <a class="button" id="loginSubmit" >Войти</a>
 
         <?php ActiveForm::end(); ?>
+        <?php \yii\widgets\Pjax::end() ?>
         <button class="form-modal-close" type="button">Закрыть</button>
     </section>
 </div>
 <div class="overlay"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/login.js"></script>
 </body>
 </html>
-<!--<form action="#" method="post">
-            <p>
-                <label class="form-modal-description" for="enter-email">Email</label>
-                <input class="enter-form-email input input-middle" type="email" name="enter-email" id="enter-email">
-            </p>
-            <p>
-                <label class="form-modal-description" for="enter-password">Пароль</label>
-                <input class="enter-form-email input input-middle" type="password" name="enter-email" id="enter-password">
-            </p>
-            <button class="button" type="submit">Войти</button>
-        </form>-->
+
+

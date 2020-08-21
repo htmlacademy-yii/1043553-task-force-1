@@ -2,10 +2,12 @@
 
 namespace frontend\models\forms;
 
+use frontend\models\User;
+use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 
-class UserLoginForm extends ActiveRecord
+class UserLoginForm extends Model
 {
     public $email;
     public $password;
@@ -34,12 +36,12 @@ class UserLoginForm extends ActiveRecord
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Неправильный email или пароль');
+                $this->addError($attribute, 'wrong email or password');
             }
         }
     }
 
-    public function getUser()
+    public function getUser(): User
     {
         if ($this->user === null) {
             $this->user = User::findOne(['email' => $this->email]);

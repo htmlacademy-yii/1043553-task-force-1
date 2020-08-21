@@ -34,7 +34,6 @@ class LandingComponent
             if (Yii::$app->request->isAjax) {
                 var_dump(ActiveForm::validate($userLoginForm));
                 die;
-                return ActiveForm::validate($userLoginForm);
             }
             if ($userLoginForm->validate()) {
                 Yii::$app->user->login($userLoginForm->getUser());
