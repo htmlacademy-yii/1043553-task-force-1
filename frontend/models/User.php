@@ -51,6 +51,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $usersReviews;
     public $userPhotos;
     public $passwordHash;
+    public $age;
 
     public static function findIdentity($id)
     {
@@ -118,6 +119,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['phone'], 'string', 'max' => 16],
             [['skype', 'other_app'], 'string', 'max' => 40],
             [['email'], 'unique'],
+            [['email'], 'email'],
             [
                 ['city_id'],
                 'exist',

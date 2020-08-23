@@ -4,7 +4,7 @@
         <div class="content-view__headline">
             <h1><?= $user['name'] ?></h1>
             <p>Россия, Санкт-Петербург,
-                <?= date_diff(date_create(), date_create($user['birthday']))->format("%y лет"); ?></p>
+                <?= $user['age']; ?></p>
             <div class="profile-mini__name five-stars__rate">
                 <?= $this->render('../../components/stars',
                     ['vote' => $user['vote']]); ?>

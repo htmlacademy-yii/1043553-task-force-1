@@ -19,7 +19,6 @@ class TaskFilter
 
     /**
      * @param TasksFilterForm $model
-     * @param array $filters
      * @param ActiveQuery $query
      * @return ActiveQuery
      *
@@ -81,7 +80,7 @@ class TaskFilter
             }
              return $this->query->andWhere($categories);
         }
-         return $this->query;
+        return $this->query;
     }
 
     /**
@@ -97,7 +96,7 @@ class TaskFilter
              return $this->query->andWhere(['>', 'tasks.created_at', strtotime("- 1 month")]);
         }
 
-         return $this->query;
+        return $this->query;
     }
 
     /**
@@ -109,6 +108,6 @@ class TaskFilter
             return $this->query->andWhere(['like', 'tasks.title', $this->model->search]);
         }
 
-          return $this->query;
+        return $this->query;
     }
 }

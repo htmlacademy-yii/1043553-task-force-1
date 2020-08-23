@@ -1,6 +1,8 @@
 $(document).ready(function () {
-    let error = false;
     let form = $("#loginForm");
+    let errorMessage = $('#errorMessage');
+    let alertMessage = 'Ошибка, попробуйте позже';
+    let redirectAfterLogin = "/tasks";
 
     $(document).on("click", "#loginSubmit", function () {
         $.ajax({
@@ -10,25 +12,20 @@ $(document).ready(function () {
         })
         //Если запрос отправлен
             .done(function (data) {
-                if (data == true) {
-                    window.location.replace("/tasks");
+                if (data.loginResult) {
+                    window.location.replace(redirectAfterLogin);
                 }
-                showErrorMessage();
+                showErrorMessage(errorMessage, data.error);
             })
             //Если запрос не ушел
             .fail(function () {
-
-                alert('Ошибка, попробуйте позже');
+                alert(alertMessage);
             });
-
-
-        return false; // Отменить синхронную отправку данных
     });
-
-
 });
 
-function showErrorMessage()
+function showErrorMessage(element,message)
 {
-    $('#errorMessage').css("display", "block");
+    element.css("display", "block");
+    element.text(message);
 }

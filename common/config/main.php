@@ -12,6 +12,7 @@ return [
             'enableStrictParsing' => false,
             'rules' => [
                 '//' => '/',
+                '/' => 'landing/index',
                 'persons' => 'contacts/index',
                 'tasks/<id:\d+>' => 'tasks/show',
                 'users/<id:\d+>' => 'users/show',

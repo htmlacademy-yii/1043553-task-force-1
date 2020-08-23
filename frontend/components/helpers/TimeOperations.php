@@ -1,10 +1,16 @@
 <?php
 
-
 namespace frontend\components\helpers;
+
+use frontend\models\User;
 
 class TimeOperations
 {
+    private const SECONDS_IN_MINUTE = 60;
+    private const SECONDS_IN_HOUR = 3600;
+    private const SECONDS_IN_DAY = 172800;
+    private const SECONDS_IN_TWO_DAYS = 86400;
+
     /**
      * @param $date
      * @return string
@@ -13,39 +19,31 @@ class TimeOperations
      */
     public static function timePassed(int $date): string
     {
-        $secInMin = 60;
-        $secInHour = 3600;
-        $secInDay = 86400;
-
-
         $day = date("m.d.y", $date);
         $time = date("H:i:s", $date);
 
         $timeleft = time() - $date;
-        /*if ($timeleft < 0) {
-            $timeleft = $timeleft + $secInHour * 3;
-        }*/
 
         switch ($timeleft) {
-            case $timeleft < $secInMin:
+            case $timeleft < self::SECONDS_IN_MINUTE:
                 return "только что";
                 break;
-            case $timeleft < $secInHour:
-                $minutes = $timeleft / $secInMin;
+            case $timeleft < self::SECONDS_IN_HOUR:
+                $minutes = $timeleft / self::SECONDS_IN_MINUTE;
                 return floor($minutes) . self::getNounPluralForm(floor($minutes), ' минута', ' минуты',
                         ' минут') . " назад";
                 break;
-            case $timeleft === $secInHour:
+            case $timeleft === self::SECONDS_IN_HOUR:
                 return "час назад";
                 break;
-            case $timeleft < $secInDay:
-                $hours = $timeleft / $secInHour;
+            case $timeleft < self::SECONDS_IN_DAY:
+                $hours = $timeleft / self::SECONDS_IN_HOUR;
                 return floor($hours) . self::getNounPluralForm(floor($hours), ' час', ' часа', ' часов') . " назад";
                 break;
-            case $timeleft < 2 * $secInDay:
+            case $timeleft < self::SECONDS_IN_TWO_DAYS:
                 return "Вчера в " . $time;
                 break;
-            case $timeleft > 2 * $secInDay:
+            case $timeleft > self::SECONDS_IN_TWO_DAYS:
                 $fullDate = $day;
                 $fullTime = $time;
                 return $fullDate . " в " . $fullTime;
@@ -95,5 +93,10 @@ class TimeOperations
         }
 
         return $data;
+    }
+
+    public static function calculateBirthday(User $user)
+    {
+        return date_diff(date_create(), date_create($user['birthday']))->format("%y лет");
     }
 }

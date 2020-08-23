@@ -4,9 +4,8 @@ namespace frontend\controllers;
 
 use frontend\components\RegisterComponent;
 use frontend\models\forms\RegisterForm;
-use yii\web\Controller;
 
-class RegisterController extends Controller
+class RegisterController extends UnsecuredController
 {
     public function actionIndex()
     {

@@ -4,14 +4,11 @@ namespace frontend\models\forms;
 
 use frontend\models\User;
 use yii\base\Model;
-use yii\db\ActiveRecord;
-use yii\db\Exception;
 
 class UserLoginForm extends Model
 {
     public $email;
     public $password;
-
     private $user;
 
     public function attributeLabels()
@@ -27,6 +24,7 @@ class UserLoginForm extends Model
         return [
             [['email', 'password'], 'safe'],
             [['email', 'password'], 'required'],
+            [['email'], 'email'],
             ['password', 'validatePassword'],
         ];
     }
@@ -41,12 +39,29 @@ class UserLoginForm extends Model
         }
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         if ($this->user === null) {
             $this->user = User::findOne(['email' => $this->email]);
         }
 
         return $this->user;
+    }
+
+    public function getErrorMessage(): string
+    {
+        $post = \Yii::$app->request->post()['UserLoginForm'];
+        $email = $post["email"] ?? null;
+        $password = $post["password"] ?? null;
+
+        if (!$email or !$password) {
+            return 'Заполните поля Имейл и Пароль';
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 'Введите валидый имейл';
+        }
+
+        return 'Неверный имейл либо пароль';
     }
 }

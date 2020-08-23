@@ -1388,12 +1388,26 @@ INSERT INTO `user_photos` (`id`, `user_id`, `photo`) VALUES
 (NULL, '1', 'man-brune.jpg'),
 (NULL, '2', 'man-blond.jpg'),
 (NULL, '3', 'man-glasses.jpg'),
-(NULL, '4', 'man-hat.jpg'),
+(NULL, '4', 'man-hat.png'),
 (NULL, '5', 'man-running.jpg');
 
 INSERT INTO `responses` (`id`, `created_at`, `your_price`, `comment`, `task_id`, `user_employee_id`) VALUES
 (NULL, '1593958992', '2000', 'че там как дела', '7', '6'),
-(NULL, '1593758992', '1000', 'че там как дела', '7', '2')
+(NULL, '1593758992', '1000', 'нормально дела', '7', '2');
+
+INSERT INTO `users_categories` (`user_id`, `category_id`) VALUES
+(2,1),
+(3,2),
+(4,3),
+(5,4),
+(3,5),
+(4,6),
+(5,7),
+(10,8),
+(11,1),
+(11,2),
+(8,3),
+(8,4);
 
 
 

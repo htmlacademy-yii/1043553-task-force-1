@@ -69,11 +69,11 @@ AppAsset::register($this);
                 </div>
                 <div class="header__nav">
                     <ul class="header-nav__list site-list">
-                        <li class="site-list__item">
-                            <a href="<?= Url::to(['/tasks/']); ?>">Задания</a>
+                        <li id="tasks" class="site-list__item">
+                            <a href="<?= Url::to(['/tasks']); ?>">Задания</a>
                         </li>
-                        <li class="site-list__item site-list__item--active">
-                            <a href="<?= Url::to(['/users/']); ?>">Исполнители</a>
+                        <li id="users" class="site-list__item">
+                            <a href="<?= Url::to(['/users']); ?>">Исполнители</a>
                         </li>
                         <li class="site-list__item">
                             <a href="#">Создать задание</a>
@@ -129,7 +129,7 @@ AppAsset::register($this);
                             <a href="#">Настройки</a>
                         </li>
                         <li>
-                            <a href="#">Выход</a>
+                            <a href="<?= Url::to(['/landing/logout']); ?>">Выход</a>
                         </li>
                     </ul>
                 </div>
@@ -185,6 +185,8 @@ AppAsset::register($this);
             </div>
         </footer>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="js/other.js"></script>
     <?php $this->endBody() ?>
     </body>
     </html>

@@ -9,7 +9,7 @@ use yii\web\Controller;
 use TaskForce\Exception\TaskException;
 use yii\web\NotFoundHttpException;
 
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
     public function actionIndex()
     {
@@ -22,6 +22,7 @@ class TasksController extends Controller
     public function actionShow(int $id)
     {
         $data = TaskComponent::getDataForSelectedTaskPage($id);
+
         return $this->render('show', $data);
     }
 }

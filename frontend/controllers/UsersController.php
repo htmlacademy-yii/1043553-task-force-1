@@ -6,7 +6,7 @@ use frontend\components\UserComponent;
 use frontend\models\forms\UsersFilterForm;
 use yii\web\Controller;
 
-class UsersController extends Controller
+class UsersController extends SecuredController
 {
     public function actionIndex()
     {

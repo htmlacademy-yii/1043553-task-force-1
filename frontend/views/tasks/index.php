@@ -1,7 +1,6 @@
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
-        <?= Yii::$app->user->id ?>
         <?= $this->render('/tasks/components/tasks', ['data' => $data]);?>
     </div>
     <?= $this->render('/tasks/components/pagination');?>

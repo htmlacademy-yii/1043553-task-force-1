@@ -35,10 +35,12 @@ class UserComponent
      */
     public static function getDataForUsersPage(UsersFilterForm $model): array
     {
-        $query = self::findEmployeesQuery();
+        $query = self::findUsersQuery();
         $query = UserFilter::applyFilters($model, $query);
         $data = $query->all();
 
         return SelectedUser::addRelatedDataForEachUser($data);
     }
+
+
 }

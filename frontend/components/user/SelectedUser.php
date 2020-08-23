@@ -34,21 +34,17 @@ class SelectedUser
      */
     public static function addDataRelatedToUser(User $user, int $userId): User
     {
-        //$user['vote'] = self::countAverageUsersRate($userId);
+        $user['usersReviews'] = self::findUserReviews($userId);
 
-        $user['tasksCount'] = self::countAccomplishedTasks($userId);
-
-        $user['reviewsCount'] = self::countUsersReviews($userId);
-
-        $user['usersReviews'] = self::findUsersReview($userId);
-
-        $user['categories'] = self::findUsersWithCategories($userId);
+        $user['categories'] = self::findUserCategories($userId);
 
         $user['photo'] = self::findUsersPhoto($userId);
 
         $user['last_active'] = TimeOperations::timePassed($user['last_active']);
 
         $user["usersReviews"] = self::addRelatedDataForEachReview($user["usersReviews"]);
+
+        $user["age"] = TimeOperations::calculateBirthday($user);
 
         return $user;
     }
@@ -74,7 +70,7 @@ class SelectedUser
      */
     private static function addDataRelatedToReview(UserReview $review): UserReview
     {
-        $customer = self::findUser($review['user_customer_id']);
+        $customer = self::findUserWithPhotosAndCategories($review['user_customer_id']);
 
         $review['customerPhoto'] = self::findUsersPhoto($review['user_customer_id']);
 
