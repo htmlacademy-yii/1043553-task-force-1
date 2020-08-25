@@ -4,6 +4,7 @@ namespace frontend\components;
 
 use frontend\models\City;
 use frontend\models\forms\RegisterForm;
+use frontend\models\forms\UserLoginForm;
 use Yii;
 
 class RegisterComponent
@@ -59,8 +60,18 @@ class RegisterComponent
         }
 
         if ($model->register()) {
-             return true;
+             return self::loginAfterRegistration($model);
         }
          return false;
+    }
+
+    private static function loginAfterRegistration(RegisterForm $RegisterForm): bool
+    {
+        $loginForm = new UserLoginForm();
+        $loginForm->email = $RegisterForm->email;
+        $loginForm->password = $RegisterForm->password;
+        $user = $loginForm->getUser();
+
+        return Yii::$app->user->login($user);
     }
 }
