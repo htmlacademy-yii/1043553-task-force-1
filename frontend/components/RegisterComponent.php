@@ -63,5 +63,4 @@ class RegisterComponent
 
          return false;
     }
-
 }

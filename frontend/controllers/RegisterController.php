@@ -15,6 +15,6 @@ class RegisterController extends UnsecuredController
              return $this->redirect('/tasks');
         }
 
-         return $this->render('index', RegisterComponent::getDataForRegisterPage($model));
+        return $this->render('index', RegisterComponent::getDataForRegisterPage($model));
     }
 }
