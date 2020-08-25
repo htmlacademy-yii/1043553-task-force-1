@@ -31,12 +31,12 @@ PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 CREATE TABLE `taskForce`.`tasks` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `user_customer_id` INT(11) NOT NULL ,
-`user_employee_id` INT(11) NOT NULL ,
+`user_employee_id` INT(11) NULL ,
 `created_at` INT(11)   NOT NULL ,
 `title` VARCHAR(50) NOT NULL ,
 `description` TEXT NOT NULL ,
 `category_id` INT(11)   NOT NULL ,
-`city_id` INT(11)   NOT NULL ,
+`city_id` INT(11)  NULL ,
 `lat` VARCHAR(50) NULL ,
 `lon` VARCHAR(50) NULL ,
 `address` VARCHAR(50) NULL ,
@@ -1285,7 +1285,7 @@ INSERT INTO `categories` (`name`, `image`) VALUES
  ('Ярцево', '55.0564933', '32.6902457'),
  ('Ясногорск', '54.4795178', '37.689669'),
  ('Ясный', '51.0369499', '59.8743256'),
- ('Яхрома', '56.2889858', '37.4831016')
+ ('Яхрома', '56.2889858', '37.4831016'),
  ('Москва', ' 55.751244', '37.618423');
 
 
@@ -1408,10 +1408,6 @@ INSERT INTO `users_categories` (`user_id`, `category_id`) VALUES
 (11,2),
 (8,3),
 (8,4);
-
-
-
-
 
 
 

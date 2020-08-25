@@ -9,10 +9,11 @@ use Yii;
 class RegisterComponent
 {
     private const MOSCOW_ID = 1109;
-    private const EMAIL_DEFAULT_DESCRIPTION = 'Введите валидный адрес электронной почты';
-    private const NAME_DEFAULT_DESCRIPTION = 'Введите ваше имя и фамилию';
-    private const PASSWORD_DEFAULT_DESCRIPTION = 'Длина пароля от 8 символов';
-    private const CITY_DEFAULT_DESCRIPTION = 'Укажите город, чтобы находить подходящие задачи';
+    private const EMAIL_LABEL_DEFAULT_TEXT = 'Введите валидный адрес электронной почты';
+    private const NAME_LABEL_DEFAULT_TEXT = 'Введите ваше имя и фамилию';
+    private const PASSWORD_LABEL_DEFAULT_TEXT = 'Длина пароля от 8 символов';
+    private const CITY_LABEL_DEFAULT_TEXT = 'Укажите город, чтобы находить подходящие задачи';
+
     /**
      * @param RegisterForm $model
      * @return array
@@ -29,11 +30,11 @@ class RegisterComponent
             'city' => $model->city ?? self::MOSCOW_ID
             ];
 
-        $fieldsDescriptions = [
-            'email' => $errors['email'][0] ?? self::EMAIL_DEFAULT_DESCRIPTION,
-            'name' => $errors['name'][0] ?? self::NAME_DEFAULT_DESCRIPTION,
-            'password' => $errors['password'][0] ?? self::PASSWORD_DEFAULT_DESCRIPTION,
-            'city' => $errors['city'][0] ?? self::CITY_DEFAULT_DESCRIPTION
+        $inputLabelTexts = [
+            'email' => $errors['email'][0] ?? self::EMAIL_LABEL_DEFAULT_TEXT,
+            'name' => $errors['name'][0] ?? self::NAME_LABEL_DEFAULT_TEXT,
+            'password' => $errors['password'][0] ?? self::PASSWORD_LABEL_DEFAULT_TEXT,
+            'city' => $errors['city'][0] ?? self::CITY_LABEL_DEFAULT_TEXT
         ];
 
          return [
@@ -41,7 +42,7 @@ class RegisterComponent
             'cities' => $cities,
             'errors' => $errors,
             'values' => $previousValues,
-            'fieldsDescriptions' => $fieldsDescriptions
+            'inputLabelTexts' => $inputLabelTexts
          ];
     }
 
@@ -60,7 +61,6 @@ class RegisterComponent
         if ($model->register()) {
              return true;
         }
-
          return false;
     }
 }

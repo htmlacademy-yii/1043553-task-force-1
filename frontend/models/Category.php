@@ -15,6 +15,17 @@ namespace frontend\models;
  */
 class Category extends \yii\db\ActiveRecord
 {
+    public static function getCategoriesListArray()
+    {
+        $categories = Category::find()->all();
+        $data = [];
+
+        foreach ($categories as $category) {
+            $data[$category['id']] = $category['name'];
+        }
+
+        return $data;
+    }
     /**
      * {@inheritdoc}
      */

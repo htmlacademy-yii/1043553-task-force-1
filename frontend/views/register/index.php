@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
         'value' => $values['email']
     ]; ?>
     <?= $form->field($model, 'email', ['template' => "{label}\n{input}"])->input('textarea', $options)->label(false); ?>
-    <span><?= $fieldsDescriptions['email'] ?></span>
+    <span><?= $inputLabelTexts['email'] ?></span>
 
     <label for="name" class="<?php if (isset($errors['name'])) {
         echo 'input-danger';
@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
     ]; ?>
     <?= $form->field($model, 'name', ['template' => "{label}\n{input}"])->input('textarea',
         $options)->label(false); ?>
-    <span><?= $fieldsDescriptions['name'] ?></span>
+    <span><?= $inputLabelTexts['name'] ?></span>
 
     <label for="city" class="<?php if (isset($errors['city'])) {
         echo 'input-danger';
@@ -62,7 +62,7 @@ use yii\widgets\ActiveForm;
     ]; ?>
     <?= $form->field($model, 'city', ['template' => "{label}\n{input}"])->dropDownList($cities,
         $options)->label(false); ?>
-    <span><?= $fieldsDescriptions['city'] ?></span>
+    <span><?= $inputLabelTexts['city'] ?></span>
 
     <label for="password" class="<?php if (isset($errors['password'])) {
         echo 'input-danger';
@@ -76,7 +76,7 @@ use yii\widgets\ActiveForm;
     ]; ?>
     <?= $form->field($model, 'password', ['template' => "{label}\n{input}"])->input('password',
         $options)->label(false); ?>
-    <span><?= $fieldsDescriptions['password'] ?></span>
+    <span><?= $inputLabelTexts['password'] ?></span>
 
 
     <?= Html::submitButton('Cоздать аккаунт', ['class' => 'button button__registration']) ?>
