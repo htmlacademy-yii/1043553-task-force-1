@@ -5,8 +5,6 @@ namespace frontend\controllers;
 use frontend\components\LandingComponent;
 use frontend\models\forms\UserLoginForm;
 use Yii;
-use yii\web\Controller;
-use frontend\controllers\UnsecuredController;
 
 class LandingController extends UnsecuredController
 {
@@ -20,13 +18,6 @@ class LandingController extends UnsecuredController
         }
 
         return $this->render('index', LandingComponent::getDataForLandingPage());
-    }
-
-    public function actionLogout()
-    {
-        \Yii::$app->user->logout();
-
-        return $this->goHome();
     }
 
     public function beforeAction($action)

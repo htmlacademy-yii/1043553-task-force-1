@@ -2,10 +2,16 @@ updateActiveTab();
 
 function updateActiveTab()
 {
-    var url = window.location.href.split('/');
-    var currentRoute = url.pop() || url.pop();  // handle potential trailing slash
-
     let activeTab = $(".site-list__item--active");
+    let url = window.location.href;
     activeTab.toggleClass('site-list__item--active');
-    $('#' + currentRoute).addClass('site-list__item--active');
+
+    if (~url.indexOf("users")) {
+        $('#users').addClass('site-list__item--active');
+        console.log('users');
+    }
+    if (~url.indexOf("tasks")) {
+        $('#tasks').addClass('site-list__item--active');
+        console.log('tasks');
+    }
 }

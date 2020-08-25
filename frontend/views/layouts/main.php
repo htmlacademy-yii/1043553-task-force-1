@@ -111,13 +111,11 @@ AppAsset::register($this);
                 <?php if (Url::current() !== '/register/index') : ?>
                     <div class="header__account">
                         <a class="header__account-photo">
-                            <img src="/img/user-photo.png"
+                            <img src="/img/<?= $this->context->userPhoto ?>"
                                  width="43" height="44"
                                  alt="Аватар пользователя">
                         </a>
-                        <span class="header__account-name">
-                 Василий
-             </span>
+                        <span class="header__account-name"><?= $this->context->userName ?></span>
                     </div>
                 <?php endif; ?>
                 <div class="account__pop-up">
@@ -129,7 +127,7 @@ AppAsset::register($this);
                             <a href="#">Настройки</a>
                         </li>
                         <li>
-                            <a href="<?= Url::to(['/landing/logout']); ?>">Выход</a>
+                            <a href="<?= Url::to(['/logout']); ?>">Выход</a>
                         </li>
                     </ul>
                 </div>
@@ -186,7 +184,7 @@ AppAsset::register($this);
         </footer>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="js/other.js"></script>
+    <script src="/js/other.js"></script>
     <?php $this->endBody() ?>
     </body>
     </html>

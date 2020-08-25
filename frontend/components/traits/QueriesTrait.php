@@ -123,10 +123,22 @@ trait QueriesTrait
      * @param int $userId
      * @return string
      */
-    private static function findUsersPhoto(int $userId): string
+    public static function findUsersPhoto(int $userId): string
     {
         $photo = UserPhoto::find()->select(['photo'])->where(['user_id' => $userId])->one();
         return $photo['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
+    }
+
+    /**
+     * @param int $userId
+     * @return string
+     */
+    public static function findUserName(int $userId): string
+    {
+        $userName = User::find()
+            ->select(['name'])->where(['id' => $userId])->asArray()->one();
+
+        return $userName['name'];
     }
 
     /**
