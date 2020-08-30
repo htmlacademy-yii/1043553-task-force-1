@@ -3,16 +3,28 @@
 
 namespace frontend\controllers;
 
+use frontend\components\TaskComponent;
+use frontend\models\forms\TaskCreateForm;
 
-use frontend\models\Tasks;
-use yii\web\Controller;
-
-class TasksController extends Controller
+class TasksController extends SecuredController
 {
     public function actionIndex()
     {
-        $data = (new Tasks())->getDataForTasksPage();
+        return $this->render('index', TaskComponent::getDataForTasksPage());
+    }
 
-        return $this->render('browse', ["data" => $data]);
+    public function actionShow(int $id)
+    {
+        return $this->render('show', TaskComponent::getDataForSelectedTaskPage($id));
+    }
+
+    public function actionCreate()
+    {
+        $model = new TaskCreateForm();
+
+        if (TaskComponent::createTask($model)) {
+            $this->redirect('/tasks');
+        }
+        return $this->render('create', TaskComponent::getDataForCreatePage($model));
     }
 }

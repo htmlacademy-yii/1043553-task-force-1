@@ -6,6 +6,18 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'enableStrictParsing' => false,
+            'rules' => [
+                '//' => '/',
+                '/' => 'landing/index',
+                'persons' => 'contacts/index',
+                'tasks/<id:\d+>' => 'tasks/show',
+                'users/<id:\d+>' => 'users/show',
+            ]
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
