@@ -18,12 +18,14 @@ class LandingComponent extends Component
             ->asArray()
             ->all();
 
-        foreach ($tasks as &$task) {
-            $task['created_at'] = TimeOperations::timePassed($task['created_at']);
-            $task['description'] = $this->makeStringShorter($task['description'], 70);
+        $tasksClone = [];
+        foreach ($tasks as $key => $task) {
+            $tasksClone[$key] = $task;
+            $tasksClone[$key]['created_at'] = TimeOperations::timePassed($task['created_at']);
+            $tasksClone[$key]['description'] = $this->makeStringShorter($task['description'], 70);
         }
 
-        return ['tasks' => $tasks];
+        return ['tasks' => $tasksClone];
     }
 
     private function makeStringShorter(string $string, $length)
@@ -31,3 +33,8 @@ class LandingComponent extends Component
         return substr($string, 0, $length) . '...';
     }
 }
+
+/*foreach ($tasks as &$task) {
+    $task['created_at'] = TimeOperations::timePassed($task['created_at']);
+    $task['description'] = $this->makeStringShorter($task['description'], 70);
+}*/
