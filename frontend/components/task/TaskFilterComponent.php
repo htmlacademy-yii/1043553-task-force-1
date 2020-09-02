@@ -6,10 +6,14 @@ use frontend\models\forms\TasksFilterForm;
 use Yii;
 use yii\db\ActiveQuery;
 
-class TaskFilter
+class TaskFilterComponent
 {
     private TasksFilterForm $model;
     private ActiveQuery $query;
+
+    private const DAY_PERIOD_VALUE = 'day';
+    private const WEEK_PERIOD_VALUE = 'week';
+    private const MONTH_PERIOD_VALUE = 'month';
 
     private function __construct(TasksFilterForm $model, ActiveQuery $query)
     {
@@ -17,13 +21,6 @@ class TaskFilter
         $this->query = $query;
     }
 
-    /**
-     * @param TasksFilterForm $model
-     * @param ActiveQuery $query
-     * @return ActiveQuery
-     *
-     * Функция добавляет в SQL запрос новые параметры в зависмости от выбранных фильтров
-     */
     public static function applyFilters(TasksFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         $self = new self($model, $query);
@@ -39,9 +36,7 @@ class TaskFilter
         return $self->query;
     }
 
-    /**
-     * @return ActiveQuery
-     */
+
     private function filterThroughAdditionalFields(): ActiveQuery
     {
         if ($this->model->additional) {
@@ -66,9 +61,7 @@ class TaskFilter
         return $this->query;
     }
 
-    /**
-     * @return ActiveQuery
-     */
+
     private function filterThroughChosenCategories(): ActiveQuery
     {
         if ($this->model->categories) {
@@ -83,25 +76,19 @@ class TaskFilter
         return $this->query;
     }
 
-    /**
-     * @return ActiveQuery
-     */
     private function filterThroughChosenPeriod(): ActiveQuery
     {
-        if ($this->model->period == 'day') {
+        if ($this->model->period === self::DAY_PERIOD_VALUE) {
              return $this->query->andWhere(['>', 'tasks.created_at', strtotime("- 1 day")]);
-        } elseif ($this->model->period == 'week') {
+        } elseif ($this->model->period === self::WEEK_PERIOD_VALUE) {
              return $this->query->andWhere(['>', 'tasks.created_at', strtotime("- 1 week")]);
-        } elseif ($this->model->period == 'month') {
+        } elseif ($this->model->period === self::MONTH_PERIOD_VALUE) {
              return $this->query->andWhere(['>', 'tasks.created_at', strtotime("- 1 month")]);
         }
 
         return $this->query;
     }
 
-    /**
-     * @return ActiveQuery
-     */
     private function filterThroughSearchField(): ActiveQuery
     {
         if ($this->model->search) {

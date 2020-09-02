@@ -1,30 +1,36 @@
 <?php
 
-
 namespace frontend\controllers;
 
-use frontend\components\TaskComponent;
+use frontend\controllers\parentControllers\SecuredController;
 use frontend\models\forms\TaskCreateForm;
 
 class TasksController extends SecuredController
 {
     public function actionIndex()
     {
-        return $this->render('index', TaskComponent::getDataForTasksPage());
+        $data = \Yii::$app->taskViewComponent->getDataForTasksPage();
+
+        return $this->render('index', $data);
     }
 
     public function actionShow(int $id)
     {
-        return $this->render('show', TaskComponent::getDataForSelectedTaskPage($id));
+        $data = \Yii::$app->taskViewComponent->getDataForSelectedTaskPage($id);
+
+        return $this->render('show', $data);
     }
 
     public function actionCreate()
     {
         $model = new TaskCreateForm();
 
-        if (TaskComponent::createTask($model)) {
+        if (\Yii::$app->taskCreateComponent->createTask($model)) {
             $this->redirect('/tasks');
         }
-        return $this->render('create', TaskComponent::getDataForCreatePage($model));
+
+        $data = \Yii::$app->taskCreateComponent->getDataForTaskCreatePage($model);
+
+        return $this->render('create', $data);
     }
 }

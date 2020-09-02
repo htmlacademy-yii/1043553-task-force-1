@@ -41,6 +41,8 @@ class Task extends \yii\db\ActiveRecord
     private $taskDeadline;
     private int $currentTaskStatusCode;
 
+    public $category_id;
+
     public $image;
     public $city;
     public $category;

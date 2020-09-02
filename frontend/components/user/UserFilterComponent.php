@@ -1,16 +1,13 @@
 <?php
 
-
 namespace frontend\components\user;
-
 
 use frontend\models\forms\UsersFilterForm;
 use frontend\models\Task;
-use frontend\models\User;
 use Yii;
 use yii\db\ActiveQuery;
 
-class UserFilter
+class UserFilterComponent
 {
     private UsersFilterForm $model;
     private ActiveQuery $query;
@@ -21,19 +18,12 @@ class UserFilter
         $this->query = $query;
     }
 
-    /**
-     * @param UsersFilterForm $model
-     * @param ActiveQuery $query
-     * @return ActiveQuery
-     *
-     * Функция добавляет в SQL запрос новые параметры в зависмости от выбранных фильтров
-     */
     public static function applyFilters(UsersFilterForm $model, ActiveQuery $query): ActiveQuery
     {
         $self = new self($model, $query);
         $filters = Yii::$app->request->post() ?? [];
 
-        if ($model->load($filters)) {
+        if ($self->model->load($filters)) {
             $self->filterThroughAdditionalFields();
 
             $self->filterThroughChosenCategories();
@@ -46,7 +36,7 @@ class UserFilter
         return $self->query;
     }
 
-    private function sortUsers()
+    private function sortUsers(): ActiveQuery
     {
         $sortRule = Yii::$app->request->get()['sortBy'] ?? [];
 
@@ -64,9 +54,6 @@ class UserFilter
         return $this->query;
     }
 
-    /**
-     * @return ActiveQuery
-     */
     private function filterThroughAdditionalFields(): ActiveQuery
     {
         if ($this->model->additional) {
@@ -100,16 +87,15 @@ class UserFilter
             $this->query->andWhere(['tasks.address' => null]);
         }
 
-        /*if ($model->favorite) {
+        if ($this->model->favorite) {
+            $this->query->joinWith('favorites')
+                ->andWhere(['favorites.user_id' => Yii::$app->user->getId()]);
 
-        }*/
+        }
 
         return $this->query;
     }
 
-    /**
-     * @return ActiveQuery
-     */
     private function filterThroughChosenCategories(): ActiveQuery
     {
         if ($this->model->categories) {
@@ -125,9 +111,6 @@ class UserFilter
         return $this->query;
     }
 
-    /**
-     * @return ActiveQuery
-     */
     private function filterThroughSearchField(): ActiveQuery
     {
         if ($this->model->search) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers;
+namespace frontend\controllers\parentControllers;
 
 use frontend\components\traits\QueriesTrait;
 use Yii;

@@ -6,8 +6,9 @@ use frontend\models\City;
 use frontend\models\forms\RegisterForm;
 use frontend\models\forms\UserLoginForm;
 use Yii;
+use yii\base\Component;
 
-class RegisterComponent
+class RegisterComponent extends Component
 {
     private const MOSCOW_ID = 1109;
     private const EMAIL_LABEL_DEFAULT_TEXT = 'Введите валидный адрес электронной почты';
@@ -15,11 +16,8 @@ class RegisterComponent
     private const PASSWORD_LABEL_DEFAULT_TEXT = 'Длина пароля от 8 символов';
     private const CITY_LABEL_DEFAULT_TEXT = 'Укажите город, чтобы находить подходящие задачи';
 
-    /**
-     * @param RegisterForm $model
-     * @return array
-     */
-    public static function getDataForRegisterPage(RegisterForm $model): array
+
+    public function getDataForRegisterPage(RegisterForm $model): array
     {
         $cities = City::getCities();
         $errors = $model->getErrors() ?? [];
@@ -47,11 +45,7 @@ class RegisterComponent
          ];
     }
 
-    /**
-     * @param RegisterForm $model
-     * @return bool
-     */
-    public static function register(RegisterForm $model): bool
+    public function register(RegisterForm $model): bool
     {
         $formData = Yii::$app->request->post() ?? [];
 
@@ -65,7 +59,7 @@ class RegisterComponent
          return false;
     }
 
-    private static function loginAfterRegistration(RegisterForm $RegisterForm): bool
+    private function loginAfterRegistration(RegisterForm $RegisterForm): bool
     {
         $loginForm = new UserLoginForm();
         $loginForm->email = $RegisterForm->email;

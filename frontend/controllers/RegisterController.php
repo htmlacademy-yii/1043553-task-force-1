@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use frontend\components\RegisterComponent;
+use frontend\controllers\parentControllers\UnsecuredController;
 use frontend\models\forms\RegisterForm;
 
 class RegisterController extends UnsecuredController
@@ -11,10 +11,12 @@ class RegisterController extends UnsecuredController
     {
         $model = new RegisterForm();
 
-        if (RegisterComponent::register($model)) {
+        if (\Yii::$app->registerComponent->register($model)) {
              return $this->redirect('/tasks');
         }
 
-        return $this->render('index', RegisterComponent::getDataForRegisterPage($model));
+        $data = \Yii::$app->registerComponent->getDataForRegisterPage($model);
+
+        return $this->render('index', $data);
     }
 }

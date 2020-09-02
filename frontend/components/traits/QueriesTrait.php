@@ -2,7 +2,6 @@
 
 namespace frontend\components\traits;
 
-use frontend\components\UserComponent;
 use frontend\models\pivot\UsersCategories;
 use frontend\models\Task;
 use frontend\models\User;
@@ -13,8 +12,6 @@ use yii\web\NotFoundHttpException;
 
 trait QueriesTrait
 {
-
-
     /**
      * @param int $id
      * @return string
@@ -33,7 +30,7 @@ trait QueriesTrait
      * @throws NotFoundHttpException
      *
      */
-    public static function getTaskWithResponsesCategoriesFiles(int $id): Task
+    public function getTaskWithResponsesCategoriesFiles(int $id): Task
     {
         $task = Task::find()
             ->select([
@@ -58,16 +55,19 @@ trait QueriesTrait
     /**
      * @return ActiveQuery
      */
-    public static function findNewTasksWithCategoryCityQuery(): ActiveQuery
+    public function findNewTasksWithCategoryCityQuery(): ActiveQuery
     {
         return Task::find()
             ->select([
+                'category_id',
+                'city_id',
+
                 'tasks.id',
                 'title',
                 'description',
                 'budget',
                 'tasks.created_at',
-                'categories.name as category',
+                'categories.name as categoryName',
                 'categories.image as image',
                 'cities.name as city'
 
@@ -80,7 +80,7 @@ trait QueriesTrait
     /**
      * @return \yii\db\ActiveQuery
      */
-    private static function findUsersQuery(): ActiveQuery
+    private function findUsersQuery(): ActiveQuery
     {
         return User::find()
             ->select([
@@ -99,7 +99,6 @@ trait QueriesTrait
             ->joinWith('usersReviews')
             ->joinWith('tasks')
             ->joinWith('userPhotos')
-            ->joinWith('categories')
             ->where(['current_role' => Task::ROLE_EMPLOYEE])
             ->groupBy(['users.id']);
     }
@@ -109,9 +108,9 @@ trait QueriesTrait
      * @return User
      * @throws NotFoundHttpException
      */
-    private static function findUserWithPhotosAndCategories(int $id): User
+    private function findUserWithPhotosAndCategories(int $id): User
     {
-        $user = self::findUsersQuery()->where(['users.id' => $id]) ->one();
+        $user = $this->findUsersQuery()->where(['users.id' => $id]) ->one();
         if (!$user) {
             throw new NotFoundHttpException("Не найден пользователь с ID: " . $id);
         }
@@ -126,7 +125,7 @@ trait QueriesTrait
     public static function findUsersPhoto(int $userId): string
     {
         $photo = UserPhoto::find()->select(['photo'])->where(['user_id' => $userId])->one();
-        return $photo['photo'] ?? UserComponent::DEFAULT_USER_PHOTO;
+        return $photo['photo'] ?? User::DEFAULT_USER_PHOTO;
     }
 
     /**
@@ -152,10 +151,5 @@ trait QueriesTrait
             ->joinWith('categories')
             ->where(['user_id' => $userId])
             ->all();
-    }
-
-    private static function findUserReviews(int $userId): array
-    {
-        return UserReview::find()->where(['user_employee_id' => $userId])->all();
     }
 }

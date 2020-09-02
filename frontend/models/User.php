@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use frontend\models\pivot\Favorite;
 use yii\web\IdentityInterface;
 
 /**
@@ -42,6 +43,9 @@ use yii\web\IdentityInterface;
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    public const DEFAULT_USER_PHOTO = 'default.jpg';
+
+
     public $vote;
     public $tasksCount;
     public $reviewsCount;
@@ -52,6 +56,15 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $userPhotos;
     public $passwordHash;
     public $age;
+
+    public function getUser()
+    {
+        if ($this->user === null) {
+            $this->user = User::findOne(['email' => $this->email]);
+        }
+
+        return $this->user;
+    }
 
     public static function findIdentity($id)
     {
@@ -270,13 +283,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->hasMany(UserReview::className(), ['user_employee_id' => 'id']);
     }
 
-
-    public function getUser()
+    public function getFavorites()
     {
-        if ($this->user === null) {
-            $this->user = User::findOne(['email' => $this->email]);
-        }
-
-        return $this->user;
+        return $this->hasMany(Favorite::className(), ['fav_user_id' => 'id']);
     }
 }
