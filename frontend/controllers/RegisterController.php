@@ -10,7 +10,6 @@ class RegisterController extends UnsecuredController
     public function actionIndex()
     {
         $model = new RegisterForm();
-
         if (\Yii::$app->registerComponent->register($model)) {
              return $this->redirect('/tasks');
         }
