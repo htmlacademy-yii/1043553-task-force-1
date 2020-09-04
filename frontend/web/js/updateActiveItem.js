@@ -12,11 +12,11 @@ function updateActiveTab()
         return ;
     }
 
-    if (~url.indexOf("users")) {
+    if (~url.indexOf("user")) {
         $('#users').addClass('site-list__item--active');
         return ;
     }
-    if (~url.indexOf("tasks")) {
+    if (~url.indexOf("task")) {
         $('#tasks').addClass('site-list__item--active');
         return ;
     }
