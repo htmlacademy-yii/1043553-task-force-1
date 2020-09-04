@@ -10,7 +10,7 @@ if ($user['usersReviews']) : ?>
                         <?= $review['taskTitle'] ?> </a>
                 </p>
                 <div class="card__review">
-                    <a href="#"><img src="../img/<?= $review['customerPhoto'] ?>" width="55" height="54"></a>
+                    <a href="#"><img src="../../img/<?= $review['customerPhoto'] ?>" width="55" height="54"></a>
                     <div class="feedback-card__reviews-content">
                         <p class="link-name link">
                             <a href="<?= Url::to(['users/show', 'id' => $review['user_customer_id']]); ?>"

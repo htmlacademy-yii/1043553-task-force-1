@@ -14,8 +14,8 @@ return [
                 '//' => '/',
                 '/' => 'landing/index',
                 'tasks' => 'tasks/index',
-                'tasks/<id:\d+>' => 'tasks/show',
-                'users/<id:\d+>' => 'users/show',
+                'task/view/<id:\d+>' => 'tasks/show',
+                'user/view/<id:\d+>' => 'users/show',
             ]
         ],
         'cache' => [

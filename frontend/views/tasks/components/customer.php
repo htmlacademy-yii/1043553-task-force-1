@@ -7,7 +7,7 @@ use yii\helpers\Url;
     <div class="profile-mini__wrapper">
         <h3>Заказчик</h3>
         <div class="profile-mini__top">
-            <img src="../img/<?= $customer['photo'] ?>" width="62" height="62"
+            <img src="../../img/<?= $customer['photo'] ?>" width="62" height="62"
                  alt="Аватар заказчика">
             <div class="profile-mini__name five-stars__rate">
                 <a class="link-regular" href="<?= Url::to(['/users/show', 'id' => $customer['id']]); ?>"><p><?= $customer['name'] ?></p></a>
