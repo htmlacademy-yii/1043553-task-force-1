@@ -12,7 +12,7 @@ use yii\helpers\Url;
 
                 <div class="content-view__feedback-card">
                     <div class="feedback-card__top">
-                        <a href="#"><img src="../img/<?= $response['userEmployee']['photo'] ?>"
+                        <a href="#"><img src="../../img/<?= $response['userEmployee']['photo'] ?>"
                                          width="55" height="55">
                         </a>
                         <div class="feedback-card__top--name">
