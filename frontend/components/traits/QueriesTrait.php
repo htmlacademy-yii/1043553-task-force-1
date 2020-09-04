@@ -6,7 +6,6 @@ use frontend\models\pivot\UsersCategories;
 use frontend\models\Task;
 use frontend\models\User;
 use frontend\models\UserPhoto;
-use frontend\models\UserReview;
 use yii\db\ActiveQuery;
 use yii\web\NotFoundHttpException;
 
@@ -99,7 +98,7 @@ trait QueriesTrait
             ->joinWith('usersReviews')
             ->joinWith('tasks')
             ->joinWith('userPhotos')
-            ->where(['current_role' => Task::ROLE_EMPLOYEE])
+            ->where(['current_role' => User::ROLE_EMPLOYEE_CODE])
             ->groupBy(['users.id']);
     }
 

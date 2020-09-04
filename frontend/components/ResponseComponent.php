@@ -5,17 +5,47 @@ namespace frontend\components;
 use frontend\components\helpers\TimeOperations;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\Response;
-use yii\base\Component;
+use frontend\models\Task;
+use Yii;
 
-class ResponseComponent extends Component
+class ResponseComponent
 {
     use QueriesTrait;
 
-    public function addDataForEachResponse(array $responses): array
+    private Task $task;
+    private int $taskCreatorId;
+    public bool $showResponses;
+    public $taskResponses;
+
+    public function __construct(Task $task)
+    {
+        $this->task = $task;
+        $this->taskCreatorId = (int)$this->task['user_customer_id'];
+        $this->showResponses = $this->showResponses();
+        $this->taskResponses = $this->addDataForEachResponse();
+    }
+
+    private function showResponses(): bool
+    {
+        $this->taskResponses = $this->task['responses'] ?? [];
+
+        if ($this->taskCreatorId !== Yii::$app->user->getId()) {
+            foreach ($this->taskResponses as $key => $response) {
+                if ($response['id'] == Yii::$app->user->getId()) {
+                    $this->taskResponses = $this->taskResponses[$key];
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private function addDataForEachResponse(): array
     {
         $newResponsesArray = [];
 
-        foreach ($responses as $key => $response) {
+        foreach ($this->taskResponses as $key => $response) {
             $newResponsesArray[$key] = $this->addDataRelatedToResponse($response);
         }
 

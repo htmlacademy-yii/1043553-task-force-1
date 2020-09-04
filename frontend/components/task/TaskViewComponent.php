@@ -14,10 +14,13 @@ class TaskViewComponent extends Component
     public function getDataForSelectedTaskPage(): array
     {
         $selectedTask = new SelectedTaskComponent();
-        $task = $selectedTask->getTask();
-        $customer = $selectedTask->getCustomerData();
-        $responses = $selectedTask->getTaskResponses();
-        $data = ['task' => $task, 'customer' => $customer, 'responses' => $responses];
+        $data = [
+            'task' => $selectedTask->getTask(),
+            'customer' => $selectedTask->getCustomerData(),
+            'responses' => $selectedTask->getTaskResponses(),
+            'showResponses' => $selectedTask->showResponses(),
+            'actionButton' => $selectedTask->getTaskAction()
+        ];
 
         return TimeOperations::addTimeInfo($data);
     }

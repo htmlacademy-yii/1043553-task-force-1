@@ -45,6 +45,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public const DEFAULT_USER_PHOTO = 'default.jpg';
 
+    public const ROLE_EMPLOYEE_CODE = 0;
+    public const ROLE_CUSTOMER_CODE = 1;
+
 
     public $vote;
     public $tasksCount;
