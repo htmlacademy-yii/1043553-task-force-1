@@ -18,8 +18,9 @@ class TaskViewComponent extends Component
             'task' => $selectedTask->getTask(),
             'customer' => $selectedTask->getCustomerData(),
             'responses' => $selectedTask->getTaskResponses(),
-            'showResponses' => $selectedTask->showResponses(),
-            'actionButton' => $selectedTask->getTaskAction()
+            'showResponses' => $selectedTask->getResponseVisibility(),
+            'actionButton' => $selectedTask->getTaskAction(),
+            'userRole' => $selectedTask->getUserRole(),
         ];
 
         return TimeOperations::addTimeInfo($data);

@@ -2,12 +2,11 @@
 
 namespace frontend\models;
 
-use Yii;
-
 /**
  * This is the model class for table "responses".
  *
  * @property int $id
+ * @property int $status
  * @property int $created_at
  * @property int|null $your_price
  * @property int $task_id
@@ -18,13 +17,28 @@ use Yii;
  */
 class Response extends \yii\db\ActiveRecord
 {
+    public const STATUS_APPROVED_CODE = 1;
+    public const STATUS_REFUSED_CODE = 2;
+    public const STATUS_PENDING_CODE = 0;
+
+    public const STATUS_REFUSED_NAME = 'Предложение отклонено';
+    public const STATUS_APPROVED_NAME = 'Предложение принято';
+    public const STATUS_PENDING_NAME = 'Ожидает подтверждения заказчика';
+
+    public const GET_POSSIBLE_STATUSES_EXCEPTION = 'Неизвестный индекc в функции getPossibleResponseStatuses';
+    public const GET_POSSIBLE_ACTIONS_EXCEPTION = 'Неизвестный индекc в функции getPossibleActions';
+    public const PREDICT_STATUS_EXCEPTION = 'Неизвестный индекc в функции predictResponseStatus';
+    public const SET_CURRENT_STATUS_EXCEPTION = 'Невозможно поменять статус. Ошибка: ';
+
     public $userEmployee;
+    public $actionButtonsAreVisible;
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-         return 'responses';
+        return 'responses';
     }
 
     /**
@@ -32,11 +46,23 @@ class Response extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-         return [
+        return [
             [['created_at', 'task_id', 'user_employee_id'], 'required'],
             [['created_at', 'your_price', 'task_id', 'user_employee_id'], 'integer'],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
-            [['user_employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_employee_id' => 'id']],
+            [
+                ['task_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Task::className(),
+                'targetAttribute' => ['task_id' => 'id']
+            ],
+            [
+                ['user_employee_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['user_employee_id' => 'id']
+            ],
         ];
     }
 
@@ -45,7 +71,7 @@ class Response extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-         return [
+        return [
             'id' => 'ID',
             'created_at' => 'Created At',
             'your_price' => 'Your Price',
@@ -61,7 +87,7 @@ class Response extends \yii\db\ActiveRecord
      */
     public function getTask()
     {
-         return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
+        return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
     }
 
     /**
@@ -71,6 +97,6 @@ class Response extends \yii\db\ActiveRecord
      */
     public function getUserEmployee()
     {
-         return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
     }
 }

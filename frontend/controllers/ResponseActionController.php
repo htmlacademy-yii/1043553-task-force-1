@@ -2,18 +2,23 @@
 
 namespace frontend\controllers;
 
+use frontend\components\response\ResponseStatusComponent;
 use frontend\controllers\parentControllers\SecuredController;
+use Yii;
 
-class TaskActionController extends SecuredController
+class ResponseActionController extends SecuredController
 {
-    public function actionCancel($id)
+    public function actionDeny($id, $userRole)
     {
-        return redirect('/tasks');
+        $responseStatusComponent = new ResponseStatusComponent($userRole, $id);
+        $responseStatusComponent->denyResponse();
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
-    public function actionApprove($id)
+    public function actionApprove($id, $userRole)
     {
-        var_dump($id);
-        die;
+        $responseStatusComponent = new ResponseStatusComponent($userRole, $id);
+        $responseStatusComponent->approveResponse();
+        return $this->redirect(Yii::$app->request->referrer);
     }
 }

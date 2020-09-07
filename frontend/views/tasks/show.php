@@ -3,8 +3,10 @@
         <?= $this->render('/tasks/components/taskDescription', ['task' => $task]); ?>
         <?= $this->render('/tasks/components/actionButtons', ['actionButton' => $actionButton]); ?>
     </div>
+    <?= var_dump($showResponses) ?>
     <?php if ($showResponses) : ?>
-        <?= $this->render('/tasks/components/responses', ['responses' => $responses]); ?>
+        <?= $this->render('/tasks/components/responses',
+            ['responses' => $responses, 'userRole' => $userRole]); ?>
     <?php endif; ?>
 </section>
 <section class="connect-desk">

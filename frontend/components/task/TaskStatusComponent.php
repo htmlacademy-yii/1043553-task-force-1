@@ -3,11 +3,11 @@
 namespace frontend\components\task;
 
 use frontend\models\Task;
-use frontend\TaskActions\AbstractAction;
-use frontend\TaskActions\ActionAccomplish;
-use frontend\TaskActions\ActionCancel;
-use frontend\TaskActions\ActionRefuse;
-use frontend\TaskActions\ActionRespond;
+use frontend\components\task\actions\AbstractAction;
+use frontend\components\task\actions\ActionAccomplish;
+use frontend\components\task\actions\ActionCancel;
+use frontend\components\task\actions\ActionRefuse;
+use frontend\components\task\actions\ActionRespond;
 
 class TaskStatusComponent
 {

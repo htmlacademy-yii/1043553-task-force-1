@@ -2,7 +2,9 @@
 
 namespace frontend\components\task;
 
-use frontend\components\ResponseComponent;
+use frontend\components\helpers\Checker;
+use frontend\components\response\ResponseViewComponent;
+use frontend\components\response\ResponseVisibilityComponent;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\Task;
 use frontend\models\User;
@@ -15,7 +17,8 @@ class SelectedTaskComponent
     private Task $task;
     private int $taskCreatorId;
     private bool $showResponses;
-    private ResponseComponent $responseComponent;
+    private ResponseViewComponent $responseViewComponent;
+    private ResponseVisibilityComponent $responseVisibilityComponent;
     private TaskActionComponent $taskActionComponent;
     private int $userRole;
 
@@ -24,10 +27,10 @@ class SelectedTaskComponent
         $selectedTaskId = (int)\Yii::$app->request->get('id');
         $this->task = $this->getTaskWithResponsesCategoriesFiles($selectedTaskId);
         $this->taskCreatorId = (int)$this->task['user_customer_id'];
-        $this->detectUserRole();
-        $this->responseComponent = new ResponseComponent($this->task);
+        $this->userRole = Checker::authorisedUserIsTaskCreator($this->task);
+        $this->responseViewComponent = new ResponseViewComponent($this->task);
+        $this->responseVisibilityComponent = new ResponseVisibilityComponent($this->task);
         $this->taskActionComponent = new TaskActionComponent($this->task['current_status'], $this->userRole);
-        $this->showResponses = $this->taskCreatorId === Yii::$app->user->getId();
     }
 
     public function getCustomerData(): User
@@ -41,14 +44,19 @@ class SelectedTaskComponent
         return $customer;
     }
 
-    public function showResponses(): bool
+    public function getUserRole(): int
     {
-        return $this->responseComponent->showResponses;
+        return $this->userRole;
+    }
+
+    public function getResponseVisibility(): bool
+    {
+        return $this->responseVisibilityComponent->getResponseVisibility();
     }
 
     public function getTaskResponses(): array
     {
-        return $this->responseComponent->taskResponses;
+        return $this->responseViewComponent->taskResponses ?? [];
     }
 
     public function getTaskAction(): string
@@ -59,14 +67,5 @@ class SelectedTaskComponent
     public function getTask(): Task
     {
         return $this->task;
-    }
-
-    private function detectUserRole()
-    {
-        if ($this->taskCreatorId == Yii::$app->user->getId()) {
-            $this->userRole = User::ROLE_CUSTOMER_CODE;
-            return;
-        }
-        $this->userRole = User::ROLE_EMPLOYEE_CODE;
     }
 }

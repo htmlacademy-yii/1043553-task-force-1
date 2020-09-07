@@ -1,3 +1,6 @@
+-- Test user login/pass :
+-- testuser@gmail.com / 11111111
+
 CREATE DATABASE taskForce
 DEFAULT CHARACTER SET = utf8
 DEFAULT COLLATE = utf8_general_ci;
@@ -42,7 +45,7 @@ CREATE TABLE `taskForce`.`tasks` (
 `address` VARCHAR(50) NULL ,
 `budget` INT(11) NOT NULL ,
 `deadline` DATE  NULL ,
-`current_status` SMALLINT(3)  NULL ,
+`current_status` SMALLINT(3) NOT NULL DEFAULT 0 ,
 PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE `taskForce`.`tasks_files` (
@@ -54,6 +57,7 @@ PRIMARY KEY (`id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 CREATE TABLE `taskForce`.`responses` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `created_at` INT(11)   NOT NULL ,
+`status` SMALLINT(3) NOT NULL DEFAULT 0,
 `your_price` INT(11)  NULL ,
 `comment` TEXT NULL ,
 `task_id` INT(11)   NOT NULL ,
@@ -165,7 +169,9 @@ ALTER TABLE `favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON 
 ALTER TABLE `favorites` ADD INDEX( `fav_user_id`);
 ALTER TABLE `favorites` ADD FOREIGN KEY (`fav_user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-
+-- ############################################## FAKE DATA BELOW ##############################################
+-- Test user login/pass :
+-- testuser@gmail.com / 11111111
 
 INSERT INTO `categories` (`name`, `image`) VALUES
 ('Курьерские услуги', 'translation'),
@@ -1309,7 +1315,8 @@ INSERT INTO `users` (`email`, `name`, `password_hash`, `created_at`, `city_id`, 
 ('bbartolettig@simplemachines.org', 'Barnabas Bartoletti', '3chTNtqhoo', '1545696000', '735', '1', '1581334518'),
 ('nculliph@fc2.com', 'Nixie Cullip', '2UdKIR2f', '1554595200', '790', '0', '1581327369'),
 ('mpimblotti@xing.com', 'Matilde Pimblott', 'nGZ8disdg', '1563408000', '307', '1', '1581333846'),
-('askurrayj@un.org', 'Al Skurray', 'bL9tAf', '1543104000', '508', '1', '1581329872');
+('askurrayj@un.org', 'Al Skurray', 'bL9tAf', '1543104000', '508', '1', '1581329872'),
+('testuser@gmail.com', 'Test User', '$2y$13$RczuqQYBEhRYlPosFIP7zOklmhTzP5giULfYT5U7cvBLQNbDBvZiq', '1543104000', '508', '1', '1581329872');
 
 UPDATE `users` SET  `address` = '38737 Moose Avenue' , `birthday` = '1989-11-11' , `description` = 'In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.' , `phone` = '64574473047' , `skype` = 'high-level' WHERE `email` = 'kbuttress0@1und1.de';
 UPDATE `users` SET  `address` = '738 Hagan Lane' , `birthday` = '1989-03-05' , `description` = 'Pellentesque ultrices mattis odio.' , `phone` = '75531015353' , `skype` = 'mobile' WHERE `email` = 'baymer1@hp.com';
@@ -1342,7 +1349,8 @@ INSERT INTO `tasks` (`created_at`, `category_id`, `description`, `deadline`, `ti
 ('1568332800', '5', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', '2019-11-19', 'transform web-enabled relationships', '6213 Lake View Drive', '4414', '44.3794871', '20.2638941', '499', '11', '2', '0'),
 ('1554076800', '8', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '2019-11-14', 'strategize frictionless solutions', '994 Corry Park', '3454', '-7.3251485', '108.3607464', '599', '20', '12', '4'),
 ('1553731200', '4', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', '2019-12-12', 'innovate seamless metrics', '2 Bluestem Park', '3101', '43', '-87.97', '991', '5', '2', '3'),
-('1556668800', '4', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '2019-12-19', 'integrate wireless infomediaries', '1 Dexter Hill', '6562', '41.3410168', '-8.3169303', '186', '16', '8', '0');
+('1556668800', '4', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '2019-12-19', 'integrate wireless infomediaries', '1 Dexter Hill', '6562', '41.3410168', '-8.3169303', '186', '16', '8', '0'),
+('1599405084', '2', 'Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.', '2019-12-19', 'Task Created By Test User', '1 Dexter Hill', '6562', '41.3410168', '-8.3169303', '186', '21', null, '0');
 
 INSERT INTO `users_review` (`created_at`, `task_id`, `vote`, `review`, `user_customer_id`, `user_employee_id`) VALUES
 ('1566172800', '1', '3', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.Phasellus in felis. Donec semper sapien a libero. Nam dui.', '7', '7'),
@@ -1382,18 +1390,23 @@ INSERT INTO `favorites` (`user_id`, `fav_user_id`) VALUES
 (1,3),
 (2,5),
 (3,8),
+(21,2),
+(21,3),
 (4,10);
 
 INSERT INTO `user_photos` (`id`, `user_id`, `photo`) VALUES
-(NULL, '1', 'man-brune.jpg'),
+(NULL, '7', 'man-brune.jpg'),
 (NULL, '2', 'man-blond.jpg'),
 (NULL, '3', 'man-glasses.jpg'),
 (NULL, '4', 'man-hat.png'),
-(NULL, '5', 'man-running.jpg');
+(NULL, '6', 'woman-glasses.jpg');
 
 INSERT INTO `responses` (`id`, `created_at`, `your_price`, `comment`, `task_id`, `user_employee_id`) VALUES
 (NULL, '1593958992', '2000', 'че там как дела', '7', '6'),
-(NULL, '1593758992', '1000', 'нормально дела', '7', '2');
+(NULL, '1593758992', '1000', 'нормально дела', '7', '2'),
+(NULL, '1593758992', '1000', 'response 1 left for test users task', '11', '2'),
+(NULL, '1599404146', '1000', 'response 2 left for test users task', '11', '5'),
+(NULL, '1593758992', '1000', 'test user left response', '7', '21');
 
 INSERT INTO `users_categories` (`user_id`, `category_id`) VALUES
 (2,1),
@@ -1403,6 +1416,8 @@ INSERT INTO `users_categories` (`user_id`, `category_id`) VALUES
 (3,5),
 (4,6),
 (5,7),
+(21,7),
+(21,4),
 (10,8),
 (11,1),
 (11,2),

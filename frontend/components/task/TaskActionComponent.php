@@ -30,8 +30,6 @@ class TaskActionComponent
                 }
             }
         } catch (TaskException $e) {
-            echo 'ошибка бля';
-            die;
             error_log($e->getMessage());
         }
     }

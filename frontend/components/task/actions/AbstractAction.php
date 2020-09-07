@@ -2,24 +2,28 @@
 
 namespace frontend\components\task\actions;
 
+use frontend\models\Response;
+
 abstract class AbstractAction
 {
     protected string $actionName;
     protected int $actionCode;
     protected int $requiredRoleCode;
 
+
     public function getActionName(): string
     {
-        return $this->actionName;
+        return static::ACTION_NAME;
     }
 
     public function getActionCode(): string
     {
-        return $this->actionCode;
+        return static::ACTION_CODE;
     }
 
     public function checkRights(int $role): bool
     {
-        return $this->requiredRoleCode === $role;
+        return $role === static::REQUIRED_ROLE;
+        //return $this->requiredRoleCode === $role;
     }
 }
