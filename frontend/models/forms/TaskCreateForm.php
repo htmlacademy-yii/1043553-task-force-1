@@ -9,34 +9,34 @@ use yii\base\Model;
 
 class TaskCreateForm extends Model
 {
-    public $name;
+    public $title;
     public $description;
     public $category;
     public $address;
     public $budget;
-    public $expire;
+    public $deadline;
 
     public function attributeLabels()
     {
         return [
-            'name' => 'Мне нужно',
+            'title' => 'Мне нужно',
             'description' => 'Подробности задания',
             'category' => 'Категория',
             'address' => 'Локация',
             'budget' => 'Бюджет',
-            'expire' => 'Срок исполнения'
+            'deadline' => 'Срок исполнения'
         ];
     }
 
     public function rules()
     {
         return [
-            [['name', 'description', 'category', 'address', 'budget', 'expire'], 'safe'],
-            [['name', 'description', 'category', 'budget', 'expire'], 'required'],
-            [['name', 'description', 'address'], 'string'],
+            [['title', 'description', 'category', 'address', 'budget', 'expire'], 'safe'],
+            [['title', 'description', 'category', 'budget', 'deadline'], 'required'],
+            [['title', 'description', 'address'], 'string'],
             [['category'], 'exist', 'targetClass' => Category::className(), 'targetAttribute' => ['category' => 'id']],
             [['budget'], 'integer', 'min' => 1],
-            [['expire'], 'date', 'format' => 'php:Y-m-d']
+            [['deadline'], 'date', 'format' => 'php:Y-m-d']
         ];
     }
 
@@ -47,13 +47,14 @@ class TaskCreateForm extends Model
         $task->user_customer_id = Yii::$app->user->getId();
         $task->current_status = Task::STATUS_NEW_CODE;
 
-        $task->title = $this->name;
+        $task->title = $this->title;
         $task->description = $this->description;
-        $task->category_id = $this->category;
+        $task->category_id = intval($this->category);
+        $task->budget = intval($this->budget);
+        $task->deadline = $this->deadline;
+        $task->created_at = time();
         //$task->address = $this->address;
-        $task->budget = $this->budget;
-        $task->deadline = $this->expire;
 
-        return $task->save();
+        return $task->save(false);
     }
 }

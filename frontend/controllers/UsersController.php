@@ -2,23 +2,22 @@
 
 namespace frontend\controllers;
 
-use frontend\components\UserComponent;
+use frontend\controllers\parentControllers\SecuredController;
 use frontend\models\forms\UsersFilterForm;
-use yii\web\Controller;
 
 class UsersController extends SecuredController
 {
     public function actionIndex()
     {
         $model = new UsersFilterForm();
-        $data = UserComponent::getDataForUsersPage($model);
+        $data = \Yii::$app->userViewComponent->getDataForUsersPage($model);
 
         return $this->render('index', ["data" => $data, 'model' => $model ]);
     }
 
     public function actionShow(int $id)
     {
-        $data = UserComponent::getDataForUserProfilePage($id);
+        $data = \Yii::$app->userViewComponent->getDataForUserProfilePage($id);
 
         return $this->render('show', $data);
     }

@@ -14,8 +14,9 @@ $(document).ready(function () {
             .done(function (data) {
                 if (data.loginResult) {
                     window.location.replace(redirectAfterLogin);
+                } else {
+                    showErrorMessage(errorMessage, data.error);
                 }
-                showErrorMessage(errorMessage, data.error);
             })
             //Если запрос не ушел
             .fail(function () {

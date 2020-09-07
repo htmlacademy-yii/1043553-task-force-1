@@ -1,6 +1,8 @@
 <?php
 
-namespace frontend\TaskActions;
+namespace frontend\components\task\actions;
+
+use frontend\models\User;
 
 class ActionRefuse extends AbstractAction
 {
@@ -11,6 +13,6 @@ class ActionRefuse extends AbstractAction
     {
         $this->actionName = self::ACTION_NAME;
         $this->actionCode = self::ACTION_CODE;
-        $this->requiredRole = Task::ROLE_EMPLOYEE;
+        $this->requiredRoleCode = User::ROLE_EMPLOYEE_CODE;
     }
 }

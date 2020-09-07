@@ -13,13 +13,31 @@ return [
             'rules' => [
                 '//' => '/',
                 '/' => 'landing/index',
-                'persons' => 'contacts/index',
-                'tasks/<id:\d+>' => 'tasks/show',
-                'users/<id:\d+>' => 'users/show',
+                'tasks' => 'tasks/index',
+                'task/view/<id:\d+>' => 'tasks/show',
+                'user/view/<id:\d+>' => 'users/show',
             ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
+        ],
+        'taskViewComponent' => [
+            'class' => 'frontend\components\task\TaskViewComponent',
+        ],
+        'taskCreateComponent' => [
+            'class' => 'frontend\components\task\TaskCreateComponent',
+        ],
+        'userViewComponent' => [
+            'class' => 'frontend\components\user\userViewComponent',
+        ],
+        'landingComponent' => [
+            'class' => 'frontend\components\LandingComponent',
+        ],
+        'loginComponent' => [
+            'class' => 'frontend\components\LoginComponent',
+        ],
+        'registerComponent' => [
+            'class' => 'frontend\components\RegisterComponent',
         ],
     ],
 ];

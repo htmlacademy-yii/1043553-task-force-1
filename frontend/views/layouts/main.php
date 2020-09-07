@@ -75,11 +75,11 @@ AppAsset::register($this);
                         <li id="users" class="site-list__item">
                             <a href="<?= Url::to(['/users']); ?>">Исполнители</a>
                         </li>
-                        <li class="site-list__item">
-                            <a href="#">Создать задание</a>
+                        <li id="create" class="site-list__item">
+                            <a href="<?= Url::to(['/tasks/create']); ?>">Создать задание</a>
                         </li>
-                        <li class="site-list__item">
-                            <a href="#">Мой профиль</a>
+                        <li id="account" class="site-list__item">
+                            <a href="<?= Url::to(['/account']); ?>">Мой профиль</a>
                         </li>
                     </ul>
                 </div>
@@ -108,7 +108,7 @@ AppAsset::register($this);
                         <a href="#" class="link-regular">«Помочь с курсовой»</a>
                     </p>
                 </div>
-                <?php if (Url::current() !== '/register/index') : ?>
+                <?php if (Yii::$app->user->getId()) : ?>
                     <div class="header__account">
                         <a class="header__account-photo">
                             <img src="/img/<?= $this->context->userPhoto ?>"
@@ -184,7 +184,8 @@ AppAsset::register($this);
         </footer>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="/js/other.js"></script>
+    <script src="/js/updateActiveItem.js"></script>
+    <script src="/js/main.js"></script>
     <?php $this->endBody() ?>
     </body>
     </html>

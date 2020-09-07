@@ -97,14 +97,14 @@ use yii\helpers\Url;
             <h2>Последние задания на сайте</h2>
             <?php foreach ($tasks as $task) : ?>
             <div class="landing-task">
-                <div class="landing-task-top task-<?= $task['image'] ?>"></div>
+                <div class="landing-task-top task-<?php echo $task['image'] ?>"></div>
                 <div class="landing-task-description">
                     <h3><a href="#" class="link-regular"><?= $task['title'] ?></a></h3>
                     <p><?= $task['description'] ?></p>
                 </div>
                 <div class="landing-task-info">
                     <div class="task-info-left">
-                        <p><a href="#" class="link-regular"><?= $task['category'] ?></a></p>
+                        <p><a href="#" class="link-regular"><?= $task['categoryName'] ?></a></p>
                         <p><?= $task['created_at'] ?></p>
                     </div>
                     <span><?= $task['budget'] ?><b>₽</b></span>

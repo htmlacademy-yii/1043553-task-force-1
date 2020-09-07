@@ -13,7 +13,7 @@ use yii\filters\AccessControl;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
-use frontend\models\RegisterForm;
+use frontend\models\forms\RegisterForm;
 use frontend\models\ContactForm;
 
 /**
@@ -21,6 +21,9 @@ use frontend\models\ContactForm;
  */
 class SiteController extends Controller
 {
+    public $userName;
+    public $userPhoto;
+
     /**
      * {@inheritdoc}
      */

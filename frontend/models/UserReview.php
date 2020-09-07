@@ -17,15 +17,18 @@ namespace frontend\models;
  */
 class UserReview extends \yii\db\ActiveRecord
 {
+    public const NO_TASK_FOUND_MESSAGE = 'Отзыв добавлен без привязки к заданию';
+
     public $customerPhoto;
     public $customerName;
     public $taskTitle;
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-         return 'users_review';
+        return 'users_review';
     }
 
     /**
@@ -33,12 +36,24 @@ class UserReview extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-         return [
+        return [
             [['created_at', 'user_customer_id', 'user_employee_id', 'vote', 'review'], 'required'],
             [['created_at', 'user_customer_id', 'user_employee_id', 'vote'], 'integer'],
             [['review'], 'string'],
-            [['user_customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_customer_id' => 'id']],
-            [['user_employee_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_employee_id' => 'id']],
+            [
+                ['user_customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Users::className(),
+                'targetAttribute' => ['user_customer_id' => 'id']
+            ],
+            [
+                ['user_employee_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Users::className(),
+                'targetAttribute' => ['user_employee_id' => 'id']
+            ],
         ];
     }
 
@@ -47,7 +62,7 @@ class UserReview extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-         return [
+        return [
             'id' => 'ID',
             'created_at' => 'Created At',
             'user_customer_id' => 'User Customer ID',
@@ -64,7 +79,7 @@ class UserReview extends \yii\db\ActiveRecord
      */
     public function getUserCustomer()
     {
-         return $this->hasOne(Users::className(), ['id' => 'user_customer_id']);
+        return $this->hasOne(Users::className(), ['id' => 'user_customer_id']);
     }
 
     /**
@@ -74,6 +89,6 @@ class UserReview extends \yii\db\ActiveRecord
      */
     public function getUserEmployee()
     {
-         return $this->hasOne(Users::className(), ['id' => 'user_employee_id']);
+        return $this->hasOne(Users::className(), ['id' => 'user_employee_id']);
     }
 }

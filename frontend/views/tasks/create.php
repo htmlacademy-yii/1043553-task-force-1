@@ -2,7 +2,6 @@
 
 /* @var $this yii\web\View */
 
-use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Создать задание - TaskForce';
@@ -35,7 +34,7 @@ $this->title = 'Создать задание - TaskForce';
             'id' => 'name',
             'tag' => false
         ]; ?>
-        <?= $form->field($model, 'name', ['template' => "{label}\n{input}"])->input('textarea', $options)->label(null,
+        <?= $form->field($model, 'title', ['template' => "{label}\n{input}"])->input('textarea', $options)->label(null,
             ['for' => 'name']); ?>
         <span>Кратко опишите суть работы</span>
 
@@ -93,7 +92,7 @@ $this->title = 'Создать задание - TaskForce';
                     'id' => 'expire',
                     'tag' => false
                 ]; ?>
-                <?= $form->field($model, 'expire', ['template' => "{label}\n{input}"])->input('date',
+                <?= $form->field($model, 'deadline', ['template' => "{label}\n{input}"])->input('date',
                     $options)->label(null, ['for' => 'date']); ?>
                 <span>Укажите крайний срок исполнения</span>
             </div>
