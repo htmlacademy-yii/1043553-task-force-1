@@ -21,6 +21,7 @@ class TaskViewComponent extends Component
             'showResponses' => $selectedTask->getResponseVisibility(),
             'actionButton' => $selectedTask->getTaskAction(),
             'userRole' => $selectedTask->getUserRole(),
+            'actionButtonIsVisible' => $selectedTask->getActionButtonVisibility()
         ];
 
         return TimeOperations::addTimeInfo($data);

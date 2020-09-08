@@ -32,7 +32,6 @@ class ResponseViewComponent
 
             if (Checker::authorisedUserIsResponseCreator($this->taskResponses[$key])) {
                 $this->leaveOnlyAuthUserResponseInResponsesList($this->taskResponses[$key]);
-                return;
             }
         }
     }
@@ -44,7 +43,7 @@ class ResponseViewComponent
         $response['your_price'] = $response['your_price'] ?? $this->task['budget'];
         $response['created_at'] = TimeOperations::timePassed($response['created_at']);
         $response['actionButtonsAreVisible']
-            = ResponseVisibilityComponent::setResponseActionButtonsVisibility($this->task, $response);
+            = ResponseVisibilityComponent::getResponseActionButtonsVisibility($this->task, $response);
         $response['status'] = $this->setResponseStatusText((int)$response['status']);
 
         return $response;
@@ -60,7 +59,7 @@ class ResponseViewComponent
             case Response::STATUS_PENDING_CODE:
                 return Response::STATUS_PENDING_NAME;
         }
-        return "";
+        return Response::STATUS_EXCEPTION;
     }
 
     private function leaveOnlyAuthUserResponseInResponsesList($response): void

@@ -12,7 +12,6 @@ class Checker
     public static function authorisedUserIsResponseCreator(Response $response): bool
     {
         return (int)$response->user_employee_id === Yii::$app->user->getId();
-        //return (int)$response['user_employee_id'] === Yii::$app->user->getId();
     }
 
     public static function authorisedUserIsTaskCreator(Task $task): bool
@@ -28,5 +27,22 @@ class Checker
     public static function roleIsCustomer(int $role): bool
     {
         return $role === User::ROLE_CUSTOMER_CODE;
+    }
+
+    public static function taskIsNotNew(Task $task): bool
+    {
+        return (int)$task->current_status !== Task::STATUS_NEW_CODE;
+    }
+
+    public static function authUserRespondedToTask($taskId): bool
+    {
+        $response = Response::find()
+            ->where(['task_id' => $taskId])
+            ->andWhere(['user_employee_id' => \Yii::$app->user->id])
+            ->one();
+        if ($response) {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,9 +1,10 @@
 <section class="content-view">
     <div class="content-view__card">
         <?= $this->render('/tasks/components/taskDescription', ['task' => $task]); ?>
-        <?= $this->render('/tasks/components/actionButtons', ['actionButton' => $actionButton]); ?>
+        <?php if ($actionButtonIsVisible) : ?>
+            <?= $this->render('/tasks/components/actionButtons', ['actionButton' => $actionButton]); ?>
+        <?php endif; ?>
     </div>
-    <?= var_dump($showResponses) ?>
     <?php if ($showResponses) : ?>
         <?= $this->render('/tasks/components/responses',
             ['responses' => $responses, 'userRole' => $userRole]); ?>

@@ -28,17 +28,14 @@ for (var j = 0; j < closeModalLinks.length; j++) {
     closeModalLink.addEventListener("click", closeModal)
 }
 
-//document.getElementById('close-modal').addEventListener("click", closeModal);
-
-document.getElementById('close-modal-refuse').addEventListener("click", closeModal);
-document.getElementById('close-modal-cancel').addEventListener("click", closeModal);
+document.getElementById('close-modal').addEventListener("click", closeModal);
 
 var starRating = document.getElementsByClassName("completion-form-star");
 
 if (starRating.length) {
     starRating = starRating[0];
 
-    starRating.addEventListener("click", function (event) {
+    starRating.addEventListener("click", function(event) {
         var stars = event.currentTarget.childNodes;
         var rating = 0;
 
@@ -59,7 +56,3 @@ if (starRating.length) {
         inputField.value = rating;
     });
 }
-
-
-
-

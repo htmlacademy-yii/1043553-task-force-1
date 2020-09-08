@@ -8,7 +8,6 @@ use frontend\components\response\ResponseVisibilityComponent;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\Task;
 use frontend\models\User;
-use Yii;
 
 class SelectedTaskComponent
 {
@@ -30,7 +29,7 @@ class SelectedTaskComponent
         $this->userRole = Checker::authorisedUserIsTaskCreator($this->task);
         $this->responseViewComponent = new ResponseViewComponent($this->task);
         $this->responseVisibilityComponent = new ResponseVisibilityComponent($this->task);
-        $this->taskActionComponent = new TaskActionComponent($this->task['current_status'], $this->userRole);
+        $this->taskActionComponent = new TaskActionComponent($this->task, $this->userRole);
     }
 
     public function getCustomerData(): User
@@ -59,13 +58,18 @@ class SelectedTaskComponent
         return $this->responseViewComponent->taskResponses ?? [];
     }
 
-    public function getTaskAction(): string
+    public function getTaskAction(): int
     {
-        return $this->taskActionComponent->getNextAction()->getActionName();
+        return $this->taskActionComponent->getNextAction()->getActionCode();
     }
 
     public function getTask(): Task
     {
         return $this->task;
+    }
+
+    public function getActionButtonVisibility(): bool
+    {
+        return $this->taskActionComponent->getActionButtonVisibility();
     }
 }

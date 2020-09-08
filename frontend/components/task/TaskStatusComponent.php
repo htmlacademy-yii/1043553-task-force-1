@@ -64,4 +64,11 @@ class TaskStatusComponent
             error_log(Task::SET_CURRENT_STATUS_EXCEPTION . $e->getMessage());
         }
     }
+
+    public static function setStatusProcessing(Task $task, int $userId)
+    {
+        $task->current_status = Task::STATUS_PROCESSING_CODE;
+        $task->user_employee_id = $userId;
+        $task->save();
+    }
 }

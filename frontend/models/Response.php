@@ -24,6 +24,7 @@ class Response extends \yii\db\ActiveRecord
     public const STATUS_REFUSED_NAME = 'Предложение отклонено';
     public const STATUS_APPROVED_NAME = 'Предложение принято';
     public const STATUS_PENDING_NAME = 'Ожидает подтверждения заказчика';
+    public const STATUS_EXCEPTION = 'ошибка определения статуса задания';
 
     public const GET_POSSIBLE_STATUSES_EXCEPTION = 'Неизвестный индекc в функции getPossibleResponseStatuses';
     public const GET_POSSIBLE_ACTIONS_EXCEPTION = 'Неизвестный индекc в функции getPossibleActions';

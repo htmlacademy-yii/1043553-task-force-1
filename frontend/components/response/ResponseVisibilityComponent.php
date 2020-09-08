@@ -3,11 +3,9 @@
 namespace frontend\components\response;
 
 use frontend\components\helpers\Checker;
-use frontend\components\helpers\TimeOperations;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\Response;
 use frontend\models\Task;
-use Yii;
 
 class ResponseVisibilityComponent
 {
@@ -36,13 +34,15 @@ class ResponseVisibilityComponent
         return false;
     }
 
-    public static function setResponseActionButtonsVisibility(Task $task, Response $response): bool
+    public static function getResponseActionButtonsVisibility(Task $task, Response $response): bool
     {
+        if (Checker::taskIsNotNew($task)) {
+            return false;
+        }
+
         if (Checker::authorisedUserIsTaskCreator($task) && Checker::responseIsPending($response)) {
             return true;
         }
         return false;
     }
-
-
 }
