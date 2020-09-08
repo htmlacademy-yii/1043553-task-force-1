@@ -182,10 +182,11 @@ AppAsset::register($this);
                 </div>
             </div>
         </footer>
+        <?= $this->render('/layouts/components/modals');?>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="/js/updateActiveItem.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/main2.js"></script>
     <?php $this->endBody() ?>
     </body>
     </html>

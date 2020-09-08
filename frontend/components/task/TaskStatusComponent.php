@@ -3,11 +3,11 @@
 namespace frontend\components\task;
 
 use frontend\models\Task;
-use frontend\TaskActions\AbstractAction;
-use frontend\TaskActions\ActionAccomplish;
-use frontend\TaskActions\ActionCancel;
-use frontend\TaskActions\ActionRefuse;
-use frontend\TaskActions\ActionRespond;
+use frontend\components\task\actions\AbstractAction;
+use frontend\components\task\actions\ActionAccomplish;
+use frontend\components\task\actions\ActionCancel;
+use frontend\components\task\actions\ActionRefuse;
+use frontend\components\task\actions\ActionRespond;
 
 class TaskStatusComponent
 {
@@ -63,5 +63,12 @@ class TaskStatusComponent
         } catch (TaskException $e) {
             error_log(Task::SET_CURRENT_STATUS_EXCEPTION . $e->getMessage());
         }
+    }
+
+    public static function setStatusProcessing(Task $task, int $userId)
+    {
+        $task->current_status = Task::STATUS_PROCESSING_CODE;
+        $task->user_employee_id = $userId;
+        $task->save();
     }
 }

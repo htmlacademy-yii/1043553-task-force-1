@@ -6,10 +6,9 @@ use yii\helpers\Url;
 
 <div class="content-view__feedback">
     <?php if ($responses) : ?>
-        <h2>Отклики <span><?php echo count($responses) ?></span></h2>
+        <h2>Отклики <span><?= count($responses) ?></span></h2>
         <div class="content-view__feedback-wrapper">
             <?php foreach ($responses as $response) : ?>
-
                 <div class="content-view__feedback-card">
                     <div class="feedback-card__top">
                         <a href="#"><img src="../../img/<?= $response['userEmployee']['photo'] ?>"
@@ -37,12 +36,24 @@ use yii\helpers\Url;
                         </p>
                         <span><?= $response['your_price'] ?></span>
                     </div>
-                    <div class="feedback-card__actions">
-                        <a class="button__small-color request-button button"
-                           type="button">Подтвердить</a>
-                        <a class="button__small-color refusal-button button"
-                           type="button">Отказать</a>
-                    </div>
+                    <?php if ($response['actionButtonsAreVisible']) : ?>
+                        <div class="feedback-card__actions">
+                            <a class="button__small-color request-button button"
+                               type="button" href="<?= Url::to([
+                                'response-action/approve',
+                                'id' => $response['id'], 'userRole' => $userRole
+                            ]); ?>">Подтвердить</a>
+                            <a class="button__small-color refusal-button button"
+                               type="button" href="<?= Url::to([
+                                'response-action/deny',
+                                'id' => $response['id'], 'userRole' => $userRole
+                            ]); ?>">Отказать</a>
+                        </div>
+                    <?php else : ?>
+                        <p>
+                            <?= $response['status'] ?>
+                        </p>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>

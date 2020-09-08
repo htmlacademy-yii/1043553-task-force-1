@@ -3,6 +3,7 @@
 namespace frontend\components\traits;
 
 use frontend\models\pivot\UsersCategories;
+use frontend\models\Response;
 use frontend\models\Task;
 use frontend\models\User;
 use frontend\models\UserPhoto;
@@ -11,10 +12,6 @@ use yii\web\NotFoundHttpException;
 
 trait QueriesTrait
 {
-    /**
-     * @param int $id
-     * @return string
-     */
     private static function getTaskTitle(int $id): string
     {
         $taskTitle = Task::find()
@@ -23,12 +20,6 @@ trait QueriesTrait
          return $taskTitle['title'];
     }
 
-    /**
-     * @param int $id
-     * @return Task
-     * @throws NotFoundHttpException
-     *
-     */
     public function getTaskWithResponsesCategoriesFiles(int $id): Task
     {
         $task = Task::find()
@@ -51,9 +42,6 @@ trait QueriesTrait
         return $task;
     }
 
-    /**
-     * @return ActiveQuery
-     */
     public function findNewTasksWithCategoryCityQuery(): ActiveQuery
     {
         return Task::find()
@@ -76,9 +64,6 @@ trait QueriesTrait
             ->where(['current_status' => Task::STATUS_NEW_CODE]);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     private function findUsersQuery(): ActiveQuery
     {
         return User::find()
@@ -102,11 +87,6 @@ trait QueriesTrait
             ->groupBy(['users.id']);
     }
 
-    /**
-     * @param int $id
-     * @return User
-     * @throws NotFoundHttpException
-     */
     private function findUserWithPhotosAndCategories(int $id): User
     {
         $user = $this->findUsersQuery()->where(['users.id' => $id]) ->one();
@@ -117,20 +97,12 @@ trait QueriesTrait
         return $user;
     }
 
-    /**
-     * @param int $userId
-     * @return string
-     */
     public static function findUsersPhoto(int $userId): string
     {
         $photo = UserPhoto::find()->select(['photo'])->where(['user_id' => $userId])->one();
         return $photo['photo'] ?? User::DEFAULT_USER_PHOTO;
     }
 
-    /**
-     * @param int $userId
-     * @return string
-     */
     public static function findUserName(int $userId): string
     {
         $userName = User::find()
@@ -139,16 +111,20 @@ trait QueriesTrait
         return $userName['name'];
     }
 
-    /**
-     * @param int $userId
-     * @return array
-     */
     private static function findUserCategories(int $userId): array
     {
         return UsersCategories::find()
             ->select(['categories.name as name'])
             ->joinWith('categories')
             ->where(['user_id' => $userId])
+            ->all();
+    }
+
+    public function findAllTaskPendingResponses(int $taskId): array
+    {
+        return Response::find()
+            ->where(['=', 'status', Response::STATUS_PENDING_CODE])
+            ->andWhere(['task_id' => $taskId])
             ->all();
     }
 }
