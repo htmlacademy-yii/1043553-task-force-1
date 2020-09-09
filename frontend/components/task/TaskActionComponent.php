@@ -3,6 +3,8 @@
 namespace frontend\components\task;
 
 use frontend\components\helpers\Checker;
+use frontend\components\user\UserRoleComponent;
+use frontend\models\Response;
 use frontend\models\Task;
 use frontend\components\task\actions\AbstractAction;
 use frontend\components\task\actions\ActionAccomplish;
@@ -22,13 +24,26 @@ class TaskActionComponent
     private Task $task;
     private bool $actionButtonVisibility;
 
+    public function __construct(Task $task)
+    {
+        $this->actionCancel = new ActionCancel($task->id);
+        $this->actionAccomplish = new ActionAccomplish($task->id);
+        $this->actionRespond = new ActionRespond($task->id);
+        $this->actionRefuse = new ActionRefuse($task->id);
+
+        $this->task = $task;
+        $this->currentTaskStatusCode = $task['current_status'];
+        $this->currentUserRole = UserRoleComponent::detectUserRole($task);
+        $this->setActionButtonVisibility();
+    }
+
     public function getNextAction(): AbstractAction
     {
         try {
             $actions = $this->getPossibleActions();
 
             foreach ($actions as $key => $action) {
-                if ($action->checkRights($this->currentUserRole)) {
+                if ($action->userIsAllowedToProcessAction()) {
                     return $action;
                 }
             }
@@ -52,26 +67,12 @@ class TaskActionComponent
 
     private function setActionButtonVisibility(): void
     {
-        if (Checker::authUserRespondedToTask($this->task->id)) {
-            $this->actionButtonVisibility = false;
+        if (Response::authUserHaveNotRespondedToTask($this->task->id)) {
+            $this->actionButtonVisibility = true;
             return;
         }
-        $this->actionButtonVisibility = true;
+        $this->actionButtonVisibility = false;
     }
-
-    public function __construct(Task $task, int $currentUserRole)
-    {
-        $this->actionCancel = new ActionCancel();
-        $this->actionAccomplish = new ActionAccomplish();
-        $this->actionRespond = new ActionRespond();
-        $this->actionRefuse = new ActionRefuse();
-
-        $this->task = $task;
-        $this->currentTaskStatusCode = $task['current_status'];
-        $this->currentUserRole = $currentUserRole;
-        $this->setActionButtonVisibility();
-    }
-
 
     public function getActionButtonVisibility(): bool
     {

@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
     <h2>Отклик на задание</h2>
 
     <?php $form = ActiveForm::begin([
-        'action' => Url::to(["/task/" . $this->context->taskId . "/reply"]),
+        'action' => Url::to(["/task-action/respond?taskId=" . $this->context->taskId]),
         'options' => [
             'name' => $this->context->taskResponseForm->formName()
         ],

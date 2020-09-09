@@ -29,15 +29,16 @@ class TaskResponseForm extends Model
         ];
     }
 
-    public function save($taskId)
+    public function save(int $taskId)
     {
-        $reply = new Response();
+        $response = new Response();
 
-        $reply->task_id = $taskId;
-        $reply->contractor_id = Yii::$app->user->getId();
-        $reply->price = $this->price;
-        $reply->comment = $this->comment;
+        $response->task_id = $taskId;
+        $response->user_employee_id = Yii::$app->user->getId();
+        $response->your_price = $this->price;
+        $response->comment = $this->comment;
+        $response->created_at = time();
 
-        return $reply->save();
+        return $response->save(false);
     }
 }

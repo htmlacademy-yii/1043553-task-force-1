@@ -20,7 +20,6 @@ class TaskViewComponent extends Component
             'responses' => $selectedTask->getTaskResponses(),
             'showResponses' => $selectedTask->getResponseVisibility(),
             'actionButton' => $selectedTask->getTaskAction(),
-            'userRole' => $selectedTask->getUserRole(),
             'actionButtonIsVisible' => $selectedTask->getActionButtonVisibility()
         ];
 

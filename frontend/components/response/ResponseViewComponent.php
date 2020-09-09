@@ -30,7 +30,7 @@ class ResponseViewComponent
         foreach ($responses as $key => $response) {
             $this->taskResponses[$key] = $this->addDataRelatedToResponse($response);
 
-            if (Checker::authorisedUserIsResponseCreator($this->taskResponses[$key])) {
+            if (Response::authorisedUserIsResponseCreator($this->taskResponses[$key])) {
                 $this->leaveOnlyAuthUserResponseInResponsesList($this->taskResponses[$key]);
             }
         }

@@ -41,12 +41,12 @@ use yii\helpers\Url;
                             <a class="button__small-color request-button button"
                                type="button" href="<?= Url::to([
                                 'response-action/approve',
-                                'id' => $response['id'], 'userRole' => $userRole
+                                'id' => $response['id']
                             ]); ?>">Подтвердить</a>
                             <a class="button__small-color refusal-button button"
                                type="button" href="<?= Url::to([
                                 'response-action/deny',
-                                'id' => $response['id'], 'userRole' => $userRole
+                                'id' => $response['id']
                             ]); ?>">Отказать</a>
                         </div>
                     <?php else : ?>

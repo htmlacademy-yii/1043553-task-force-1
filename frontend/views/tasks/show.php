@@ -7,7 +7,7 @@
     </div>
     <?php if ($showResponses) : ?>
         <?= $this->render('/tasks/components/responses',
-            ['responses' => $responses, 'userRole' => $userRole]); ?>
+            ['responses' => $responses]); ?>
     <?php endif; ?>
 </section>
 <section class="connect-desk">

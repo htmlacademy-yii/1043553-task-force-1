@@ -54,10 +54,10 @@ class TaskStatusComponent
         throw new TaskException(Task::PREDICT_STATUS_EXCEPTION);
     }
 
-    public function updateCurrentStatus(int $role): void
+    public function updateCurrentStatus(int $role, AbstractAction $action): void
     {
         try {
-            $action = $this->getNextAction($role);
+            //$action = $this->getNextAction($role);
             $status = $this->predictTaskStatus($action);
             $this->currentTaskStatusCode = array_key_first($status);
         } catch (TaskException $e) {
@@ -65,7 +65,26 @@ class TaskStatusComponent
         }
     }
 
-    public static function setStatusProcessing(Task $task, int $userId)
+    public static function detectTaskStatus(Task $task): int
+    {
+        switch ((int)$task->current_status) {
+            case Task::STATUS_NEW_CODE:
+                return Task::STATUS_NEW_CODE;
+            case Task::STATUS_PROCESSING_CODE:
+                return Task::STATUS_PROCESSING_CODE;
+            case Task::STATUS_ACCOMPLISHED_CODE:
+                return Task::STATUS_ACCOMPLISHED_CODE;
+            case Task::STATUS_CANCELLED_CODE:
+                return Task::STATUS_CANCELLED_CODE;
+        }
+    }
+
+    public static function taskIsNotNew(Task $task): bool
+    {
+        return (int)$task->current_status !== Task::STATUS_NEW_CODE;
+    }
+
+    public static function setStatusProcessing(Task $task, int $userId): void
     {
         $task->current_status = Task::STATUS_PROCESSING_CODE;
         $task->user_employee_id = $userId;
