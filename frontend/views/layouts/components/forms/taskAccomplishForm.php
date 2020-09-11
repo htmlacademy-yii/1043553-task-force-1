@@ -9,9 +9,10 @@ use yii\widgets\ActiveForm;
     <p class="form-modal-description">Задание выполнено?</p>
 
     <?php $form = ActiveForm::begin([
-        'action' => Url::to(["/task/" . $this->context->taskId . "/complete"]),
+        'action' => Url::to(["/task-action/accomplish?taskId=" . $this->context->taskId]),
+        'id' => 'taskAccomplishForm',
         'options' => [
-            'name' => $this->context->taskCompleteForm->formName()
+            'name' => $this->context->taskAccomplishForm->formName()
         ],
         'fieldConfig' => [
             'options' => [
@@ -27,7 +28,7 @@ use yii\widgets\ActiveForm;
         'value' => \frontend\models\Task::STATUS_ACCOMPLISHED_CODE,
         'checked' => ''
     ]; ?>
-    <?= $form->field($this->context->taskCompleteForm, 'status', ['template' => "{input}\n{label}"])->input('radio',
+    <?= $form->field($this->context->taskAccomplishForm, 'status', ['template' => "{input}\n{label}"])->input('radio',
         $options)->label(false); ?>
     <label class="completion-label completion-label--yes" for="completion-radio--yes">Да</label>
 
@@ -36,7 +37,7 @@ use yii\widgets\ActiveForm;
         'id' => 'completion-radio--yet',
         'value' =>  \frontend\models\Task::STATUS_FAILED_CODE
     ]; ?>
-    <?= $form->field($this->context->taskCompleteForm, 'status', ['template' => "{input}\n{label}"])->input('radio',
+    <?= $form->field($this->context->taskAccomplishForm, 'status', ['template' => "{input}\n{label}"])->input('radio',
         $options)->label(false); ?>
     <label class="completion-label completion-label--difficult" for="completion-radio--yet">Возникли проблемы</label>
 
@@ -50,7 +51,7 @@ use yii\widgets\ActiveForm;
             'class' => 'form-modal-description',
             'for' => 'completion-comment'
         ]; ?>
-        <?= $form->field($this->context->taskCompleteForm, 'comment',
+        <?= $form->field($this->context->taskAccomplishForm, 'comment',
             ['template' => "{label}\n{input}"])->textarea($inputOptions)->label(null, $labelOptions); ?>
     </p>
 
@@ -64,10 +65,10 @@ use yii\widgets\ActiveForm;
         <span class="star-disabled"></span>
     </div>
     </p>
-    <?= $form->field($this->context->taskCompleteForm, 'rating',
+    <?= $form->field($this->context->taskAccomplishForm, 'rating',
         ['template' => "{label}\n{input}"])->hiddenInput(['id' => 'rating'])->label(false); ?>
 
-    <button class="button modal-button" type="submit">Отправить</button>
+    <a class="button modal-button" id = 'taskAccomplishFormSubmit'>Отправить</a>
 
     <?php ActiveForm::end(); ?>
 

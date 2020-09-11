@@ -65,17 +65,20 @@ class TaskStatusComponent
         }
     }
 
-    public static function detectTaskStatus(Task $task): int
+    public static function detectTaskStatus(Task $task): string
     {
+
         switch ((int)$task->current_status) {
             case Task::STATUS_NEW_CODE:
-                return Task::STATUS_NEW_CODE;
+                return Task::STATUS_NEW_NAME;
             case Task::STATUS_PROCESSING_CODE:
-                return Task::STATUS_PROCESSING_CODE;
+                return Task::STATUS_PROCESSING_NAME;
             case Task::STATUS_ACCOMPLISHED_CODE:
-                return Task::STATUS_ACCOMPLISHED_CODE;
+                return Task::STATUS_ACCOMPLISHED_NAME;
             case Task::STATUS_CANCELLED_CODE:
-                return Task::STATUS_CANCELLED_CODE;
+                return Task::STATUS_CANCELLED_NAME;
+            case Task::STATUS_FAILED_CODE:
+                return Task::STATUS_FAILED_NAME;
         }
     }
 
@@ -84,10 +87,25 @@ class TaskStatusComponent
         return (int)$task->current_status !== Task::STATUS_NEW_CODE;
     }
 
-    public static function setStatusProcessing(Task $task, int $userId): void
+    public static function taskIsCancelled(Task $task): bool
     {
-        $task->current_status = Task::STATUS_PROCESSING_CODE;
+        return (int)$task->current_status === Task::STATUS_CANCELLED_CODE;
+    }
+
+    public static function taskIsFailed(Task $task): bool
+    {
+        return (int)$task->current_status === Task::STATUS_FAILED_CODE;
+    }
+
+    public static function setStatusProcessing(Task $task, int $userId): bool
+    {
         $task->user_employee_id = $userId;
-        $task->save();
+        return self::updateTaskStatus($task, Task::STATUS_PROCESSING_CODE);
+    }
+
+    public static function updateTaskStatus(Task $task, int $status): bool
+    {
+        $task->current_status = $status;
+        return $task->save(false);
     }
 }

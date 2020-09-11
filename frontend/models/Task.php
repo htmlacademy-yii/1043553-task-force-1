@@ -37,6 +37,11 @@ class Task extends \yii\db\ActiveRecord
         return User::idEqualAuthUserId($task->user_customer_id);
     }
 
+    public static function authorisedUserIsTaskEmployee(Task $task): bool
+    {
+        return User::idEqualAuthUserId($task->user_employee_id);
+    }
+
 
     public static function tableName()
     {

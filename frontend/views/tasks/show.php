@@ -5,6 +5,7 @@
             <?= $this->render('/tasks/components/actionButtons', ['actionButton' => $actionButton]); ?>
         <?php endif; ?>
     </div>
+    <b><?= 'Статус заказа : '. \frontend\components\task\TaskStatusComponent::detectTaskStatus($task) ?></b>
     <?php if ($showResponses) : ?>
         <?= $this->render('/tasks/components/responses',
             ['responses' => $responses]); ?>

@@ -3,8 +3,8 @@
         <?= $this->render('/layouts/components/forms/taskResponseForm'); ?>
     <?php endif; ?>
 
-    <?php if (isset($this->context->taskCompleteForm)) : ?>
-        <?= $this->render('/layouts/components/forms/taskCompleteForm'); ?>
+    <?php if (isset($this->context->taskAccomplishForm)) : ?>
+        <?= $this->render('/layouts/components/forms/taskAccomplishForm'); ?>
     <?php endif; ?>
 
     <?php if (isset($this->context->taskId)) : ?>

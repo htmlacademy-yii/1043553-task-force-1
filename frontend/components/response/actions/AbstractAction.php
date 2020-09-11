@@ -14,6 +14,13 @@ abstract class AbstractAction
     protected Response $response;
     protected Task $task;
 
+    public function __construct(int $responseId)
+    {
+        $this->response = Response::findOne($responseId);
+        $this->task = Task::findOne($this->response->task_id);
+        $this->statusAfterAction = static::STATUS_AFTER_ACTION;
+    }
+
     public function processAction(): void
     {
         if ($this->userIsAllowedToProcessAction()) {
@@ -27,12 +34,5 @@ abstract class AbstractAction
         $role = UserRoleComponent::detectUserRole($this->task);
 
         return $role === User::ROLE_CUSTOMER_CODE && ResponseStatusComponent::responseIsPending($this->response);
-    }
-
-    public function __construct(int $responseId)
-    {
-        $this->response = Response::findOne($responseId);
-        $this->task = Task::findOne($this->response->task_id);
-        $this->statusAfterAction = static::STATUS_AFTER_ACTION;
     }
 }

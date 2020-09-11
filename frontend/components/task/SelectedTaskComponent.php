@@ -2,6 +2,7 @@
 
 namespace frontend\components\task;
 
+use frontend\components\exception\TaskException;
 use frontend\components\helpers\Checker;
 use frontend\components\response\ResponseViewComponent;
 use frontend\components\response\ResponseVisibilityComponent;
@@ -53,7 +54,11 @@ class SelectedTaskComponent
 
     public function getTaskAction(): int
     {
-        return $this->taskActionComponent->getNextAction()->getActionCode();
+        try {
+            return $this->taskActionComponent->getNextAction()->getActionCode();
+        } catch (TaskException $e) {
+            return TaskActionComponent::NO_ACTION_IS_AVAILABLE;
+        }
     }
 
     public function getTask(): Task

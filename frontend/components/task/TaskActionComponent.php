@@ -2,7 +2,7 @@
 
 namespace frontend\components\task;
 
-use frontend\components\helpers\Checker;
+use frontend\components\exception\TaskException;
 use frontend\components\user\UserRoleComponent;
 use frontend\models\Response;
 use frontend\models\Task;
@@ -24,6 +24,8 @@ class TaskActionComponent
     private Task $task;
     private bool $actionButtonVisibility;
 
+    public const NO_ACTION_IS_AVAILABLE = 50;
+
     public function __construct(Task $task)
     {
         $this->actionCancel = new ActionCancel($task->id);
@@ -39,16 +41,12 @@ class TaskActionComponent
 
     public function getNextAction(): AbstractAction
     {
-        try {
-            $actions = $this->getPossibleActions();
+        $actions = $this->getPossibleActions();
 
-            foreach ($actions as $key => $action) {
-                if ($action->userIsAllowedToProcessAction()) {
-                    return $action;
-                }
+        foreach ($actions as $key => $action) {
+            if ($action->userIsAllowedToProcessAction()) {
+                return $action;
             }
-        } catch (TaskException $e) {
-            error_log($e->getMessage());
         }
     }
 
@@ -58,7 +56,7 @@ class TaskActionComponent
             Task::STATUS_NEW_CODE => [$this->actionCancel, $this->actionRespond],
             Task::STATUS_PROCESSING_CODE => [$this->actionAccomplish, $this->actionRefuse]
         ];
-        if ($actions[$this->currentTaskStatusCode]) {
+        if (isset($actions[$this->currentTaskStatusCode])) {
             return $actions[$this->currentTaskStatusCode];
         }
 
@@ -67,6 +65,21 @@ class TaskActionComponent
 
     private function setActionButtonVisibility(): void
     {
+        if (TaskStatusComponent::taskIsCancelled($this->task) or TaskStatusComponent::taskIsFailed($this->task)) {
+            $this->actionButtonVisibility = false;
+            return;
+        }
+
+        if (Task::authorisedUserIsTaskCreator($this->task)) {
+            $this->actionButtonVisibility = true;
+            return;
+        }
+
+        if (Task::authorisedUserIsTaskEmployee($this->task)) {
+            $this->actionButtonVisibility = true;
+            return;
+        }
+
         if (Response::authUserHaveNotRespondedToTask($this->task->id)) {
             $this->actionButtonVisibility = true;
             return;

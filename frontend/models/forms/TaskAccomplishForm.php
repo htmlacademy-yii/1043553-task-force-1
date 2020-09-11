@@ -2,17 +2,19 @@
 
 namespace frontend\models\forms;
 
+use frontend\models\Task;
+use frontend\models\UserReview;
 use Yii;
 use yii\base\Model;
 
 /**
  * Signup form
  */
-class TaskCompleteForm extends model
+class TaskAccomplishForm extends model
 {
-    public $status;
-    public $comment;
-    public $rating;
+    public int $status;
+    public string $comment;
+    public int $rating;
 
     public function attributeLabels()
     {
@@ -32,16 +34,18 @@ class TaskCompleteForm extends model
         ];
     }
 
-    public function save($taskId)
+    public function save(Task $task)
     {
-        $task = Task::findOne($taskId);
-        $task->status = $this->status;
+        $task->current_status = $this->status;
+        $review = new UserReview();
+        $review->task_id = $task->id;
+        $review->user_employee_id = $task->user_employee_id;
+        $review->user_customer_id = $task->user_customer_id;
+        $review->vote = $this->rating;
+        $review->created_at = time();
+        $review->review = $this->comment;
 
-        $feedback = new Feedback();
-        $feedback->task_id = $taskId;
-        $feedback->contractor_id = $task->contractor_id;
-        $feedback->rating = $this->rating;
-        $feedback->description = $this->comment;
+        return $review->save();
 
         $transaction = Yii::$app->db->beginTransaction();
         if ($task->save() && $feedback->save()) {
@@ -51,5 +55,10 @@ class TaskCompleteForm extends model
             $transaction->rollback();
             return false;
         }
+    }
+
+    public function getErrorMessage()
+    {
+        return "";
     }
 }

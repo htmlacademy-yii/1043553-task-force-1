@@ -15,10 +15,12 @@ class ActionRespond extends AbstractAction
     public const TASK_STATUS_AFTER_ACTION = Task::STATUS_NEW_CODE;
     public const TASK_STATUS_BEFORE_ACTION = Task::STATUS_NEW_CODE;
 
-    public function processAction()
+    public function processAction(): array
     {
         if ($this->userIsAllowedToProcessAction() && Response::authUserHaveNotRespondedToTask($this->task->id)) {
-            ResponseCreateComponent::createResponse($this->task->id);
+            $responseCreateComponent = new ResponseCreateComponent($this->task->id);
+            return $responseCreateComponent->create();
+            //ResponseCreateComponent::createResponse($this->task->id);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use App\Task;
 use frontend\components\task\actions\ActionAccomplish;
 use frontend\components\task\actions\ActionCancel;
 use frontend\components\task\actions\ActionRefuse;
@@ -12,16 +13,20 @@ class TaskActionController extends SecuredController
 {
     public function actionRespond($taskId)
     {
+        $this->enableCsrfValidation = false;
         $actionRespond = new ActionRespond($taskId);
-        $actionRespond->processAction();
-        return $this->redirectBack();
+
+        return $actionRespond->processAction();
     }
 
     public function actionAccomplish($taskId)
     {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $this->enableCsrfValidation = false;
         $actionAccomplish = new ActionAccomplish($taskId);
-        $actionAccomplish->processAction();
-        return $this->redirectBack();
+
+        return $actionAccomplish->processAction();
+        //return $this->redirectBack();
     }
 
     public function actionRefuse($taskId)
@@ -35,6 +40,7 @@ class TaskActionController extends SecuredController
     {
         $actionCancel = new ActionCancel($taskId);
         $actionCancel->processAction();
+
         return $this->redirectBack();
     }
 }
