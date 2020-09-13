@@ -13,6 +13,7 @@ class ResponseActionController extends SecuredController
     {
         $actionDeny = new ActionDeny($id);
         $actionDeny->processAction();
+
         return $this->redirectBack();
     }
 
@@ -20,12 +21,14 @@ class ResponseActionController extends SecuredController
     {
         $actionApprove = new ActionApprove($id);
         $actionApprove->processAction();
+
         return $this->redirectBack();
     }
 
     public function actionDelete($id)
     {
         Response::deleteResponse($id);
+
         return $this->redirectBack();
     }
 }
