@@ -50,9 +50,17 @@ use yii\helpers\Url;
                             ]); ?>">Отказать</a>
                         </div>
                     <?php else : ?>
-                        <p>
-                            <?= $response['status'] ?>
-                        </p>
+                        <div style="display: flex; align-items: center">
+                            <p>
+                                <?= $response['status'] ?>
+                            </p>
+                            <?php if (\frontend\models\Response::authorisedUserIsResponseCreator($response)): ?>
+                                <a href="<?= Url::to([
+                                    'response-action/delete',
+                                    'id' => $response['id']
+                                ]); ?>" style="color:red;">Удалить</a>
+                            <?php endif; ?>
+                        </div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>

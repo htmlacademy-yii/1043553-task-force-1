@@ -42,7 +42,6 @@ abstract class AbstractAction
     {
         $role = UserRoleComponent::detectUserRole($this->task);
         $taskStatus = (int)$this->task->current_status;
-
         return $role === $this->requiredRoleCode && $taskStatus === $this->statusBeforeAction;
     }
 

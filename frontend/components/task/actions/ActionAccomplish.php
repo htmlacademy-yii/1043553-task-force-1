@@ -3,7 +3,7 @@
 namespace frontend\components\task\actions;
 
 use frontend\components\task\TaskStatusComponent;
-use frontend\components\UserReviewCreateComponent;
+use frontend\components\userReview\UserReviewCreateComponent;
 use frontend\models\Task;
 use frontend\models\User;
 
@@ -22,7 +22,7 @@ class ActionAccomplish extends AbstractAction
         if ($this->userIsAllowedToProcessAction()) {
             return [
                 'result' => $this->updateTaskStatusAndAddResponse(),
-                'errors' => $this->reviewErrors,
+                'errors' => $this->reviewErrors ?? [],
             ];
         }
 
@@ -36,17 +36,11 @@ class ActionAccomplish extends AbstractAction
     {
         $createReview = new UserReviewCreateComponent($this->task);
         $reviewCreation = $createReview->create();
-
-        $reviewCreationResult = $reviewCreation['result'];
-        $this->reviewErrors = $reviewCreation['errors'];
-
-        $this->statusAfterAction = $createReview->getStatusAfterAction();
-        $taskStatusUpdateResult = TaskStatusComponent::updateTaskStatus($this->task, $this->statusAfterAction);
-
-        if ($reviewCreationResult && $taskStatusUpdateResult) {
-            return true;
+        if (!$reviewCreation['result']) {
+            $this->reviewErrors = $reviewCreation['errors'];
+            return false;
         }
-
-        return false;
+        $this->statusAfterAction = $createReview->getStatusAfterAction();
+        return TaskStatusComponent::updateTaskStatus($this->task, $this->statusAfterAction);
     }
 }

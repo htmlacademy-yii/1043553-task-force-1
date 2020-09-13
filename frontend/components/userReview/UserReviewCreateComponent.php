@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\components;
+namespace frontend\components\userReview;
 
 use frontend\models\forms\TaskAccomplishForm;
 use frontend\models\Task;

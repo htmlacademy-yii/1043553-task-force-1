@@ -1,9 +1,10 @@
 $(document).ready(function () {
     let form = $("#taskAccomplishForm");
-    let errorMessagePrice = $('#errorMessageRating');
+    let errorMessageRating = $('#errorMessageRating');
     let errorMessageComment = $('#errorMessageComment');
     let alertMessage = 'Ошибка, попробуйте позже';
-    let redirectAfterResponseCreation = window.location.href;
+    let redirectAfterResponseCreation = '/tasks';
+    //let redirectAfterResponseCreation = window.location.href;
     let taskId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
 
     $(document).on("click", "#taskAccomplishFormSubmit", function () {
@@ -17,8 +18,7 @@ $(document).ready(function () {
                 if (data.result) {
                     window.location.replace(redirectAfterResponseCreation);
                 } else {
-                    //showErrorMessage(errorMessagePrice, data.errors.price);
-                    //showErrorMessage(errorMessageComment, data.errors.comment);
+                    showErrorMessage(errorMessageRating, data.errors.rating);
                 }
             })
             //Если запрос не ушел

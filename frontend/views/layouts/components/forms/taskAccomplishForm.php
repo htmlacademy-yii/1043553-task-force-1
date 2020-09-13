@@ -35,7 +35,7 @@ use yii\widgets\ActiveForm;
     <?php $options = [
         'class' => 'visually-hidden completion-input completion-input--difficult',
         'id' => 'completion-radio--yet',
-        'value' =>  \frontend\models\Task::STATUS_FAILED_CODE
+        'value' => \frontend\models\Task::STATUS_FAILED_CODE
     ]; ?>
     <?= $form->field($this->context->taskAccomplishForm, 'status', ['template' => "{input}\n{label}"])->input('radio',
         $options)->label(false); ?>
@@ -57,18 +57,21 @@ use yii\widgets\ActiveForm;
 
     <p class="form-modal-description">
         Оценка
-    <div class="feedback-card__top--name completion-form-star">
-        <span class="star-disabled"></span>
-        <span class="star-disabled"></span>
-        <span class="star-disabled"></span>
-        <span class="star-disabled"></span>
-        <span class="star-disabled"></span>
+        <div style="display: flex">
+            <div class="feedback-card__top--name completion-form-star">
+                <span class="star-disabled"></span>
+                <span class="star-disabled"></span>
+                <span class="star-disabled"></span>
+                <span class="star-disabled"></span>
+                <span class="star-disabled"></span>
+            </div>
+    <p style="display: none; color: red" id="errorMessageRating"></p>
     </div>
     </p>
     <?= $form->field($this->context->taskAccomplishForm, 'rating',
         ['template' => "{label}\n{input}"])->hiddenInput(['id' => 'rating'])->label(false); ?>
 
-    <a class="button modal-button" id = 'taskAccomplishFormSubmit'>Отправить</a>
+    <a class="button modal-button" id='taskAccomplishFormSubmit'>Отправить</a>
 
     <?php ActiveForm::end(); ?>
 

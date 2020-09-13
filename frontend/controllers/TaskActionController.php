@@ -21,18 +21,17 @@ class TaskActionController extends SecuredController
 
     public function actionAccomplish($taskId)
     {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $this->enableCsrfValidation = false;
         $actionAccomplish = new ActionAccomplish($taskId);
 
         return $actionAccomplish->processAction();
-        //return $this->redirectBack();
     }
 
     public function actionRefuse($taskId)
     {
         $actionRefuse = new ActionRefuse($taskId);
         $actionRefuse->processAction();
+
         return $this->redirectBack();
     }
 

@@ -4,17 +4,17 @@ namespace frontend\models\forms;
 
 use frontend\models\Task;
 use frontend\models\UserReview;
-use Yii;
 use yii\base\Model;
+use yii\widgets\ActiveForm;
 
 /**
  * Signup form
  */
 class TaskAccomplishForm extends model
 {
-    public int $status;
-    public string $comment;
-    public int $rating;
+    public $status;
+    public $comment;
+    public $rating;
 
     public function attributeLabels()
     {
@@ -28,7 +28,7 @@ class TaskAccomplishForm extends model
     {
         return [
             [['status', 'comment', 'rating'], 'safe'],
-            [['comment', 'rating'], 'required'],
+            [['rating'], 'required'],
             [['comment'], 'string'],
             [['rating'], 'integer', 'min' => 1, 'max' => 5]
         ];
@@ -36,7 +36,6 @@ class TaskAccomplishForm extends model
 
     public function save(Task $task)
     {
-        $task->current_status = $this->status;
         $review = new UserReview();
         $review->task_id = $task->id;
         $review->user_employee_id = $task->user_employee_id;
@@ -45,20 +44,15 @@ class TaskAccomplishForm extends model
         $review->created_at = time();
         $review->review = $this->comment;
 
-        return $review->save();
-
-        $transaction = Yii::$app->db->beginTransaction();
-        if ($task->save() && $feedback->save()) {
-            $transaction->commit();
-            return true;
-        } else {
-            $transaction->rollback();
-            return false;
-        }
+        return $review->save(false);
     }
 
     public function getErrorMessage()
     {
-        return "";
+        $errors = ActiveForm::validate($this);
+
+        return [
+            'rating' => $errors["taskaccomplishform-rating"][0] ?? null,
+        ];
     }
 }
