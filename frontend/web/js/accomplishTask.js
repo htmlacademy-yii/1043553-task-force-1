@@ -1,10 +1,8 @@
 $(document).ready(function () {
     let form = $("#taskAccomplishForm");
     let errorMessageRating = $('#errorMessageRating');
-    let errorMessageComment = $('#errorMessageComment');
     let alertMessage = 'Ошибка, попробуйте позже';
     let redirectAfterResponseCreation = '/tasks';
-    //let redirectAfterResponseCreation = window.location.href;
     let taskId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
 
     $(document).on("click", "#taskAccomplishFormSubmit", function () {

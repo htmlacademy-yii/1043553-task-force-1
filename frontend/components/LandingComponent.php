@@ -33,8 +33,3 @@ class LandingComponent extends Component
         return substr($string, 0, $length) . '...';
     }
 }
-
-/*foreach ($tasks as &$task) {
-    $task['created_at'] = TimeOperations::timePassed($task['created_at']);
-    $task['description'] = $this->makeStringShorter($task['description'], 70);
-}*/

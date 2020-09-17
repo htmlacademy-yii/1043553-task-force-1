@@ -2,6 +2,7 @@
 
 namespace frontend\models\forms;
 
+use frontend\components\LocationComponent;
 use frontend\models\Category;
 use frontend\models\Task;
 use Yii;
@@ -53,8 +54,17 @@ class TaskCreateForm extends Model
         $task->budget = intval($this->budget);
         $task->deadline = $this->deadline;
         $task->created_at = time();
-        //$task->address = $this->address;
 
-        return $task->save(false);
+        $service = new LocationComponent($this->address);
+        try {
+            $coordinates = $service->getCoordinates();
+            $task->lat = $coordinates['lat'];
+            $task->lon = $coordinates['lon'];
+            $task->address = $this->address;
+            return $task->save(false);
+        } catch (\Exception $e) {
+            self::addError('address', $e->getMessage());
+            return false;
+        }
     }
 }

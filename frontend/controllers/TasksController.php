@@ -12,6 +12,8 @@ class TasksController extends SecuredController
     public int $taskId;
     public TaskResponseForm $taskResponseForm;
     public TaskAccomplishForm $taskAccomplishForm;
+    public int $lat;
+    public int $lon;
 
     public function actionIndex()
     {
@@ -27,6 +29,8 @@ class TasksController extends SecuredController
         $this->taskAccomplishForm = new TaskAccomplishForm();
 
         $data = \Yii::$app->taskViewComponent->getDataForSelectedTaskPage($id);
+        $this->lat = $data['task']['lat'];
+        $this->lon = $data['task']['lon'];
 
         return $this->render('show', $data);
     }
