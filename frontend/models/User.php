@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use frontend\models\pivot\Favorite;
+use Yii;
 use yii\web\IdentityInterface;
 
 /**
@@ -59,6 +60,11 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $userPhotos;
     public $passwordHash;
     public $age;
+
+    public static function idEqualAuthUserId(int $id): bool
+    {
+        return $id === Yii::$app->user->getId();
+    }
 
     public function getUser()
     {

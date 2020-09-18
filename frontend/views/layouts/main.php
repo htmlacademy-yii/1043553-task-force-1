@@ -18,6 +18,9 @@ AppAsset::register($this);
         <link rel="stylesheet" type="text/css" href="/css/normalize.css">
         <link rel="stylesheet" type="text/css" href="/css/styles.css">
         <title><?= Html::encode($this->title) ?></title>
+        <script src="https://api-maps.yandex.ru/2.1/?apikey=e666f398-c983-4bde-8f14-e3fec900592a&lang=ru_RU"
+                type="text/javascript">
+        </script>
         <?php //$this->head() ?>
     </head>
     <body>
@@ -182,11 +185,18 @@ AppAsset::register($this);
                 </div>
             </div>
         </footer>
-        <?= $this->render('/layouts/components/modals');?>
+        <?= $this->render('/layouts/components/modals'); ?>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="/js/updateActiveItem.js"></script>
     <script src="/js/main2.js"></script>
+    <script>
+        var lon=<?= $this->context->lon ?? '' ?>;
+        var lat=<?= $this->context->lat ?? '' ?>;
+    </script>
+    <script src="/js/showMap.js"></script>
+    <script src="/js/createResponse.js"></script>
+    <script src="/js/accomplishTask.js"></script>
     <?php $this->endBody() ?>
     </body>
     </html>

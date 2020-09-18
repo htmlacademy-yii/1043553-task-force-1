@@ -34,6 +34,29 @@ class Response extends \yii\db\ActiveRecord
     public $userEmployee;
     public $actionButtonsAreVisible;
 
+    public static function authUserHaveNotRespondedToTask(int $taskId): bool
+    {
+        $response = Response::find()
+            ->where(['task_id' => $taskId])
+            ->andWhere(['user_employee_id' => \Yii::$app->user->id])
+            ->one();
+
+        return !$response;
+    }
+
+    public static function deleteResponse(int $responseId)
+    {
+        $response = Response::findOne($responseId);
+        if (self::authorisedUserIsResponseCreator($response)) {
+            $response->delete();
+        }
+    }
+
+    public static function authorisedUserIsResponseCreator(Response $response): bool
+    {
+        return User::idEqualAuthUserId($response->user_employee_id);
+    }
+
     /**
      * {@inheritdoc}
      */

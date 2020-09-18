@@ -2,54 +2,19 @@
 
 namespace frontend\components\response;
 
-
-use frontend\components\response\actions\ActionApprove;
-use frontend\components\response\actions\ActionDeny;
-use frontend\components\task\TaskStatusComponent;
-use frontend\components\traits\QueriesTrait;
 use frontend\models\Response;
-use frontend\models\Task;
 
 class ResponseStatusComponent
 {
-    use QueriesTrait;
-
-    private int $userRoleCode;
-    private int $responseId;
-    private ActionDeny $actionDeny;
-    private ActionApprove $actionApprove;
-    private Response $response;
-
-    public function denyResponse(): void
+    public static function updateResponseStatus(Response $response, int $newStatus)
     {
-        $this->actionDeny->processAction($this->response, $this->userRoleCode);
+        $response->status = $newStatus;
+        $response->save();
     }
 
-    public function approveResponse(): void
+    public static function responseIsPending(Response $response): bool
     {
-        $this->actionApprove->processAction($this->response, $this->userRoleCode);
-        $this->denyAllTaskResponsesExceptApproved();
-        $task = Task::findOne($this->response->task_id);
-        TaskStatusComponent::setStatusProcessing($task, $this->response->user_employee_id);
+        return (int)$response->status === Response::STATUS_PENDING_CODE;
     }
 
-    private function denyAllTaskResponsesExceptApproved(): void
-    {
-        $pendingResponses = $this->findAllTaskPendingResponses($this->response->task_id) ?? [];
-
-        foreach ($pendingResponses as $response) {
-            $this->response = $response;
-            $this->denyResponse();
-        }
-    }
-
-    public function __construct(int $userRoleCode, $responseId)
-    {
-        $this->userRoleCode = $userRoleCode;
-        $this->responseId = $responseId;
-        $this->response = Response::findOne($responseId);
-
-        $this->actionDeny = new ActionDeny();
-        $this->actionApprove = new ActionApprove();
-    }
 }

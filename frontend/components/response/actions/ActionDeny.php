@@ -2,14 +2,23 @@
 
 namespace frontend\components\response\actions;
 
+use frontend\components\traits\QueriesTrait;
 use frontend\models\Response;
 
 class ActionDeny extends AbstractAction
 {
-    public const ACTION_CODE = 20;
+    use QueriesTrait;
 
-    public function __construct()
+    public const ACTION_CODE = 20;
+    public const STATUS_AFTER_ACTION = Response::STATUS_REFUSED_CODE;
+
+    public function denyAllPendingResponses()
     {
-        $this->statusAfterAction = Response::STATUS_REFUSED_CODE;
+        $pendingResponses = $this->findAllTaskPendingResponses($this->task->id) ?? [];
+
+        foreach ($pendingResponses as $response) {
+            $this->response = $response;
+            $this->processAction();
+        }
     }
 }

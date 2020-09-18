@@ -28,7 +28,8 @@ for (var j = 0; j < closeModalLinks.length; j++) {
     closeModalLink.addEventListener("click", closeModal)
 }
 
-document.getElementById('close-modal').addEventListener("click", closeModal);
+
+//document.getElementById('close-modal').addEventListener("click", closeModal);
 
 var starRating = document.getElementsByClassName("completion-form-star");
 

@@ -26,6 +26,7 @@ trait QueriesTrait
             ->select([
                 '*',
                 'tasks.id as id',
+                'tasks.user_employee_id as user_employee_id',
                 'categories.name as category',
                 'categories.image as image',
             ])

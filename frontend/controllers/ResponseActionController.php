@@ -2,23 +2,33 @@
 
 namespace frontend\controllers;
 
-use frontend\components\response\ResponseStatusComponent;
+use frontend\components\response\actions\ActionApprove;
+use frontend\components\response\actions\ActionDeny;
 use frontend\controllers\parentControllers\SecuredController;
-use Yii;
+use frontend\models\Response;
 
 class ResponseActionController extends SecuredController
 {
-    public function actionDeny($id, $userRole)
+    public function actionDeny($id)
     {
-        $responseStatusComponent = new ResponseStatusComponent($userRole, $id);
-        $responseStatusComponent->denyResponse();
-        return $this->redirect(Yii::$app->request->referrer);
+        $actionDeny = new ActionDeny($id);
+        $actionDeny->processAction();
+
+        return $this->redirectBack();
     }
 
-    public function actionApprove($id, $userRole)
+    public function actionApprove($id)
     {
-        $responseStatusComponent = new ResponseStatusComponent($userRole, $id);
-        $responseStatusComponent->approveResponse();
-        return $this->redirect(Yii::$app->request->referrer);
+        $actionApprove = new ActionApprove($id);
+        $actionApprove->processAction();
+
+        return $this->redirectBack();
+    }
+
+    public function actionDelete($id)
+    {
+        Response::deleteResponse($id);
+
+        return $this->redirectBack();
     }
 }

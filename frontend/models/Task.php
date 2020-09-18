@@ -32,6 +32,15 @@ class Task extends \yii\db\ActiveRecord
     public $city;
     public $category;
 
+    public static function authorisedUserIsTaskCreator(Task $task): bool
+    {
+        return User::idEqualAuthUserId($task->user_customer_id);
+    }
+
+    public static function authorisedUserIsTaskEmployee(Task $task): bool
+    {
+        return User::idEqualAuthUserId($task->user_employee_id);
+    }
 
 
     public static function tableName()
@@ -156,16 +165,4 @@ class Task extends \yii\db\ActiveRecord
          return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
     }
 
-    /*public function __construct(int $employeeId, int $customerId, $deadline)
-    {
-        $this->employeeId = $employeeId;
-        $this->customerId = $customerId;
-        $this->deadline = $deadline;
-        $this->currentTaskStatusCode = self::STATUS_NEW_CODE;
-
-        $this->actionCancel = new ActionCancel();
-        $this->actionAccomplish = new ActionAccomplish();
-        $this->actionRespond = new ActionRespond();
-        $this->actionRefuse = new ActionRefuse();
-    }*/
 }

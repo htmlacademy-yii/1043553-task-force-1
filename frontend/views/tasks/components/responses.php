@@ -41,18 +41,26 @@ use yii\helpers\Url;
                             <a class="button__small-color request-button button"
                                type="button" href="<?= Url::to([
                                 'response-action/approve',
-                                'id' => $response['id'], 'userRole' => $userRole
+                                'id' => $response['id']
                             ]); ?>">Подтвердить</a>
                             <a class="button__small-color refusal-button button"
                                type="button" href="<?= Url::to([
                                 'response-action/deny',
-                                'id' => $response['id'], 'userRole' => $userRole
+                                'id' => $response['id']
                             ]); ?>">Отказать</a>
                         </div>
                     <?php else : ?>
-                        <p>
-                            <?= $response['status'] ?>
-                        </p>
+                        <div style="display: flex; align-items: center">
+                            <p>
+                                <?= $response['status'] ?>
+                            </p>
+                            <?php if (\frontend\models\Response::authorisedUserIsResponseCreator($response)): ?>
+                                <a href="<?= Url::to([
+                                    'response-action/delete',
+                                    'id' => $response['id']
+                                ]); ?>" style="color:red;">Удалить</a>
+                            <?php endif; ?>
+                        </div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>

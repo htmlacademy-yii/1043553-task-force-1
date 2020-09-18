@@ -2,6 +2,7 @@
 
 namespace frontend\components\task;
 
+use App\Http\Controllers\Api\TaskController;
 use frontend\components\helpers\TimeOperations;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\forms\TasksFilterForm;
@@ -20,7 +21,6 @@ class TaskViewComponent extends Component
             'responses' => $selectedTask->getTaskResponses(),
             'showResponses' => $selectedTask->getResponseVisibility(),
             'actionButton' => $selectedTask->getTaskAction(),
-            'userRole' => $selectedTask->getUserRole(),
             'actionButtonIsVisible' => $selectedTask->getActionButtonVisibility()
         ];
 

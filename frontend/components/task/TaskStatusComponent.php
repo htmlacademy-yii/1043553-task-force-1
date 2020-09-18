@@ -54,10 +54,10 @@ class TaskStatusComponent
         throw new TaskException(Task::PREDICT_STATUS_EXCEPTION);
     }
 
-    public function updateCurrentStatus(int $role): void
+    public function updateCurrentStatus(int $role, AbstractAction $action): void
     {
         try {
-            $action = $this->getNextAction($role);
+            //$action = $this->getNextAction($role);
             $status = $this->predictTaskStatus($action);
             $this->currentTaskStatusCode = array_key_first($status);
         } catch (TaskException $e) {
@@ -65,10 +65,47 @@ class TaskStatusComponent
         }
     }
 
-    public static function setStatusProcessing(Task $task, int $userId)
+    public static function detectTaskStatus(Task $task): string
     {
-        $task->current_status = Task::STATUS_PROCESSING_CODE;
+
+        switch ((int)$task->current_status) {
+            case Task::STATUS_NEW_CODE:
+                return Task::STATUS_NEW_NAME;
+            case Task::STATUS_PROCESSING_CODE:
+                return Task::STATUS_PROCESSING_NAME;
+            case Task::STATUS_ACCOMPLISHED_CODE:
+                return Task::STATUS_ACCOMPLISHED_NAME;
+            case Task::STATUS_CANCELLED_CODE:
+                return Task::STATUS_CANCELLED_NAME;
+            case Task::STATUS_FAILED_CODE:
+                return Task::STATUS_FAILED_NAME;
+        }
+    }
+
+    public static function taskIsNotNew(Task $task): bool
+    {
+        return (int)$task->current_status !== Task::STATUS_NEW_CODE;
+    }
+
+    public static function taskIsCancelled(Task $task): bool
+    {
+        return (int)$task->current_status === Task::STATUS_CANCELLED_CODE;
+    }
+
+    public static function taskIsFailed(Task $task): bool
+    {
+        return (int)$task->current_status === Task::STATUS_FAILED_CODE;
+    }
+
+    public static function setStatusProcessing(Task $task, int $userId): bool
+    {
         $task->user_employee_id = $userId;
-        $task->save();
+        return self::updateTaskStatus($task, Task::STATUS_PROCESSING_CODE);
+    }
+
+    public static function updateTaskStatus(Task $task, int $status): bool
+    {
+        $task->current_status = $status;
+        return $task->save(false);
     }
 }

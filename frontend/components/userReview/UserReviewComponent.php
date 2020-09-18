@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\components;
+namespace frontend\components\userReview;
 
 use frontend\components\helpers\TimeOperations;
 use frontend\components\traits\QueriesTrait;

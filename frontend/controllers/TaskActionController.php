@@ -2,30 +2,44 @@
 
 namespace frontend\controllers;
 
+use App\Task;
+use frontend\components\task\actions\ActionAccomplish;
+use frontend\components\task\actions\ActionCancel;
+use frontend\components\task\actions\ActionRefuse;
+use frontend\components\task\actions\ActionRespond;
 use frontend\controllers\parentControllers\SecuredController;
-use frontend\models\forms\TaskCompleteForm;
-use frontend\models\forms\TaskCreateForm;
-use frontend\models\forms\TaskResponseForm;
 
 class TaskActionController extends SecuredController
 {
-    public function actionRespond()
+    public function actionRespond($taskId)
     {
-        
+        $this->enableCsrfValidation = false;
+        $actionRespond = new ActionRespond($taskId);
+
+        return $actionRespond->processAction();
     }
 
-    public function actionAccomplish()
+    public function actionAccomplish($taskId)
     {
-        
+        $this->enableCsrfValidation = false;
+        $actionAccomplish = new ActionAccomplish($taskId);
+
+        return $actionAccomplish->processAction();
     }
 
-    public function actionRefuse()
+    public function actionRefuse($taskId)
     {
-        
+        $actionRefuse = new ActionRefuse($taskId);
+        $actionRefuse->processAction();
+
+        return $this->redirectBack();
     }
 
-    public function actionCancel()
+    public function actionCancel($taskId)
     {
-        
+        $actionCancel = new ActionCancel($taskId);
+        $actionCancel->processAction();
+
+        return $this->redirectBack();
     }
 }

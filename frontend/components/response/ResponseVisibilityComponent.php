@@ -3,6 +3,7 @@
 namespace frontend\components\response;
 
 use frontend\components\helpers\Checker;
+use frontend\components\task\TaskStatusComponent;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\Response;
 use frontend\models\Task;
@@ -20,14 +21,14 @@ class ResponseVisibilityComponent
 
     public function getResponseVisibility(): bool
     {
-        if (Checker::authorisedUserIsTaskCreator($this->task)) {
+        if (Task::authorisedUserIsTaskCreator($this->task)) {
             return true;
         }
 
         $responses = $this->task['responses'] ?? [];
 
         foreach ($responses as $key => $response) {
-            if (Checker::authorisedUserIsResponseCreator($response)) {
+            if (Response::authorisedUserIsResponseCreator($response)) {
                 return true;
             }
         }
@@ -36,11 +37,11 @@ class ResponseVisibilityComponent
 
     public static function getResponseActionButtonsVisibility(Task $task, Response $response): bool
     {
-        if (Checker::taskIsNotNew($task)) {
+        if (TaskStatusComponent::taskIsNotNew($task)) {
             return false;
         }
 
-        if (Checker::authorisedUserIsTaskCreator($task) && Checker::responseIsPending($response)) {
+        if (Task::authorisedUserIsTaskCreator($task) && ResponseStatusComponent::responseIsPending($response)) {
             return true;
         }
         return false;

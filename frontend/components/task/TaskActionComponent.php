@@ -2,7 +2,9 @@
 
 namespace frontend\components\task;
 
-use frontend\components\helpers\Checker;
+use frontend\components\exception\TaskException;
+use frontend\components\user\UserRoleComponent;
+use frontend\models\Response;
 use frontend\models\Task;
 use frontend\components\task\actions\AbstractAction;
 use frontend\components\task\actions\ActionAccomplish;
@@ -22,18 +24,29 @@ class TaskActionComponent
     private Task $task;
     private bool $actionButtonVisibility;
 
+    public const NO_ACTION_IS_AVAILABLE = 50;
+
+    public function __construct(Task $task)
+    {
+        $this->actionCancel = new ActionCancel($task->id);
+        $this->actionAccomplish = new ActionAccomplish($task->id);
+        $this->actionRespond = new ActionRespond($task->id);
+        $this->actionRefuse = new ActionRefuse($task->id);
+
+        $this->task = $task;
+        $this->currentTaskStatusCode = $task['current_status'];
+        $this->currentUserRole = UserRoleComponent::detectUserRole($task);
+        $this->setActionButtonVisibility();
+    }
+
     public function getNextAction(): AbstractAction
     {
-        try {
-            $actions = $this->getPossibleActions();
+        $actions = $this->getPossibleActions();
 
-            foreach ($actions as $key => $action) {
-                if ($action->checkRights($this->currentUserRole)) {
-                    return $action;
-                }
+        foreach ($actions as $key => $action) {
+            if ($action->userIsAllowedToProcessAction()) {
+                return $action;
             }
-        } catch (TaskException $e) {
-            error_log($e->getMessage());
         }
     }
 
@@ -43,7 +56,7 @@ class TaskActionComponent
             Task::STATUS_NEW_CODE => [$this->actionCancel, $this->actionRespond],
             Task::STATUS_PROCESSING_CODE => [$this->actionAccomplish, $this->actionRefuse]
         ];
-        if ($actions[$this->currentTaskStatusCode]) {
+        if (isset($actions[$this->currentTaskStatusCode])) {
             return $actions[$this->currentTaskStatusCode];
         }
 
@@ -52,26 +65,27 @@ class TaskActionComponent
 
     private function setActionButtonVisibility(): void
     {
-        if (Checker::authUserRespondedToTask($this->task->id)) {
+        if (TaskStatusComponent::taskIsCancelled($this->task) or TaskStatusComponent::taskIsFailed($this->task)) {
             $this->actionButtonVisibility = false;
             return;
         }
-        $this->actionButtonVisibility = true;
+
+        if (Task::authorisedUserIsTaskCreator($this->task)) {
+            $this->actionButtonVisibility = true;
+            return;
+        }
+
+        if (Task::authorisedUserIsTaskEmployee($this->task)) {
+            $this->actionButtonVisibility = true;
+            return;
+        }
+
+        if (Response::authUserHaveNotRespondedToTask($this->task->id)) {
+            $this->actionButtonVisibility = true;
+            return;
+        }
+        $this->actionButtonVisibility = false;
     }
-
-    public function __construct(Task $task, int $currentUserRole)
-    {
-        $this->actionCancel = new ActionCancel();
-        $this->actionAccomplish = new ActionAccomplish();
-        $this->actionRespond = new ActionRespond();
-        $this->actionRefuse = new ActionRefuse();
-
-        $this->task = $task;
-        $this->currentTaskStatusCode = $task['current_status'];
-        $this->currentUserRole = $currentUserRole;
-        $this->setActionButtonVisibility();
-    }
-
 
     public function getActionButtonVisibility(): bool
     {

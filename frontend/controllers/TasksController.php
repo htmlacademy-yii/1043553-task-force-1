@@ -3,7 +3,7 @@
 namespace frontend\controllers;
 
 use frontend\controllers\parentControllers\SecuredController;
-use frontend\models\forms\TaskCompleteForm;
+use frontend\models\forms\TaskAccomplishForm;
 use frontend\models\forms\TaskCreateForm;
 use frontend\models\forms\TaskResponseForm;
 
@@ -11,7 +11,9 @@ class TasksController extends SecuredController
 {
     public int $taskId;
     public TaskResponseForm $taskResponseForm;
-    public TaskCompleteForm $taskCompleteForm;
+    public TaskAccomplishForm $taskAccomplishForm;
+    public int $lat;
+    public int $lon;
 
     public function actionIndex()
     {
@@ -24,9 +26,11 @@ class TasksController extends SecuredController
     {
         $this->taskId = $id;
         $this->taskResponseForm = new TaskResponseForm();
-        $this->taskCompleteForm = new TaskCompleteForm();
+        $this->taskAccomplishForm = new TaskAccomplishForm();
 
         $data = \Yii::$app->taskViewComponent->getDataForSelectedTaskPage($id);
+        $this->lat = $data['task']['lat'];
+        $this->lon = $data['task']['lon'];
 
         return $this->render('show', $data);
     }
