@@ -33,6 +33,7 @@ class TaskCreateForm extends Model
     {
         return [
             [['title', 'description', 'category', 'address', 'budget', 'expire'], 'safe'],
+            [['title', 'description', 'address', 'budget'], 'trim'],
             [['title', 'description', 'category', 'budget', 'deadline'], 'required'],
             [['title', 'description', 'address'], 'string'],
             [['category'], 'exist', 'targetClass' => Category::className(), 'targetAttribute' => ['category' => 'id']],
@@ -55,8 +56,12 @@ class TaskCreateForm extends Model
         $task->deadline = $this->deadline;
         $task->created_at = time();
 
-        $service = new LocationComponent($this->address);
+        if ($this->address === '') {
+            return $task->save(false);
+        }
+
         try {
+            $service = new LocationComponent($this->address);
             $coordinates = $service->getCoordinates();
             $task->lat = $coordinates['lat'];
             $task->lon = $coordinates['lon'];

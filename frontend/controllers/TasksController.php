@@ -12,8 +12,8 @@ class TasksController extends SecuredController
     public int $taskId;
     public TaskResponseForm $taskResponseForm;
     public TaskAccomplishForm $taskAccomplishForm;
-    public int $lat;
-    public int $lon;
+    public ?int $lat;
+    public ?int $lon;
 
     public function actionIndex()
     {
