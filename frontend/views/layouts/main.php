@@ -17,6 +17,10 @@ AppAsset::register($this);
         <?php $this->registerCsrfMetaTags(); ?>
         <link rel="stylesheet" type="text/css" href="/css/normalize.css">
         <link rel="stylesheet" type="text/css" href="/css/styles.css">
+        <link rel="stylesheet" type="text/css" href="/css/autoComplete.css">
+        <!--<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">-->
+
         <title><?= Html::encode($this->title) ?></title>
         <script src="https://api-maps.yandex.ru/2.1/?apikey=e666f398-c983-4bde-8f14-e3fec900592a&lang=ru_RU"
                 type="text/javascript">
@@ -187,12 +191,15 @@ AppAsset::register($this);
         </footer>
         <?= $this->render('/layouts/components/modals'); ?>
     </div>
+    <!--<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="/js/updateActiveItem.js"></script>
     <script src="/js/main2.js"></script>
+    <script src="/js/autoComplete.min.js"></script>
+    <script src="/js/addressAutocomplete.js"></script>
     <script>
-        var lon=<?= $this->context->lon ?? '' ?>;
-        var lat=<?= $this->context->lat ?? '' ?>;
+        var lon =<?= $this->context->lon ?? '' ?>;
+        var lat =<?= $this->context->lat ?? '' ?>;
     </script>
     <script src="/js/showMap.js"></script>
     <script src="/js/createResponse.js"></script>

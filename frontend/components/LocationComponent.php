@@ -24,7 +24,7 @@ class LocationComponent
 
     public function getCoordinates(): array
     {
-        $this->sendRequest();
+        $this->sendRequest(1);
 
         $this->getResponse();
 
@@ -40,13 +40,13 @@ class LocationComponent
         throw new \Exception(self::LOCATION_EXCEPTION);
     }
 
-    private function sendRequest(): void
+    private function sendRequest(int $results): void
     {
         $query = [
             'apikey' => 'e666f398-c983-4bde-8f14-e3fec900592a',
             'geocode' => $this->address,
             'format' => 'json',
-            'results' => 1
+            'results' => $results
         ];
 
         $this->response = $this->client->request('GET', '1.x', ['query' => $query]);

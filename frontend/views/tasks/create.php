@@ -68,6 +68,7 @@ $this->title = 'Создать задание - TaskForce';
         <?php $options = [
             'class' => 'input-navigation input-middle input',
             'id' => 'address',
+            //'id' => 'autoComplete',
             'tag' => false
         ]; ?>
         <?= $form->field($model, 'address', ['template' => "{label}\n{input}"])->input('search', $options)->label(null,

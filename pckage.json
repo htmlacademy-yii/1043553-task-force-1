@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@tarekraafat/autocomplete.js": "^7.2.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.44.2"
+  }
+}
