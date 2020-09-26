@@ -195,8 +195,6 @@ AppAsset::register($this);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="/js/updateActiveItem.js"></script>
     <script src="/js/main2.js"></script>
-    <script src="/js/autoComplete.min.js"></script>
-    <script src="/js/addressAutocomplete.js"></script>
     <script>
         var lon =<?= $this->context->lon ?? '' ?>;
         var lat =<?= $this->context->lat ?? '' ?>;
@@ -204,6 +202,8 @@ AppAsset::register($this);
     <script src="/js/showMap.js"></script>
     <script src="/js/createResponse.js"></script>
     <script src="/js/accomplishTask.js"></script>
+    <script src="/js/autoComplete.min.js"></script>
+    <script src="/js/addressAutocomplete.js"></script>
     <?php $this->endBody() ?>
     </body>
     </html>

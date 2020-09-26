@@ -42,7 +42,7 @@ CREATE TABLE `taskForce`.`tasks` (
 `city_id` INT(11)  NULL ,
 `lat` VARCHAR(50) NULL ,
 `lon` VARCHAR(50) NULL ,
-`address` VARCHAR(50) NULL ,
+`address` VARCHAR(255) NULL ,
 `budget` INT(11) NOT NULL ,
 `deadline` DATE  NULL ,
 `current_status` SMALLINT(3) NOT NULL DEFAULT 0 ,
@@ -105,7 +105,7 @@ CREATE TABLE `taskForce`.`users_categories` (
 `category_id` INT(11)   NOT NULL ,
 PRIMARY KEY (`user_id`, `category_id`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
-CREATE TABLE `taskForce`.`correspondence` (
+CREATE TABLE `taskForce`.`chat` (
 `id` INT(11) NOT NULL AUTO_INCREMENT,
 `task_id` INT(11)   NOT NULL ,
 `user_id` INT(11)   NOT NULL ,
@@ -159,10 +159,10 @@ ALTER TABLE `users_categories` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`i
 ALTER TABLE `users_categories` ADD INDEX( `category_id`);
 ALTER TABLE `users_categories` ADD FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE `correspondence` ADD INDEX( `task_id`);
-ALTER TABLE `correspondence` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `correspondence` ADD INDEX( `user_id`);
-ALTER TABLE `correspondence` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `chat` ADD INDEX( `task_id`);
+ALTER TABLE `chat` ADD FOREIGN KEY (`task_id`) REFERENCES `tasks`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `chat` ADD INDEX( `user_id`);
+ALTER TABLE `chat` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE `favorites` ADD INDEX( `user_id`);
 ALTER TABLE `favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

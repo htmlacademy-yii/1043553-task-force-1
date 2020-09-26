@@ -2,7 +2,7 @@
 
 namespace frontend\models\forms;
 
-use frontend\components\LocationComponent;
+use frontend\components\YandexMapsComponent;
 use frontend\models\Category;
 use frontend\models\Task;
 use Yii;
@@ -16,6 +16,8 @@ class TaskCreateForm extends Model
     public $address;
     public $budget;
     public $deadline;
+    public $lat;
+    public $lon;
 
     public function attributeLabels()
     {
@@ -25,7 +27,9 @@ class TaskCreateForm extends Model
             'category' => 'Категория',
             'address' => 'Локация',
             'budget' => 'Бюджет',
-            'deadline' => 'Срок исполнения'
+            'deadline' => 'Срок исполнения',
+            'lat' => 'Долгота',
+            'lon' => 'Широта'
         ];
     }
 
@@ -38,6 +42,7 @@ class TaskCreateForm extends Model
             [['title', 'description', 'address'], 'string'],
             [['category'], 'exist', 'targetClass' => Category::className(), 'targetAttribute' => ['category' => 'id']],
             [['budget'], 'integer', 'min' => 1],
+            [['lat', 'lon'], 'number', 'numberPattern' => '/^\d{2}\.{1}\d{6}$/'],
             [['deadline'], 'date', 'format' => 'php:Y-m-d']
         ];
     }
@@ -56,16 +61,25 @@ class TaskCreateForm extends Model
         $task->deadline = $this->deadline;
         $task->created_at = time();
 
-        if ($this->address === '') {
-            return $task->save(false);
-        }
-
         try {
-            $service = new LocationComponent($this->address);
+            if ($this->address === '') {
+                return $task->save(false);
+            }
+
+            $task->address = $this->address;
+
+            if ($this->lat && $this->lon) {
+                $task->lat = $this->lat;
+                $task->lon = $this->lon;
+
+                return $task->save(false);
+            }
+
+            $service = new YandexMapsComponent($this->address);
             $coordinates = $service->getCoordinates();
             $task->lat = $coordinates['lat'];
             $task->lon = $coordinates['lon'];
-            $task->address = $this->address;
+
             return $task->save(false);
         } catch (\Exception $e) {
             self::addError('address', $e->getMessage());
