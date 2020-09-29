@@ -204,6 +204,7 @@ AppAsset::register($this);
     <script src="/js/accomplishTask.js"></script>
     <script src="/js/autoComplete.min.js"></script>
     <script src="/js/addressAutocomplete.js"></script>
+    <script src="/js/messenger.js"></script>
     <?php $this->endBody() ?>
     </body>
     </html>

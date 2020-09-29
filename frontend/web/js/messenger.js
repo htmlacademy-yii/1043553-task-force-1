@@ -5,7 +5,7 @@ Vue.component('chat', {
   template: `<div><h3>Переписка</h3>
              <div class="chat__overflow">
                <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.is_mine}">
-                <p class="chat__message-time">{{ item.published_at }}</p>
+                <p class="chat__message-time">{{ item.created_at }}</p>
                 <p class="chat__message-text">{{ item.message }}</p>
                </div>
               </div>
@@ -13,6 +13,7 @@ Vue.component('chat', {
               <form class="chat__form">
                   <textarea class="input textarea textarea-chat" rows="2" name="message-text"
                   v-model="message" placeholder="Текст сообщения">{{this.message}}</textarea>
+                  <intput type="hidden" name="taskId" value={{this.task}}></intput>
                   <button class="button chat__button" v-on:click="sendMessage" type="button">Отправить</button>
               </form></div>`,
   mounted: function() {
@@ -20,33 +21,39 @@ Vue.component('chat', {
       console.error("Не передан идентификатор задания (атрибут task) в теге 'chat'")
     }
     else {
-      this.api_url = '/index.php/api/messages?id=' + this.task;
+     // this.api_url = '/api/messages/create?id=' + this.task;
+      this.api_create_url = '/api/messages/create';
+      this.api_index_url = '/index.php/api/messages/?id=' + this.task;
       this.getMessages();
     }
   },
   methods: {
     sendMessage: function() {
-      fetch(this.api_url, {
+      fetch(this.api_create_url, {
         method: 'POST',
-        body: JSON.stringify({message: this.message})
+        body: JSON.stringify({message: this.message, taskId: this.task})
       })
       .then(result => {
-        if (result.status !== 201) {
+        if (result.status !== 200) {
           return Promise.reject(new Error('Запрошенный ресурс не существует'));
         }
 
         return result.json();
+
       })
       .then(msg => {
         this.messages.push(msg);
         this.message = null;
+        this.getMessages();
       })
       .catch(err => {
         console.error('Не удалось отправить сообщение', err);
-      })
+      });
+
+
     },
     getMessages: function () {
-      fetch(this.api_url)
+      fetch(this.api_index_url)
       .then(result => {
         if (result.status !== 200) {
           return Promise.reject(new Error('Запрошенный ресурс не существует'));
@@ -56,6 +63,7 @@ Vue.component('chat', {
       })
       .then(messages => {
         this.messages = messages;
+        console.log(messages);
       })
       .catch(err => {
         console.error('Не удалось получить сообщения чата', err);
@@ -65,7 +73,8 @@ Vue.component('chat', {
   data: function () {
     return {
       messages: [],
-      api_url: null,
+      api_post_url: null,
+      api_index_url: null,
       message: null
     }
   }

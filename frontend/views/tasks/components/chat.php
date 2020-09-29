@@ -1,4 +1,7 @@
-<div class="connect-desk__chat">
+<div id="chat-container">
+    <chat class="connect-desk__chat" task="<?=$task->id;?>"></chat>
+</div>
+<!--<div class="connect-desk__chat">
     <h3>Переписка</h3>
     <div class="chat__overflow">
         <div class="chat__message chat__message--out">
@@ -22,4 +25,4 @@
                       placeholder="Текст сообщения"></textarea>
         <button class="button chat__button" type="submit">Отправить</button>
     </form>
-</div>
+</div>-->

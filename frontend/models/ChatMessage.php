@@ -2,6 +2,8 @@
 
 namespace frontend\models;
 
+use frontend\components\helpers\TimeOperations;
+use frontend\components\task\TaskAccessComponent;
 use Yii;
 
 /**
@@ -12,13 +14,42 @@ use Yii;
  * @property int $user_id Пользователь
  * @property int $is_mine Сообщение заказчика
  * @property string $message Текст сообщения
- * @property string $dt_add Время создания записи
+ * @property string $created_at Время создания записи
  *
  * @property Task $task
- * @property User $contractor
+ * @property User $user
  */
 class ChatMessage extends \yii\db\ActiveRecord
 {
+    public $is_mine;
+
+    public function saveMessage(string $message, int $taskId): bool
+    {
+        if (TaskAccessComponent::taskIsNotAccessible($taskId)) {
+            return false;
+        }
+        $this->task_id = $taskId;
+        $this->user_id = Yii::$app->user->getId();
+        $this->message = $message;
+        $this->created_at = time();
+        return $this->save(false);
+    }
+
+    public static function getChatMessagesForSelectedTask(int $taskId)
+    {
+        $messages = self::find()->where(['task_id' => $taskId])->all();
+
+        $messagesClone = [];
+
+        foreach ($messages as $key => $message) {
+            $messagesClone[$key] = $message;
+            $messagesClone[$key]['is_mine'] = User::idEqualAuthUserId($message['user_id']);
+            $messagesClone[$key]['created_at'] = TimeOperations::timePassed($message['created_at']);
+        }
+
+        return $messagesClone;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -33,9 +64,10 @@ class ChatMessage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'user_id', 'is_mine', 'message'], 'required'],
+            //[['task_id', 'user_id', 'is_mine', 'message'], 'required'],
+            //[['message'], 'required'],
             [['task_id', 'user_id', 'is_mine'], 'integer'],
-            [['dt_add'], 'safe'],
+            [['created_at'], 'safe'],
             [['message'], 'string', 'max' => 255],
             [
                 ['task_id'],
@@ -45,7 +77,7 @@ class ChatMessage extends \yii\db\ActiveRecord
                 'targetAttribute' => ['task_id' => 'id']
             ],
             [
-                ['contractor_id'],
+                ['user_id'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => User::className(),
@@ -63,7 +95,7 @@ class ChatMessage extends \yii\db\ActiveRecord
             'id' => 'ID',
             'task_id' => 'Task ID',
             'user_id' => 'User ID',
-            'is_mine' => 'Is Mine',
+            //'is_mine' => 'Is Mine',
             'message' => 'Message',
             'created_at' => 'created at',
         ];
@@ -86,7 +118,7 @@ class ChatMessage extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'contractor_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }
 

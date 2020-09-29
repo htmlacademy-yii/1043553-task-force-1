@@ -13,5 +13,5 @@
 </section>
 <section class="connect-desk">
     <?= $this->render('/tasks/components/customer', ['customer' => $customer]); ?>
-    <?= $this->render('/tasks/components/chat'); ?>
+    <?= $this->render('/tasks/components/chat', ['task' => $task]); ?>
 </section>

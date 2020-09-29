@@ -42,6 +42,18 @@ class Task extends \yii\db\ActiveRecord
         return User::idEqualAuthUserId($task->user_employee_id);
     }
 
+    public static function authUserCanAccessTask(Task $task): bool
+    {
+        if ((int)$task->current_status === self::STATUS_NEW_CODE) {
+            return true;
+        }
+
+        if (self::authorisedUserIsTaskEmployee($task) or self::authorisedUserIsTaskCreator($task)) {
+            return true;
+        }
+
+        return false;
+    }
 
     public static function tableName()
     {
@@ -50,7 +62,7 @@ class Task extends \yii\db\ActiveRecord
 
     public function rules()
     {
-         return [
+        return [
             [
                 [
                     'user_customer_id',
@@ -112,7 +124,7 @@ class Task extends \yii\db\ActiveRecord
 
     public function attributeLabels()
     {
-         return [
+        return [
             'id' => 'ID',
             'user_customer_id' => 'User Customer ID',
             'user_employee_id' => 'User Employee ID',
@@ -132,37 +144,37 @@ class Task extends \yii\db\ActiveRecord
 
     public function getCorrespondences()
     {
-         return $this->hasMany(Correspondence::className(), ['task_id' => 'id']);
+        return $this->hasMany(Correspondence::className(), ['task_id' => 'id']);
     }
 
     public function getResponses()
     {
-         return $this->hasMany(Response::className(), ['task_id' => 'id']);
+        return $this->hasMany(Response::className(), ['task_id' => 'id']);
     }
 
     public function getCategory()
     {
-         return $this->hasOne(Category::className(), ['id' => 'category_id']);
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
     public function getUserCustomer()
     {
-         return $this->hasOne(User::className(), ['id' => 'user_customer_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_customer_id']);
     }
 
     public function getUserEmployee()
     {
-         return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_employee_id']);
     }
 
     public function getCity()
     {
-         return $this->hasOne(City::className(), ['id' => 'city_id']);
+        return $this->hasOne(City::className(), ['id' => 'city_id']);
     }
 
     public function getTasksFiles()
     {
-         return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
+        return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
     }
 
 }
