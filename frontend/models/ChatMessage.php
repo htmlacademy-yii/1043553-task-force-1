@@ -17,14 +17,14 @@ use Yii;
  * @property Task $task
  * @property User $contractor
  */
-class Chat extends \yii\db\ActiveRecord
+class ChatMessage extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'chat';
+        return 'chat_messages';
     }
 
     /**
