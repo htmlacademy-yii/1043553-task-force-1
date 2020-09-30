@@ -2,7 +2,6 @@
 
 namespace frontend\components\task;
 
-use App\Http\Controllers\Api\TaskController;
 use frontend\components\helpers\TimeOperations;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\forms\TasksFilterForm;

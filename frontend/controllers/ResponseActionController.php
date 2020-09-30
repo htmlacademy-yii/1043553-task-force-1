@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use frontend\components\response\actions\ActionApprove;
+use frontend\components\response\actions\ActionDelete;
 use frontend\components\response\actions\ActionDeny;
 use frontend\controllers\parentControllers\SecuredController;
 use frontend\models\Response;
@@ -27,7 +28,8 @@ class ResponseActionController extends SecuredController
 
     public function actionDelete($id)
     {
-        Response::deleteResponse($id);
+        $actionDelete = new ActionDelete($id);
+        $actionDelete->processAction();
 
         return $this->redirectBack();
     }

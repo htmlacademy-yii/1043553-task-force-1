@@ -17,9 +17,10 @@ namespace frontend\models;
  */
 class Response extends \yii\db\ActiveRecord
 {
+    public const STATUS_PENDING_CODE = 0;
     public const STATUS_APPROVED_CODE = 1;
     public const STATUS_REFUSED_CODE = 2;
-    public const STATUS_PENDING_CODE = 0;
+    public const STATUS_DELETED_CODE = 3;
 
     public const STATUS_REFUSED_NAME = 'Предложение отклонено';
     public const STATUS_APPROVED_NAME = 'Предложение принято';
@@ -42,14 +43,6 @@ class Response extends \yii\db\ActiveRecord
             ->one();
 
         return !$response;
-    }
-
-    public static function deleteResponse(int $responseId)
-    {
-        $response = Response::findOne($responseId);
-        if (self::authorisedUserIsResponseCreator($response)) {
-            $response->delete();
-        }
     }
 
     public static function authorisedUserIsResponseCreator(Response $response): bool
