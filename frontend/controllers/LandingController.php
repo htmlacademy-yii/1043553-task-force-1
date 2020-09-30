@@ -24,7 +24,7 @@ class LandingController extends UnsecuredController
     public function beforeAction($action)
     {
         $this->model = new UserLoginForm();
-        $this->enableCsrfValidation = false;
+        //$this->enableCsrfValidation = false;
 
         return parent::beforeAction($action);
     }

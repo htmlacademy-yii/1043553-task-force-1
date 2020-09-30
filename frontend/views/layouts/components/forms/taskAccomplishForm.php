@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
     <p class="form-modal-description">Задание выполнено?</p>
 
     <?php $form = ActiveForm::begin([
-        'action' => Url::to(["/task-action/accomplish?taskId=" . $this->context->taskId]),
+        'action' => Url::to(["/task-action/accomplish?taskId=" . \Yii::$app->session['taskId'] ?? '']),
         'id' => 'taskAccomplishForm',
         'options' => [
             'name' => $this->context->taskAccomplishForm->formName()

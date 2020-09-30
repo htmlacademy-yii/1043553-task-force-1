@@ -7,6 +7,7 @@ use frontend\components\traits\QueriesTrait;
 use frontend\models\forms\TasksFilterForm;
 use yii\base\Component;
 
+
 class TaskViewComponent extends Component
 {
     use QueriesTrait;
@@ -22,6 +23,10 @@ class TaskViewComponent extends Component
             'actionButton' => $selectedTask->getTaskAction(),
             'actionButtonIsVisible' => $selectedTask->getActionButtonVisibility()
         ];
+
+        \Yii::$app->session['lat'] = $data['task']['lat'];
+        \Yii::$app->session['lon'] = $data['task']['lon'];
+        \Yii::$app->session['taskId'] = $data['task']['id'];
 
         return TimeOperations::addTimeInfo($data);
     }

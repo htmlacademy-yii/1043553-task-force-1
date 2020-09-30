@@ -61,7 +61,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $passwordHash;
     public $age;
 
-    public static function idEqualAuthUserId(int $id): bool
+    public static function idEqualAuthUserId(?int $id): bool
     {
         return $id === Yii::$app->user->getId();
     }

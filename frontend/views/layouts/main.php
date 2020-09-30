@@ -196,8 +196,8 @@ AppAsset::register($this);
     <script src="/js/updateActiveItem.js"></script>
     <script src="/js/main2.js"></script>
     <script>
-        var lon =<?= $this->context->lon ?? '' ?>;
-        var lat =<?= $this->context->lat ?? '' ?>;
+        var lat =<?= \Yii::$app->session['lat'] ?? '' ?>;
+        var lon =<?= \Yii::$app->session['lon'] ?? '' ?>;
     </script>
     <script src="/js/showMap.js"></script>
     <script src="/js/createResponse.js"></script>

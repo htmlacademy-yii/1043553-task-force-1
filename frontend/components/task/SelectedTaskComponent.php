@@ -49,7 +49,7 @@ class SelectedTaskComponent
 
     public function getTaskResponses(): array
     {
-        return $this->responseViewComponent->taskResponses ?? [];
+        return $this->responseViewComponent->getTaskResponses() ?? [];
     }
 
     public function getTaskAction(): int
