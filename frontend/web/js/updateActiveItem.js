@@ -1,5 +1,6 @@
 updateActiveTab();
 updateActiveUserSearchFiler();
+updateActiveTaskStatusFiler();
 
 function updateActiveTab()
 {
@@ -41,4 +42,33 @@ function updateActiveUserSearchFiler()
     if (~url.indexOf("sortBy=reviews")) {
         $('#popularity').addClass('user__search-item--current');
     }
+}
+
+function updateActiveTaskStatusFiler()
+{
+    let activeTab = $(".menu_toggle__item--current");
+    activeTab.toggleClass('menu_toggle__item--current');
+    let url = window.location.href;
+
+    if (~url.indexOf("new")) {
+        $('#new').addClass('menu_toggle__item--current');
+        return
+    }
+    if (~url.indexOf("processing")) {
+        $('#active').addClass('menu_toggle__item--current');
+        return
+    }
+    if (~url.indexOf("accomplished")) {
+        $('#completed').addClass('menu_toggle__item--current');
+        return
+    }
+    if (~url.indexOf("cancelled")) {
+        $('#cancelled').addClass('menu_toggle__item--current');
+        return
+    }
+    if (~url.indexOf("failed")) {
+        $('#failed').addClass('menu_toggle__item--current');
+        return
+    }
+    $('#active').addClass('menu_toggle__item--current');
 }

@@ -21,6 +21,7 @@ CREATE TABLE `taskForce`.`users` (
 `birthday` DATE NULL ,
 `description` VARCHAR(255) NULL ,
 `password_hash` VARCHAR(60) NOT NULL ,
+`avatar` VARCHAR(60) NULL ,
 `phone` VARCHAR(16)  NULL ,
 `skype` VARCHAR(40)  NULL ,
 `other_app` VARCHAR(40)  NULL ,
@@ -1393,6 +1394,12 @@ INSERT INTO `favorites` (`user_id`, `fav_user_id`) VALUES
 (21,2),
 (21,3),
 (4,10);
+
+UPDATE `users` SET  `avatar` = 'man-brune.jpg' WHERE `id` = '7';
+UPDATE `users` SET  `avatar` = 'man-blond.jpg' WHERE `id` = '2';
+UPDATE `users` SET  `avatar` = 'man-glasses.jpg' WHERE `id` = '3';
+UPDATE `users` SET  `avatar` = 'man-hat.png' WHERE `id` = '4';
+UPDATE `users` SET  `avatar` = 'woman-glasses.jpg' WHERE `id` = '6';
 
 INSERT INTO `user_photos` (`id`, `user_id`, `photo`) VALUES
 (NULL, '7', 'man-brune.jpg'),

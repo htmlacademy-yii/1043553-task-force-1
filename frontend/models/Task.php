@@ -2,13 +2,6 @@
 
 namespace frontend\models;
 
-use frontend\TaskActions\AbstractAction;
-use frontend\TaskActions\ActionAccomplish;
-use frontend\TaskActions\ActionCancel;
-use frontend\TaskActions\ActionRefuse;
-use frontend\TaskActions\ActionRespond;
-use TaskForce\Exception\TaskException;
-
 class Task extends \yii\db\ActiveRecord
 {
     public const STATUS_NEW_CODE = 0;
@@ -23,6 +16,12 @@ class Task extends \yii\db\ActiveRecord
     public const STATUS_ACCOMPLISHED_NAME = "Выполнено";
     public const STATUS_FAILED_NAME = "Провалено";
 
+    public const STATUS_NEW = "new";
+    public const STATUS_CANCELLED = "cancelled";
+    public const STATUS_PROCESSING = "processing";
+    public const STATUS_ACCOMPLISHED = "accomplished";
+    public const STATUS_FAILED = "failed";
+
     public const GET_POSSIBLE_STATUSES_EXCEPTION = 'Неизвестный индекc в функции getPossibleTaskStatuses';
     public const GET_POSSIBLE_ACTIONS_EXCEPTION = 'Неизвестный индекc в функции getPossibleActions';
     public const PREDICT_STATUS_EXCEPTION = 'Неизвестный индекc в функции predictTaskStatus';
@@ -31,6 +30,7 @@ class Task extends \yii\db\ActiveRecord
     public $image;
     public $city;
     public $category;
+    public $partner;
 
     public static function authorisedUserIsTaskCreator(Task $task): bool
     {
@@ -142,9 +142,9 @@ class Task extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getCorrespondences()
+    public function getChatMessages()
     {
-        return $this->hasMany(Correspondence::className(), ['task_id' => 'id']);
+        return $this->hasMany(ChatMessage::className(), ['task_id' => 'id']);
     }
 
     public function getResponses()
@@ -175,6 +175,11 @@ class Task extends \yii\db\ActiveRecord
     public function getTasksFiles()
     {
         return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
+    }
+
+    public function getUsersReview()
+    {
+        return $this->hasOne(UserReview::className(), ['task_id' => 'id']);
     }
 
 }

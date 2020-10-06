@@ -11,6 +11,7 @@ use yii\web\IdentityInterface;
  *
  * @property int $id
  * @property int $created_at
+ * @property int $current_role
  * @property int|null $last_active
  * @property string $email
  * @property string $name

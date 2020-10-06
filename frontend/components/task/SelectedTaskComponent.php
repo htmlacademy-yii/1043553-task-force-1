@@ -3,7 +3,6 @@
 namespace frontend\components\task;
 
 use frontend\components\exception\TaskException;
-use frontend\components\helpers\Checker;
 use frontend\components\response\ResponseViewComponent;
 use frontend\components\response\ResponseVisibilityComponent;
 use frontend\components\traits\QueriesTrait;
