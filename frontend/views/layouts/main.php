@@ -208,6 +208,13 @@ AppAsset::register($this);
     <script src="/js/autoComplete.min.js"></script>
     <script src="/js/addressAutocomplete.js"></script>
     <script src="/js/messenger.js"></script>
+    <script src="/js/dropzone.js"></script>
+    <script>
+        Dropzone.autoDiscover = false;
+
+        var dropzone = new Dropzone(".dropzone", {url: 'profile/update', maxFiles: 6, uploadMultiple: true,
+            acceptedFiles: 'image/*', previewTemplate: '<a href="#"><img data-dz-thumbnail alt="Фото работы"></a>'});
+    </script>
     <?php $this->endBody() ?>
     </body>
     </html>

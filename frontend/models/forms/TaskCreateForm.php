@@ -59,7 +59,6 @@ class TaskCreateForm extends Model
         $task->category_id = intval($this->category);
         $task->budget = intval($this->budget);
         $task->deadline = $this->deadline;
-        $task->created_at = time();
 
         try {
             if ($this->address === '') {

@@ -4,6 +4,9 @@ use frontend\widgets\DropzoneWidget;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+
+\Yii::$app->user->identity->selectedCategories = \frontend\components\user\AuthUserComponent::getAuthUserCategories();
+
 $fieldConfig = [
     'template' => '{label}{input}{error}',
     'options' => ['tag' => false],
@@ -21,7 +24,7 @@ $fieldConfig = [
             <h3 class="div-line">Настройки аккаунта</h3>
             <div class="account__redaction-section-wrapper">
                 <div class="account__redaction-avatar">
-                    <img src="/img/<?= $user->avatar ?? \frontend\models\User::DEFAULT_USER_PHOTO ?>" width="156"
+                    <img src="/avatars/<?= $user->avatar ?? \frontend\models\User::DEFAULT_USER_PHOTO ?>" width="156"
                          height="156">
                     <?= $form->field($model, 'avatar', [
                         'template' => '{input}{label}{error}',
@@ -42,7 +45,7 @@ $fieldConfig = [
                                 'class' => 'input textarea '
                                     . ($model->hasErrors('name') ? 'field-danger'
                                         : ''),
-                                'value' => Html::encode($user->login ?? ''),
+                                'value' => Html::encode($user['name']),
                             ])->error(['class' => 'text-danger']); ?>
                     </div>
                     <div class="account__input account__input--email">
@@ -51,7 +54,7 @@ $fieldConfig = [
                                 'class' => 'input textarea '
                                     . ($model->hasErrors('email') ? 'field-danger'
                                         : ''),
-                                'value' => Html::encode($user->email ?? ''),
+                                'value' => Html::encode($user['email']),
                             ])->error(['class' => 'text-danger']); ?>
                     </div>
                     <div class="account__input account__input--name">
@@ -62,7 +65,7 @@ $fieldConfig = [
                                         : ''),
                                 'size' => 1,
                                 'options' => [
-                                    $user->city_id ?? 1 => ['selected' => true],
+                                    $user['city_id'] ?? 1 => ['selected' => true],
                                 ],
                             ])->error(['class' => 'text-danger']); ?>
                     </div>
@@ -73,7 +76,7 @@ $fieldConfig = [
                                     'class' => 'input-middle input input-date '
                                         . ($model->hasErrors('birthday')
                                             ? 'field-danger' : ''),
-                                    'value' => Html::encode($user->userData->birthday
+                                    'value' => Html::encode($user['birthday']
                                         ?? ''),
                                 ])->error(['class' => 'text-danger']); ?>
                     </div>
@@ -84,7 +87,7 @@ $fieldConfig = [
                                     . ($model->hasErrors('description')
                                         ? 'field-danger' : ''),
                                 'rows' => 7,
-                                'value' => Html::encode($user->userData->description
+                                'value' => Html::encode($user['description']
                                     ?? ''),
                             ])->error(['class' => 'text-danger']); ?>
                     </div>
@@ -101,8 +104,8 @@ $fieldConfig = [
                             $checked,
                             $id
                         ) use ($user) {
-                            /*$checked = in_array($id, $user->category_Id)
-                                ? 'checked' : '';*/
+                            $checked = in_array($id, $user->selectedCategories)
+                                ? 'checked' : '';
 
                             return "<input
                                 class='visually-hidden checkbox__input'
@@ -141,12 +144,8 @@ $fieldConfig = [
 
             <h3 class="div-line">Фото работ</h3>
             <div class="account__redaction-section-wrapper account__redaction">
-                <?=
-                /*$form->field($model, 'files')->widget(DropzoneWidget::class, [
-                    'text' => 'Выбрать фотографии',
-                ])->label(false)->error(['class' => 'text-danger']);
-                */
-                $a = 1; ?>
+                <span class="dropzone">Выбрать фотографии</span>
+
             </div>
 
             <?php if (isset($user->photos)): ?>
@@ -165,7 +164,7 @@ $fieldConfig = [
                         ->input('tel', [
                             'class' => 'input textarea ' . ($model->hasErrors('phone')
                                     ? 'field-danger' : ''),
-                            'value' => Html::encode($user->phone ?? ''),
+                            'value' => Html::encode($user['phone']),
                         ])->error(['class' => 'text-danger']); ?>
                 </div>
                 <div class="account__input">
@@ -173,17 +172,16 @@ $fieldConfig = [
                         ->textInput([
                             'class' => 'input textarea ' . ($model->hasErrors('skype')
                                     ? 'field-danger' : ''),
-                            'value' => Html::encode($user->skype ?? ''),
+                            'value' => Html::encode($user['skype']),
                         ])->error(['class' => 'text-danger']); ?>
                 </div>
                 <div class="account__input">
-                    <?= $form->field($model, 'otherMessenger', $fieldConfig)
+                    <?= $form->field($model, 'other_app', $fieldConfig)
                         ->textInput([
                             'class' => 'input textarea '
                                 . ($model->hasErrors('otherMessenger')
                                     ? 'field-danger' : ''),
-                            'value' => Html::encode($user->other_messenger
-                                ?? ''),
+                            'value' => Html::encode($user['other_app']),
                         ])->error(['class' => 'text-danger']); ?>
                 </div>
             </div>
@@ -201,9 +199,7 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'notifications-1',
-                            'checked' => false
-                            /*'checked' => (bool)$user->userNotifications->is_new_message ?? false
-                                ?? 0,*/
+                            'checked' => (bool)$user->msg_notification,
                         ], false)
                         ->label('Новое сообщение', ['for' => 'notifications-1']); ?>
                     <?= $form->field($model, 'notifications[task-actions]',
@@ -212,9 +208,7 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'notifications-2',
-                            'checked' => false
-                            /*'checked' => (bool)$user->userNotifications->is_task_actions
-                                ?? 0,*/
+                            'checked' => (bool)$user->action_notification,
                         ], false)
                         ->label('Действия по заданию',
                             ['for' => 'notifications-2']); ?>
@@ -224,9 +218,7 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'notifications-3',
-                            'checked' => false
-                            /*'checked' => (bool)$user->userNotifications->is_new_review
-                                ?? 0,*/
+                            'checked' => (bool)$user->review_notification,
                         ], false)
                         ->label('Новый отзыв', ['for' => 'notifications-3']); ?>
                 </div>
@@ -239,9 +231,7 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'settings-1',
-                            'checked' => false
-                            /*'checked' => (bool)$user->userSettings->is_hidden_contacts
-                                ?? 0,*/
+                            'checked' => (bool)$user->show_contacts_all,
                         ], false)
                         ->label('Показывать мои контакты только заказчику',
                             ['for' => 'settings-1']); ?>
@@ -251,9 +241,7 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'settings-2',
-                            'checked' => false
-                            /* 'checked' => (bool)$user->userSettings->is_hidden_profile
-                                 ?? 0,*/
+                             'checked' => (bool)$user->hide_profile,
                         ], false)
                         ->label('Не показывать мой профиль',
                             ['for' => 'settings-2']); ?>

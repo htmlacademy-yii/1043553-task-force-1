@@ -38,7 +38,6 @@ class TaskResponseForm extends Model
         $response->user_employee_id = Yii::$app->user->getId();
         $response->your_price = $this->price;
         $response->comment = $this->comment;
-        $response->created_at = time();
 
         return $response->save(false);
     }

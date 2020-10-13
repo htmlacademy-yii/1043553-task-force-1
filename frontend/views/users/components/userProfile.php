@@ -24,8 +24,8 @@
         <div class="user__card-info">
             <h3 class="content-view__h3">Специализации</h3>
             <div class="link-specialization">
-                <?php if ($user['categories']) : ?>
-                    <?php foreach ($user['categories'] as $category) : ?>
+                <?php if ($user['selectedCategories']) : ?>
+                    <?php foreach ($user['selectedCategories'] as $category) : ?>
                         <a href="#" class="link-regular"><?= $category['name'] ?></a>
                     <?php endforeach;
                 else :

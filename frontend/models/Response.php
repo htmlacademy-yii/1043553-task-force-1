@@ -11,6 +11,7 @@ namespace frontend\models;
  * @property int|null $your_price
  * @property int $task_id
  * @property int $user_employee_id
+ * @property string $comment
  *
  * @property Tasks $task
  * @property User $userEmployee

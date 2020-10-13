@@ -2,6 +2,8 @@
 
 namespace frontend\models;
 
+use frontend\components\traits\QueriesTrait;
+use frontend\components\user\AuthUserComponent;
 use frontend\models\pivot\Favorite;
 use Yii;
 use yii\web\IdentityInterface;
@@ -45,6 +47,8 @@ use yii\web\IdentityInterface;
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    use QueriesTrait;
+
     public const DEFAULT_USER_PHOTO = 'default.jpg';
 
     public const ROLE_EMPLOYEE_CODE = 0;
@@ -54,7 +58,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $vote;
     public $tasksCount;
     public $reviewsCount;
-    public $categories;
+    public $selectedCategories;
     public $photo;
     public $createdAt;
     public $usersReviews;
@@ -67,14 +71,15 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return $id === Yii::$app->user->getId();
     }
 
-    public function getUser()
+    /*public function getUser()
     {
+
         if ($this->user === null) {
             $this->user = User::findOne(['email' => $this->email]);
         }
 
         return $this->user;
-    }
+    }*/
 
     public static function findIdentity($id)
     {

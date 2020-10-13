@@ -136,8 +136,4 @@ class UserProfileSettingsForm extends Model
         ];
     }
 
-    public function update()
-    {
-        //update user profile
-    }
 }

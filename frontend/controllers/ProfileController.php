@@ -7,11 +7,13 @@ use frontend\models\Category;
 use frontend\models\City;
 use frontend\models\forms\UserProfileSettingsForm;
 use Yii;
+use frontend\components\user\AuthUserComponent;
 
 class ProfileController extends SecuredController
 {
     public function actionIndex()
     {
+        Yii::$app->user->identity->selectedCategories = AuthUserComponent::getAuthUserCategories();
         return $this->render(
             'index',
             [
@@ -25,7 +27,7 @@ class ProfileController extends SecuredController
 
     public function actionUpdate()
     {
-        var_dump(Yii::$app->request->post());
-        die;
+        return \Yii::$app->authUserComponent->updateAuthUserProfile();
+        //return $this->redirectBack();
     }
 }

@@ -16,7 +16,9 @@ $this->title = 'Создать задание - TaskForce';
 
         <?php $form = ActiveForm::begin([
             'id' => 'task-form',
+
             'options' => [
+                ['enctype' => 'multipart/form-data'],
                 'class' => 'create__task-form form-create',
                 'enctype' => 'multipart/form-data',
                 'name' => $model->formName()
@@ -60,7 +62,7 @@ $this->title = 'Создать задание - TaskForce';
 
         <label>Файлы</label>
         <span>Загрузите файлы, которые помогут исполнителю лучше выполнить или оценить работу</span>
-        <div class="create__file">
+        <div class="create__file dropzone">
             <span>Добавить новый файл</span>
             <!--<input type="file" name="files[]" class="dropzone">-->
         </div>

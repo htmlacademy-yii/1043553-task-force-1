@@ -168,7 +168,7 @@ trait QueriesTrait
     private static function findUserCategories(int $userId): array
     {
         return UsersCategories::find()
-            ->select(['categories.name as name'])
+            ->select(['categories.id as category_id','categories.name as name'])
             ->joinWith('categories')
             ->where(['user_id' => $userId])
             ->all();
