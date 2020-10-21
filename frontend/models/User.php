@@ -28,9 +28,9 @@ use yii\web\IdentityInterface;
  * @property string|null $skype
  * @property string|null $other_app
  * @property int $msg_notification
- * @property int $action_notification
+ * @property int $task_action_notification
  * @property int $review_notification
- * @property int $show_contacts_all
+ * @property int $hide_contacts
  * @property int $hide_profile
  *
  * @property Correspondence[] $correspondences

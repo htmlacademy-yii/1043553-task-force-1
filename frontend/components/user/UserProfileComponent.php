@@ -5,7 +5,7 @@ namespace frontend\components\user;
 use frontend\models\forms\UserProfileSettingsForm;
 use frontend\models\pivot\UsersCategories;
 use frontend\models\User;
-use yii\helpers\FileHelper;
+use frontend\models\UserPhoto;
 use yii\web\UploadedFile;
 
 class UserProfileComponent
@@ -14,25 +14,28 @@ class UserProfileComponent
     private UsersCategories $userCategories;
     private UserProfileSettingsForm $userProfileSettingsFormModel;
 
-    public function __construct(int $userId, UserProfileSettingsForm $userProfileSettingsFormModel)
+    public function __construct(int $userId)
     {
         $this->user = User::findOne($userId);
-        $this->userProfileSettingsFormModel = $userProfileSettingsFormModel;
         $this->userCategories = new UsersCategories();
     }
 
-    public function updateUserProfile()
+    public function updateUserPortfolio(): bool
     {
+        $files = UploadedFile::getInstancesByName('file');
+        return UserPhoto::saveUserPhotos($files, $this->user->id);
+    }
+
+    public function updateUserProfile(UserProfileSettingsForm $userProfileSettingsFormModel): bool
+    {
+        $this->userProfileSettingsFormModel = $userProfileSettingsFormModel;
         $this->updateAccount();
         $this->updateCategories();
         $this->updatePassword();
-        $this->updateTasksPhotos();
         $this->updateContacts();
         $this->updateNotifications();
         $this->updateSettings();
         $this->updateAvatar();
-
-        return var_dump($_FILES);
 
         return $this->user->update(false);
     }
@@ -72,11 +75,6 @@ class UserProfileComponent
         }
     }
 
-    private function updateTasksPhotos()
-    {
-        //
-    }
-
     private function updateContacts()
     {
         $this->setNewFieldValue('phone', $this->user, 'phone');
@@ -88,7 +86,7 @@ class UserProfileComponent
     {
         $this->user->msg_notification
             = $this->userProfileSettingsFormModel->notifications['new-message'];
-        $this->user->action_notification
+        $this->user->task_action_notification
             = $this->userProfileSettingsFormModel->notifications['task-actions'];
         $this->user->review_notification
             = $this->userProfileSettingsFormModel->notifications['new-review'];
@@ -96,7 +94,7 @@ class UserProfileComponent
 
     private function updateSettings(): void
     {
-        $this->user->show_contacts_all
+        $this->user->hide_contacts
             = $this->userProfileSettingsFormModel->settings['show-only-client'];
         $this->user->hide_profile
             = $this->userProfileSettingsFormModel->settings['hidden-profile'];
@@ -114,6 +112,7 @@ class UserProfileComponent
             $avatar->saveAs($filePath);
         }
     }
+
 
     private function setNewFieldValue(string $formModelKey, \yii\db\ActiveRecord $entityModel, string $modelKey)
     {

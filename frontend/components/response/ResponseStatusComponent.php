@@ -9,7 +9,7 @@ class ResponseStatusComponent
     public static function updateResponseStatus(Response $response, int $newStatus)
     {
         $response->status = $newStatus;
-        $response->save();
+        $response->save(false);
     }
 
     public static function responseIsPending(Response $response): bool

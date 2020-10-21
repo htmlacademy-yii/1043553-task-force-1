@@ -21,7 +21,7 @@
         if ($task['tasksFiles']) : ?>
             <h3 class="content-view__h3">Вложения</h3>
             <?php foreach ($task['tasksFiles'] as $file) : ?>
-                <a href="#"><?= $file ?></a>
+                <a href="#"><?php var_dump($file) ?></a>
             <?php endforeach;
         else : ?>
             <h3 class="content-view__h3">Вложений нет</h3>

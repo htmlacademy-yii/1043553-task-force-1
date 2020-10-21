@@ -41,7 +41,7 @@ class TaskAccomplishForm extends model
         $review->user_employee_id = $task->user_employee_id;
         $review->user_customer_id = $task->user_customer_id;
         $review->vote = $this->rating;
-        $review->created_at = time();
+        //$review->created_at = time();
         $review->review = $this->comment;
 
         return $review->save(false);

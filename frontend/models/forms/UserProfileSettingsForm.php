@@ -2,6 +2,7 @@
 
 namespace frontend\models\forms;
 
+use frontend\components\user\UserProfileComponent;
 use frontend\models\Category;
 use frontend\models\City;
 use frontend\models\User;
@@ -43,6 +44,7 @@ class UserProfileSettingsForm extends Model
             'phone' => 'Телефон',
             'skype' => 'skype',
             'otherApp' => 'Другой мессенджер',
+            'files' => 'Фотографии работ'
         ];
     }
 
@@ -69,17 +71,9 @@ class UserProfileSettingsForm extends Model
             [['name', 'email'], 'required', 'message' => 'Обязательное поле'],
             [
                 'name',
-                'unique',
-                'targetClass' => User::class,
-                'targetAttribute' => 'login',
-                'filter' => function ($query) {
-                    $query->andWhere([
-                        '!=',
-                        'user.login',
-                        Yii::$app->user->identity->login,
-                    ]);
-                },
-                'message' => 'Выбранное имя уже занято',
+                'match',
+                'pattern' => '/^([^0-9]*)$/',
+                'message' => 'В имени недопустимы цифры'
             ],
             ['email', 'email', 'message' => 'Не корректный тип email'],
             [
@@ -89,7 +83,7 @@ class UserProfileSettingsForm extends Model
                 'filter' => function ($query) {
                     $query->andWhere([
                         '!=',
-                        'user.email',
+                        'users.email',
                         Yii::$app->user->identity->email,
                     ]);
                 },
@@ -129,10 +123,32 @@ class UserProfileSettingsForm extends Model
                 'message' => 'Город с указанным id не найден',
             ],
             ['description', 'string'],
-            ['phone', 'string', 'length' => [11, 11]],
+            [
+                'phone',
+                'match',
+                'pattern' => '/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/',
+                'message' => 'Введите телефон в формате ххх-ххх-хххх'
+            ],
             ['otherApp', 'trim'],
             ['otherApp', 'string', 'min' => 1],
             ['skype', 'match', 'pattern' => '/^[0-9a-zA-Z]{3,}$/'],
+        ];
+    }
+
+    public function update()
+    {
+        $post = \Yii::$app->request->post() ?? [];
+        if ($this->load($post) && $this->validate()) {
+            $userProfile = new UserProfileComponent(\Yii::$app->user->getId());
+            $userProfile->updateUserProfile($this);
+            return [
+                'updateResult' => true,
+                'error' => $this->getErrors()
+            ];
+        }
+        return [
+            'updateResult' => false,
+            'error' => $this->getErrors()
         ];
     }
 

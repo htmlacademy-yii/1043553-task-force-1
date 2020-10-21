@@ -7,6 +7,7 @@ use frontend\components\user\UserRoleComponent;
 use frontend\models\Response;
 use frontend\models\Task;
 use frontend\models\User;
+use yii\base\InvalidParamException;
 
 abstract class AbstractAction
 {
@@ -25,7 +26,7 @@ abstract class AbstractAction
     {
         if ($this->userIsAllowedToProcessAction()) {
             $this->response->status = $this->statusAfterAction;
-            $this->response->save();
+            $this->response->save(false);
         }
     }
 

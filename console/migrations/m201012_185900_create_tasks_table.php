@@ -24,7 +24,7 @@ class m201012_185900_create_tasks_table extends Migration
 
             'title' => $this->string(128)->notNull(),
             'description' => $this->text()->defaultValue(null),
-            'budget' => $this->integer()->notNull(),
+            'budget' => $this->integer()->defaultValue(null),
             'deadline' => $this->dateTime()->notNull(),
             'current_status' => $this->integer()->defaultValue(\frontend\models\Task::STATUS_NEW_CODE),
 

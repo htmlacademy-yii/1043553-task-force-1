@@ -5,8 +5,10 @@ namespace frontend\models\forms;
 use frontend\components\YandexMapsComponent;
 use frontend\models\Category;
 use frontend\models\Task;
+use frontend\models\TaskFile;
 use Yii;
 use yii\base\Model;
+use yii\web\UploadedFile;
 
 class TaskCreateForm extends Model
 {
@@ -18,6 +20,7 @@ class TaskCreateForm extends Model
     public $deadline;
     public $lat;
     public $lon;
+    public $files;
 
     public function attributeLabels()
     {
@@ -29,7 +32,8 @@ class TaskCreateForm extends Model
             'budget' => 'Бюджет',
             'deadline' => 'Срок исполнения',
             'lat' => 'Долгота',
-            'lon' => 'Широта'
+            'lon' => 'Широта',
+            'files' => 'Добавить новый файл'
         ];
     }
 
@@ -43,8 +47,21 @@ class TaskCreateForm extends Model
             [['category'], 'exist', 'targetClass' => Category::className(), 'targetAttribute' => ['category' => 'id']],
             [['budget'], 'integer', 'min' => 1],
             [['lat', 'lon'], 'number', 'numberPattern' => '/^\d{2}\.{1}\d{6}$/'],
-            [['deadline'], 'date', 'format' => 'php:Y-m-d']
+            [['deadline'], 'date', 'format' => 'php:Y-m-d'],
+            [
+                'files',
+                'file',
+                'extensions' => ['png', 'jpg', 'jpeg', 'gif', 'pdf'],
+                'maxFiles' => 6,
+                'message' => 'Ошибка при сохранении файлов',
+            ],
         ];
+    }
+
+    public function saveTaskFiles()
+    {
+        $files = UploadedFile::getInstances($this, 'files') ?? [];
+           return TaskFile::saveTaskFiles($files, \Yii::$app->db->getLastInsertID());
     }
 
     public function save()

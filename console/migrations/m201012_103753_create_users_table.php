@@ -31,7 +31,7 @@ class m201012_103753_create_users_table extends Migration
             'email' => $this->string()->notNull()->unique(),
             'phone' => $this->string(128)->defaultValue(null),
             'skype' => $this->string(128)->defaultValue(null),
-            'another_app' => $this->string(128)->defaultValue(null),
+            'other_app' => $this->string(128)->defaultValue(null),
 
             'hide_contacts' => $this->boolean()->defaultValue(0),
             'msg_notification' => $this->boolean()->defaultValue(0),

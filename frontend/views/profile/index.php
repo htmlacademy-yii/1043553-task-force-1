@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 
-\Yii::$app->user->identity->selectedCategories = \frontend\components\user\AuthUserComponent::getAuthUserCategories();
+//\Yii::$app->user->identity->selectedCategories = \frontend\components\user\AuthUserComponent::getAuthUserCategories();
 
 $fieldConfig = [
     'template' => '{label}{input}{error}',
@@ -17,8 +17,8 @@ $fieldConfig = [
         <h1>Редактирование настроек профиля</h1>
         <?php $form = ActiveForm::begin([
             'enableClientValidation' => false,
-            'options' => ['enctype' => 'multipart/form-data'],
-            'action' => ['profile/update']
+            'options' => ['enctype' => 'multipart/form-data', 'id' => 'profileForm'],
+            'action' => 'profile/update'
         ]); ?>
         <div class="account__redaction-section">
             <h3 class="div-line">Настройки аккаунта</h3>
@@ -37,6 +37,7 @@ $fieldConfig = [
                         ])
                         ->label(null, ['class' => 'link-regular'])
                         ->error(['class' => 'text-danger']); ?>
+                    <p id="avatarErrorMessage" style="color: red; display: none;"></p>
                 </div>
                 <div class="account__redaction">
                     <div class="account__input account__input--name">
@@ -47,6 +48,7 @@ $fieldConfig = [
                                         : ''),
                                 'value' => Html::encode($user['name']),
                             ])->error(['class' => 'text-danger']); ?>
+                        <p id="nameErrorMessage" style="color: red; display: none;"></p>
                     </div>
                     <div class="account__input account__input--email">
                         <?= $form->field($model, 'email', $fieldConfig)
@@ -56,6 +58,7 @@ $fieldConfig = [
                                         : ''),
                                 'value' => Html::encode($user['email']),
                             ])->error(['class' => 'text-danger']); ?>
+                        <p id="emailErrorMessage" style="color: red; display: none;"></p>
                     </div>
                     <div class="account__input account__input--name">
                         <?= $form->field($model, 'cityId', $fieldConfig)
@@ -79,6 +82,7 @@ $fieldConfig = [
                                     'value' => Html::encode($user['birthday']
                                         ?? ''),
                                 ])->error(['class' => 'text-danger']); ?>
+                        <p id="birthdayErrorMessage" style="color: red; display: none;"></p>
                     </div>
                     <div class="account__input account__input--info">
                         <?= $form->field($model, 'description', $fieldConfig)
@@ -130,6 +134,7 @@ $fieldConfig = [
                                     : ''),
                         ])
                         ->error(['class' => 'text-danger']); ?>
+                    <p id="passwordErrorMessage" style="color: red; display: none;"></p>
                 </div>
                 <div class="account__input">
                     <?= $form->field($model, 'confirmedPassword', $fieldConfig)
@@ -145,6 +150,11 @@ $fieldConfig = [
             <h3 class="div-line">Фото работ</h3>
             <div class="account__redaction-section-wrapper account__redaction">
                 <span class="dropzone">Выбрать фотографии</span>
+
+
+                <?php /*$form->field($model, 'files')->widget(DropzoneWidget::class, [
+                    'text' => 'Выбрать фотографии',
+                ])->label(false)->error(['class' => 'text-danger']);*/ ?>
 
             </div>
 
@@ -166,6 +176,7 @@ $fieldConfig = [
                                     ? 'field-danger' : ''),
                             'value' => Html::encode($user['phone']),
                         ])->error(['class' => 'text-danger']); ?>
+                    <p id="phoneErrorMessage" style="color: red; display: none;"></p>
                 </div>
                 <div class="account__input">
                     <?= $form->field($model, 'skype', $fieldConfig)
@@ -174,6 +185,7 @@ $fieldConfig = [
                                     ? 'field-danger' : ''),
                             'value' => Html::encode($user['skype']),
                         ])->error(['class' => 'text-danger']); ?>
+                    <p id="skypeErrorMessage" style="color: red; display: none;"></p>
                 </div>
                 <div class="account__input">
                     <?= $form->field($model, 'other_app', $fieldConfig)
@@ -183,6 +195,7 @@ $fieldConfig = [
                                     ? 'field-danger' : ''),
                             'value' => Html::encode($user['other_app']),
                         ])->error(['class' => 'text-danger']); ?>
+                    <p id="otherAppErrorMessage" style="color: red; display: none;"></p>
                 </div>
             </div>
             <h3 class="div-line">Настройки сайта</h3>
@@ -208,7 +221,7 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'notifications-2',
-                            'checked' => (bool)$user->action_notification,
+                            'checked' => (bool)$user->task_action_notification,
                         ], false)
                         ->label('Действия по заданию',
                             ['for' => 'notifications-2']); ?>
@@ -231,7 +244,7 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'settings-1',
-                            'checked' => (bool)$user->show_contacts_all,
+                            'checked' => (bool)$user->hide_contacts,
                         ], false)
                         ->label('Показывать мои контакты только заказчику',
                             ['for' => 'settings-1']); ?>
@@ -241,15 +254,14 @@ $fieldConfig = [
                             'class' => 'visually-hidden checkbox__input',
                             'value' => true,
                             'id' => 'settings-2',
-                             'checked' => (bool)$user->hide_profile,
+                            'checked' => (bool)$user->hide_profile,
                         ], false)
                         ->label('Не показывать мой профиль',
                             ['for' => 'settings-2']); ?>
                 </div>
             </div>
         </div>
-        <?= Html::submitButton('Сохранить изменения',
-            ['class' => 'button', 'id' => 'submit-btn']); ?>
+        <a id="formSubmit" class="button">Сохранить изменения</a>
         <?php ActiveForm::end(); ?>
     </section>
 </div>

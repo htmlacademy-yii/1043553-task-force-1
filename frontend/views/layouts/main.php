@@ -118,7 +118,7 @@ AppAsset::register($this);
                 <?php if (Yii::$app->user->getId()) : ?>
                     <div class="header__account">
                         <a class="header__account-photo">
-                            <img src="/img/<?= $this->context->userPhoto ?>"
+                            <img src="/avatars/<?= $this->context->userPhoto ?>"
                                  width="43" height="44"
                                  alt="Аватар пользователя">
                         </a>
@@ -202,6 +202,7 @@ AppAsset::register($this);
         var lat =<?= \Yii::$app->session['lat'] ?? '' ?>;
         var lon =<?= \Yii::$app->session['lon'] ?? '' ?>;
     </script>
+    <script src="/js/updateProfile.js"></script>
     <script src="/js/showMap.js"></script>
     <script src="/js/createResponse.js"></script>
     <script src="/js/accomplishTask.js"></script>
@@ -209,10 +210,11 @@ AppAsset::register($this);
     <script src="/js/addressAutocomplete.js"></script>
     <script src="/js/messenger.js"></script>
     <script src="/js/dropzone.js"></script>
+
     <script>
         Dropzone.autoDiscover = false;
 
-        var dropzone = new Dropzone(".dropzone", {url: 'profile/update', maxFiles: 6, uploadMultiple: true,
+        var dropzone = new Dropzone(".dropzone", {url: 'profile/update-portfolio', maxFiles: 6, uploadMultiple: true,
             acceptedFiles: 'image/*', previewTemplate: '<a href="#"><img data-dz-thumbnail alt="Фото работы"></a>'});
     </script>
     <?php $this->endBody() ?>

@@ -21,16 +21,14 @@ class AuthUserComponent
     public function __construct()
     {
         $this->userId = \Yii::$app->user->getId();
-        $status = $this->getTaskStatusParameterValue();
-        $this->getAuthUserCategories();
-        $this->tasksHistory = new TasksHistoryComponent($status, $this->userId);
+
         $this->model = new UserProfileSettingsForm();
-        $post = \Yii::$app->request->post() ?? [];
-        $this->model->load($post);
     }
 
     public function getAuthUserTasksHistory(): array
     {
+        $status = $this->getTaskStatusParameterValue();
+        $this->tasksHistory = new TasksHistoryComponent($status, $this->userId);
         return $this->tasksHistory->getTasksHistory();
     }
 
@@ -38,6 +36,7 @@ class AuthUserComponent
     {
         $categories = self::findUserCategories(\Yii::$app->user->getId());
 
+        $categoriesClone = [];
         foreach ($categories as $category) {
             $categoriesClone[] = $category->category_id;
         }
@@ -50,10 +49,10 @@ class AuthUserComponent
         return \Yii::$app->request->get()['status'] ?? Task::STATUS_PROCESSING;
     }
 
-    public function updateAuthUserProfile()
+    public function updateAuthUserPortfolio()
     {
-        $userProfile = new UserProfileComponent($this->userId, $this->model);
-        return $userProfile->updateUserProfile();
+        $userProfile = new UserProfileComponent($this->userId);
+        return $userProfile->updateUserPortfolio();
     }
 
     public static function logout(): void
@@ -65,3 +64,20 @@ class AuthUserComponent
         \Yii::$app->user->logout();
     }
 }
+
+/*public function updateAuthUserProfile(UserProfileSettingsForm $model): array
+   {
+       $post = \Yii::$app->request->post() ?? [];
+       if ($model->load($post) && $model->validate()) {
+           $userProfile = new UserProfileComponent($this->userId);
+           $userProfile->updateUserProfile($model);
+           return [
+               'updateResult' => true,
+               'error' => $model->getErrors()
+           ];
+       }
+       return [
+           'updateResult' => false,
+           'error' => $model->getErrors()
+       ];
+   }*/
