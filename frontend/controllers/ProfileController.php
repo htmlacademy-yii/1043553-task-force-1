@@ -17,6 +17,7 @@ class ProfileController extends SecuredController
     public function actionIndex()
     {
         Yii::$app->user->identity->selectedCategories = AuthUserComponent::getAuthUserCategories();
+        Yii::$app->user->identity->portfolio = AuthUserComponent::getAuthUserPortfolio();
         return $this->render(
             'index',
             [

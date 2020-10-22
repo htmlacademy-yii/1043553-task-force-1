@@ -55,7 +55,7 @@ class UserProfileComponent
         if (is_array($this->userProfileSettingsFormModel->categories)) {
             UsersCategories::deleteAll(['user_id' => $this->user->id]);
 
-            \Yii::$app->db->createCommand()
+            return \Yii::$app->db->createCommand()
                 ->batchInsert(
                     'users_categories',
                     ['user_id', 'category_id'],
@@ -65,13 +65,15 @@ class UserProfileComponent
                 )
                 ->execute();
         }
+
+        return $this->user->current_role = User::ROLE_CUSTOMER_CODE;
     }
 
     private function updatePassword()
     {
         if ($this->userProfileSettingsFormModel->password) {
             $this->user->password_hash = \Yii::$app->getSecurity()
-                ->generatePasswordHash($this->model->password);
+                ->generatePasswordHash($this->userProfileSettingsFormModel->password);
         }
     }
 

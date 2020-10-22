@@ -22,7 +22,7 @@ function updateActiveTab()
         return ;
     }
 
-    if (~url.indexOf("account")) {
+    if (~url.indexOf("profile")) {
         $('#account').addClass('site-list__item--active');
     }
 }

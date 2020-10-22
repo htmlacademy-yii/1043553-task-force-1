@@ -7,6 +7,7 @@ use frontend\components\traits\QueriesTrait;
 use frontend\models\forms\UserProfileSettingsForm;
 use frontend\models\Task;
 use frontend\models\User;
+use frontend\models\UserPhoto;
 
 class AuthUserComponent
 {
@@ -44,6 +45,11 @@ class AuthUserComponent
         return $categoriesClone;
     }
 
+    public static function getAuthUserPortfolio(): array
+    {
+        return UserPhoto::findAll(['user_id' => \Yii::$app->user->getId()]) ?? [];
+    }
+
     private function getTaskStatusParameterValue(): string
     {
         return \Yii::$app->request->get()['status'] ?? Task::STATUS_PROCESSING;
@@ -64,20 +70,3 @@ class AuthUserComponent
         \Yii::$app->user->logout();
     }
 }
-
-/*public function updateAuthUserProfile(UserProfileSettingsForm $model): array
-   {
-       $post = \Yii::$app->request->post() ?? [];
-       if ($model->load($post) && $model->validate()) {
-           $userProfile = new UserProfileComponent($this->userId);
-           $userProfile->updateUserProfile($model);
-           return [
-               'updateResult' => true,
-               'error' => $model->getErrors()
-           ];
-       }
-       return [
-           'updateResult' => false,
-           'error' => $model->getErrors()
-       ];
-   }*/

@@ -110,6 +110,7 @@ trait QueriesTrait
     {
         return User::find()
             ->select([
+                'user_photos.photo',
                 'users.created_at',
                 'users.id',
                 'users.name',
@@ -126,7 +127,7 @@ trait QueriesTrait
             ->joinWith('tasks')
             ->joinWith('userPhotos')
             ->where(['current_role' => User::ROLE_EMPLOYEE_CODE])
-            ->groupBy(['users.id']);
+            ->groupBy(['users.id', 'user_photos.id']);
     }
 
     private function findUserWithPhotosAndCategories(int $id): User

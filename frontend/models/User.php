@@ -60,9 +60,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $reviewsCount;
     public $selectedCategories;
     public $photo;
-    public $createdAt;
+   // public $createdAt;
     public $usersReviews;
-    public $userPhotos;
+    public $portfolio;
     public $passwordHash;
     public $age;
 

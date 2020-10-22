@@ -4,9 +4,6 @@ use frontend\widgets\DropzoneWidget;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
-
-//\Yii::$app->user->identity->selectedCategories = \frontend\components\user\AuthUserComponent::getAuthUserCategories();
-
 $fieldConfig = [
     'template' => '{label}{input}{error}',
     'options' => ['tag' => false],
@@ -148,14 +145,11 @@ $fieldConfig = [
             </div>
 
             <h3 class="div-line">Фото работ</h3>
+            <?php foreach (Yii::$app->user->identity->portfolio as $photo): ?>
+                <a href="#"><img src="../../portfolios/<?=$photo->photo ?>" width="85" height="86" alt="Фото работы"></a>
+            <?php endforeach; ?>
             <div class="account__redaction-section-wrapper account__redaction">
                 <span class="dropzone">Выбрать фотографии</span>
-
-
-                <?php /*$form->field($model, 'files')->widget(DropzoneWidget::class, [
-                    'text' => 'Выбрать фотографии',
-                ])->label(false)->error(['class' => 'text-danger']);*/ ?>
-
             </div>
 
             <?php if (isset($user->photos)): ?>

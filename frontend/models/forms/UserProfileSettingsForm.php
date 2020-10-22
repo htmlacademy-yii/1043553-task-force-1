@@ -101,7 +101,6 @@ class UserProfileSettingsForm extends Model
                 'birthday',
                 'date',
                 'format' => 'php:Y-m-d',
-                'timestampAttribute' => 'timestampBirthday',
                 'max' => $today->getTimestamp(),
                 'maxString' => $today->format('Y-m-d'),
                 'tooBig' => '{attribute} должен быть не позже {max}.',
