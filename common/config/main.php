@@ -16,6 +16,7 @@ return [
                 'tasks' => 'tasks/index',
                 'task/view/<id:\d+>' => 'tasks/show',
                 'user/view/<id:\d+>' => 'users/show',
+                'tasks-history/<status:>' => 'tasks-history/index',
                 'response/action/approve/<id:\d+>' => 'response-action/approve',
                 'response/action/deny/<id:\d+>' => 'response-action/deny',
             ]
@@ -40,6 +41,9 @@ return [
         ],
         'registerComponent' => [
             'class' => 'frontend\components\RegisterComponent',
+        ],
+        'authUserComponent' => [
+            'class' => 'frontend\components\user\AuthUserComponent',
         ],
     ],
 ];

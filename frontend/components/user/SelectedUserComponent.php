@@ -28,7 +28,7 @@ class SelectedUserComponent extends Component
     {
         $user['usersReviews'] = $this->userReviewComponent->findUserReviews($userId);
 
-        $user['categories'] = self::findUserCategories($userId);
+        $user['selectedCategories'] = self::findUserCategories($userId);
 
         $user['photo'] = self::findUsersPhoto($userId);
 

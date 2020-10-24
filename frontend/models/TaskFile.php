@@ -16,6 +16,26 @@ class TaskFile extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    public static function saveTaskFiles(array $files, int $taskId)
+    {
+        foreach ($files as $file) {
+            $fileName = uniqid() . ".{$file->extension}";
+            $filePath = "files/" . $fileName;
+            if (!$file->saveAs($filePath) or !self::saveTaskFile($fileName, $taskId)) {
+                throw new \Exception(' ошибка при сохранении файла');
+            }
+        }
+        return true;
+    }
+
+    public static function saveTaskFile($fileName, $taskId)
+    {
+        $self = new self();
+        $self->file = $fileName;
+        $self->task_id = $taskId;
+        return $self->save(false);
+    }
     public static function tableName()
     {
          return 'tasks_files';

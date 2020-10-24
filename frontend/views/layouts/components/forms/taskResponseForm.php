@@ -10,12 +10,12 @@ use yii\widgets\ActiveForm;
     <h2>Отклик на задание</h2>
 
     <?php $form = ActiveForm::begin([
-        'action' => Url::to(["/task-action/respond?taskId=" . $this->context->taskId]),
+        'action' => Url::to(["/task-action/respond?taskId=" . \Yii::$app->request->get('id')]),
         'options' => [
             'name' => $this->context->taskResponseForm->formName(),
             'id' => 'taskResponseForm',
             'enableAjaxValidation' => true,
-            'validationUrl' => "/task-action/respond?taskId=" . $this->context->taskId,
+            'validationUrl' => "/task-action/respond?taskId=" . \Yii::$app->request->get('id'),
             'action' => 'index',
             'method' => 'POST'
         ],

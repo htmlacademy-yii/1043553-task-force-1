@@ -33,7 +33,7 @@ AppAsset::register($this);
         <header class="page-header">
             <div class="main-container page-header__container">
                 <div class="page-header__logo">
-                    <a href="index.html">
+                    <a href="<?= Url::to(['/tasks']); ?>">
                         <svg class="page-header__logo-image" id="Layer_2" xmlns="http://www.w3.org/2000/svg"
                              viewBox="0 0 1634 646.35">
                             <title>taskforce_logo2-01</title>
@@ -86,7 +86,7 @@ AppAsset::register($this);
                             <a href="<?= Url::to(['/tasks/create']); ?>">Создать задание</a>
                         </li>
                         <li id="account" class="site-list__item">
-                            <a href="<?= Url::to(['/account']); ?>">Мой профиль</a>
+                            <a href="<?= Url::to(['/profile']); ?>">Мой профиль</a>
                         </li>
                     </ul>
                 </div>
@@ -118,7 +118,7 @@ AppAsset::register($this);
                 <?php if (Yii::$app->user->getId()) : ?>
                     <div class="header__account">
                         <a class="header__account-photo">
-                            <img src="/img/<?= $this->context->userPhoto ?>"
+                            <img src="/avatars/<?= $this->context->userPhoto ?>"
                                  width="43" height="44"
                                  alt="Аватар пользователя">
                         </a>
@@ -128,10 +128,13 @@ AppAsset::register($this);
                 <div class="account__pop-up">
                     <ul class="account__pop-up-list">
                         <li>
-                            <a href="#">Мои задания</a>
+                            <a href="<?= Url::to([
+                                '/tasks-history',
+                                'status' => \frontend\models\Task::STATUS_PROCESSING
+                            ]); ?>">Мои задания</a>
                         </li>
                         <li>
-                            <a href="#">Настройки</a>
+                            <a href="<?= Url::to(['/settings']); ?>">Настройки</a>
                         </li>
                         <li>
                             <a href="<?= Url::to(['/logout']); ?>">Выход</a>
@@ -196,15 +199,24 @@ AppAsset::register($this);
     <script src="/js/updateActiveItem.js"></script>
     <script src="/js/main2.js"></script>
     <script>
-        var lon =<?= $this->context->lon ?? '' ?>;
-        var lat =<?= $this->context->lat ?? '' ?>;
+        var lat =<?= \Yii::$app->session['lat'] ?? '' ?>;
+        var lon =<?= \Yii::$app->session['lon'] ?? '' ?>;
     </script>
+    <script src="/js/updateProfile.js"></script>
     <script src="/js/showMap.js"></script>
     <script src="/js/createResponse.js"></script>
     <script src="/js/accomplishTask.js"></script>
     <script src="/js/autoComplete.min.js"></script>
     <script src="/js/addressAutocomplete.js"></script>
     <script src="/js/messenger.js"></script>
+    <script src="/js/dropzone.js"></script>
+
+    <script>
+        Dropzone.autoDiscover = false;
+
+        var dropzone = new Dropzone(".dropzone", {url: 'profile/update-portfolio', maxFiles: 6, uploadMultiple: true,
+            acceptedFiles: 'image/*', previewTemplate: '<a href="#"><img data-dz-thumbnail alt="Фото работы"></a>'});
+    </script>
     <?php $this->endBody() ?>
     </body>
     </html>

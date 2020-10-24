@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
         уверены?</p>
     <button class="button__form-modal button" id="close-modal-refuse" type="button">Закрыть</button>
 
-    <?php ActiveForm::begin(['action' => Url::to(["/task-action/refuse?taskId=" . $this->context->taskId])]); ?>
+    <?php ActiveForm::begin(['action' => Url::to(["/task-action/refuse?taskId=" . \Yii::$app->request->get('id')])]); ?>
     <button class="button__form-modal refusal-button button" type="submit">Отказаться</button>
     <?php ActiveForm::end(); ?>
 

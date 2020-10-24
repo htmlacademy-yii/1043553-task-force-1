@@ -10,7 +10,6 @@ class MessagesController extends ActiveController
 {
     public $modelClass = ChatMessage::class;
 
-
     public function actions()
     {
         $actions = parent::actions();

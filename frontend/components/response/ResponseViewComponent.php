@@ -14,7 +14,7 @@ class ResponseViewComponent
 
     private Task $task;
     private int $taskCreatorId;
-    public array $taskResponses;
+    private array $taskResponses;
 
     public function __construct(Task $task)
     {
@@ -32,6 +32,7 @@ class ResponseViewComponent
 
             if (Response::authorisedUserIsResponseCreator($this->taskResponses[$key])) {
                 $this->leaveOnlyAuthUserResponseInResponsesList($this->taskResponses[$key]);
+                break;
             }
         }
     }
@@ -62,8 +63,13 @@ class ResponseViewComponent
         return Response::STATUS_EXCEPTION;
     }
 
-    private function leaveOnlyAuthUserResponseInResponsesList($response): void
+    private function leaveOnlyAuthUserResponseInResponsesList(Response $response): void
     {
         $this->taskResponses = [0 => $response];
+    }
+
+    public function getTaskResponses(): array
+    {
+        return $this->taskResponses ?? [];
     }
 }

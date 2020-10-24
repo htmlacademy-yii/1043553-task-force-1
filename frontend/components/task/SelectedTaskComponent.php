@@ -3,7 +3,6 @@
 namespace frontend\components\task;
 
 use frontend\components\exception\TaskException;
-use frontend\components\helpers\Checker;
 use frontend\components\response\ResponseViewComponent;
 use frontend\components\response\ResponseVisibilityComponent;
 use frontend\components\traits\QueriesTrait;
@@ -49,7 +48,7 @@ class SelectedTaskComponent
 
     public function getTaskResponses(): array
     {
-        return $this->responseViewComponent->taskResponses ?? [];
+        return $this->responseViewComponent->getTaskResponses() ?? [];
     }
 
     public function getTaskAction(): int

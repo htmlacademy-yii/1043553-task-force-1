@@ -13,7 +13,8 @@ class ResponseActionController extends SecuredController
     public function actionDeny($id)
     {
         $actionDeny = new ActionDeny($id);
-        $actionDeny->processAction();
+        var_dump($actionDeny->processAction());
+        die;
 
         return $this->redirectBack();
     }

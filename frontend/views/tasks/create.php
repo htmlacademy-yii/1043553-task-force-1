@@ -2,7 +2,6 @@
 
 /* @var $this yii\web\View */
 
-use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Создать задание - TaskForce';
@@ -17,9 +16,11 @@ $this->title = 'Создать задание - TaskForce';
 
         <?php $form = ActiveForm::begin([
             'id' => 'task-form',
+
             'options' => [
+                ['enctype' => 'multipart/form-data'],
                 'class' => 'create__task-form form-create',
-                'enctype' => 'multipart/form-data',
+                //'enctype' => 'multipart/form-data',
                 'name' => $model->formName()
             ],
             'fieldConfig' => [
@@ -61,9 +62,12 @@ $this->title = 'Создать задание - TaskForce';
 
         <label>Файлы</label>
         <span>Загрузите файлы, которые помогут исполнителю лучше выполнить или оценить работу</span>
+
         <div class="create__file">
-            <span>Добавить новый файл</span>
-            <!--<input type="file" name="files[]" class="dropzone">-->
+           <!-- <span>Добавить новый файл</span>-->
+            <?= $form->field($model, 'files[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+
+
         </div>
 
         <?php $options = [
@@ -91,7 +95,7 @@ $this->title = 'Создать задание - TaskForce';
                 <?php $options = [
                     'class' => 'input-middle input input-date',
                     'id' => 'expire',
-                    //'value' =>  date("d.m.Y"),
+                    'value' =>  date("d.m.Y"),
                     'tag' => false
                 ]; ?>
                 <?= $form->field($model, 'deadline', ['template' => "{label}\n{input}"])->input('date',

@@ -50,8 +50,7 @@ class RegisterForm extends Model
         $user->name = $this->name;
         $user->email = $this->email;
         $user->city_id = $this->city;
-        $user->created_at = time();
-        $user->last_active = time();
+        $user->current_role = User::ROLE_CUSTOMER_CODE;
         $user->password_hash = password_hash($this->password, PASSWORD_DEFAULT);
         return $user->save(false);
     }

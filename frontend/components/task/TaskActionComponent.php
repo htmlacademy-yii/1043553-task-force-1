@@ -70,6 +70,11 @@ class TaskActionComponent
             return;
         }
 
+        if (Response::authUserHaveNotRespondedToTask($this->task->id)) {
+            $this->actionButtonVisibility = true;
+            return;
+        }
+
         if (Task::authorisedUserIsTaskCreator($this->task)) {
             $this->actionButtonVisibility = true;
             return;
@@ -80,10 +85,6 @@ class TaskActionComponent
             return;
         }
 
-        if (Response::authUserHaveNotRespondedToTask($this->task->id)) {
-            $this->actionButtonVisibility = true;
-            return;
-        }
         $this->actionButtonVisibility = false;
     }
 

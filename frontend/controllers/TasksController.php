@@ -10,11 +10,8 @@ use frontend\models\forms\TaskResponseForm;
 
 class TasksController extends SecuredController
 {
-    public int $taskId;
     public TaskResponseForm $taskResponseForm;
     public TaskAccomplishForm $taskAccomplishForm;
-    public ?int $lat;
-    public ?int $lon;
 
     public function actionIndex()
     {
@@ -29,13 +26,10 @@ class TasksController extends SecuredController
             return $this->redirectBack();
         }
 
-        $this->taskId = $id;
         $this->taskResponseForm = new TaskResponseForm();
         $this->taskAccomplishForm = new TaskAccomplishForm();
 
         $data = \Yii::$app->taskViewComponent->getDataForSelectedTaskPage($id);
-        $this->lat = $data['task']['lat'];
-        $this->lon = $data['task']['lon'];
 
         return $this->render('show', $data);
     }
@@ -52,4 +46,5 @@ class TasksController extends SecuredController
 
         return $this->render('create', $data);
     }
+
 }

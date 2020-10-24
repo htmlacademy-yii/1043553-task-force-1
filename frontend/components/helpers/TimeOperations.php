@@ -12,8 +12,9 @@ class TimeOperations
     private const SECONDS_IN_DAY = 172800;
     private const SECONDS_IN_TWO_DAYS = 86400;
 
-    public static function timePassed(int $date): string
+    public static function timePassed(string $date): string
     {
+        $date = strtotime($date);
         $day = date("m.d.y", $date);
         $time = date("H:i:s", $date);
 

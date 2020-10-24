@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
     <p>Вы собираетесь отменить задание. Это действие приведёт к невозможности его исполнения. Вы уверены?</p>
     <button class="button__form-modal button" id="close-modal-cancel" type="button">Закрыть</button>
 
-    <?php ActiveForm::begin(['action' => Url::to(["/task-action/cancel?taskId=" . $this->context->taskId])]); ?>
+    <?php ActiveForm::begin(['action' => Url::to(["/task-action/cancel?taskId=" . \Yii::$app->request->get('id')])]); ?>
     <button class="button__form-modal refusal-button button" type="submit">Отменить</button>
     <?php ActiveForm::end(); ?>
 

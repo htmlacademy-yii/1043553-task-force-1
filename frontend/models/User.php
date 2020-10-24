@@ -2,6 +2,8 @@
 
 namespace frontend\models;
 
+use frontend\components\traits\QueriesTrait;
+use frontend\components\user\AuthUserComponent;
 use frontend\models\pivot\Favorite;
 use Yii;
 use yii\web\IdentityInterface;
@@ -11,6 +13,7 @@ use yii\web\IdentityInterface;
  *
  * @property int $id
  * @property int $created_at
+ * @property int $current_role
  * @property int|null $last_active
  * @property string $email
  * @property string $name
@@ -25,9 +28,9 @@ use yii\web\IdentityInterface;
  * @property string|null $skype
  * @property string|null $other_app
  * @property int $msg_notification
- * @property int $action_notification
+ * @property int $task_action_notification
  * @property int $review_notification
- * @property int $show_contacts_all
+ * @property int $hide_contacts
  * @property int $hide_profile
  *
  * @property Correspondence[] $correspondences
@@ -44,6 +47,8 @@ use yii\web\IdentityInterface;
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    use QueriesTrait;
+
     public const DEFAULT_USER_PHOTO = 'default.jpg';
 
     public const ROLE_EMPLOYEE_CODE = 0;
@@ -53,27 +58,28 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $vote;
     public $tasksCount;
     public $reviewsCount;
-    public $categories;
+    public $selectedCategories;
     public $photo;
-    public $createdAt;
+   // public $createdAt;
     public $usersReviews;
-    public $userPhotos;
+    public $portfolio;
     public $passwordHash;
     public $age;
 
-    public static function idEqualAuthUserId(int $id): bool
+    public static function idEqualAuthUserId(?int $id): bool
     {
         return $id === Yii::$app->user->getId();
     }
 
-    public function getUser()
+    /*public function getUser()
     {
+
         if ($this->user === null) {
             $this->user = User::findOne(['email' => $this->email]);
         }
 
         return $this->user;
-    }
+    }*/
 
     public static function findIdentity($id)
     {

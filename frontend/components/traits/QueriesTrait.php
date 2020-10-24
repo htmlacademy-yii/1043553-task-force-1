@@ -17,7 +17,41 @@ trait QueriesTrait
         $taskTitle = Task::find()
             ->select(['title'])->where(['id' => $id])->asArray()->one();
 
-         return $taskTitle['title'];
+        return $taskTitle['title'];
+    }
+
+    private function getUserTasksInChosenStatus(string $status, int $userId): array
+    {
+        $query = Task::find()
+            ->select(['*'])
+            ->distinct()
+            ->andWhere([
+                'or',
+                ['tasks.user_customer_id' => $userId],
+                ['tasks.user_employee_id' => $userId]
+            ]);
+
+        switch ($status) {
+            case Task::STATUS_NEW:
+                $query = $query->andWhere(['current_status' => Task::STATUS_NEW_CODE]);
+                break;
+            case Task::STATUS_PROCESSING:
+                $query = $query->andWhere(['current_status' => Task::STATUS_PROCESSING_CODE]);
+                break;
+            case Task::STATUS_ACCOMPLISHED:
+                $query = $query->andWhere(['current_status' => Task::STATUS_ACCOMPLISHED_CODE]);
+                break;
+            case Task::STATUS_FAILED:
+                $query = $query->andWhere(['current_status' => Task::STATUS_FAILED_CODE]);
+                break;
+            case Task::STATUS_CANCELLED:
+                $query = $query->andWhere(['current_status' => Task::STATUS_CANCELLED_CODE]);
+                break;
+            default:
+                throw new \Exception('заданий в статусе ' . $status . 'нет');
+        }
+
+        return $query->all();
     }
 
     public function getTaskWithResponsesCategoriesFiles(int $id): Task
@@ -49,7 +83,6 @@ trait QueriesTrait
             ->select([
                 'category_id',
                 'city_id',
-
                 'tasks.id',
                 'title',
                 'description',
@@ -65,10 +98,19 @@ trait QueriesTrait
             ->where(['current_status' => Task::STATUS_NEW_CODE]);
     }
 
+    public function findAllTaskPendingResponses(int $taskId): array
+    {
+        return Response::find()
+            ->where(['=', 'status', Response::STATUS_PENDING_CODE])
+            ->andWhere(['task_id' => $taskId])
+            ->all();
+    }
+
     private function findUsersQuery(): ActiveQuery
     {
         return User::find()
             ->select([
+                'user_photos.photo',
                 'users.created_at',
                 'users.id',
                 'users.name',
@@ -85,12 +127,12 @@ trait QueriesTrait
             ->joinWith('tasks')
             ->joinWith('userPhotos')
             ->where(['current_role' => User::ROLE_EMPLOYEE_CODE])
-            ->groupBy(['users.id']);
+            ->groupBy(['users.id', 'user_photos.id']);
     }
 
     private function findUserWithPhotosAndCategories(int $id): User
     {
-        $user = $this->findUsersQuery()->where(['users.id' => $id]) ->one();
+        $user = $this->findUsersQuery()->where(['users.id' => $id])->one();
         if (!$user) {
             throw new NotFoundHttpException("Не найден пользователь с ID: " . $id);
         }
@@ -98,10 +140,22 @@ trait QueriesTrait
         return $user;
     }
 
+    private function findUserWithAvatarAndVote(int $id): User
+    {
+        $user = User::find()
+            ->select(['*', 'users.id', 'AVG(users_review.vote) as vote'])
+            ->joinWith('usersReviews')
+            ->where(['users.id' => $id])
+            ->groupBy(['users.id', 'users_review.id'])
+            ->one();
+        $user['avatar'] = $user['avatar'] ?? User::DEFAULT_USER_PHOTO;
+        return $user;
+    }
+
     public static function findUsersPhoto(int $userId): string
     {
-        $photo = UserPhoto::find()->select(['photo'])->where(['user_id' => $userId])->one();
-        return $photo['photo'] ?? User::DEFAULT_USER_PHOTO;
+        $user = User::findOne($userId);
+        return $user['avatar'] ?? User::DEFAULT_USER_PHOTO;
     }
 
     public static function findUserName(int $userId): string
@@ -115,17 +169,9 @@ trait QueriesTrait
     private static function findUserCategories(int $userId): array
     {
         return UsersCategories::find()
-            ->select(['categories.name as name'])
+            ->select(['categories.id as category_id','categories.name as name'])
             ->joinWith('categories')
             ->where(['user_id' => $userId])
-            ->all();
-    }
-
-    public function findAllTaskPendingResponses(int $taskId): array
-    {
-        return Response::find()
-            ->where(['=', 'status', Response::STATUS_PENDING_CODE])
-            ->andWhere(['task_id' => $taskId])
             ->all();
     }
 }

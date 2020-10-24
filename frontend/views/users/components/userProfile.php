@@ -1,6 +1,6 @@
 <div class="user__card-wrapper">
     <div class="user__card">
-        <img src="../../img/<?= $user['photo'] ?>" width="120" height="120" alt="Аватар пользователя">
+        <img src="../../avatars/<?= $user['photo'] ?>" width="120" height="120" alt="Аватар пользователя">
         <div class="content-view__headline">
             <h1><?= $user['name'] ?></h1>
             <p>Россия, Санкт-Петербург,
@@ -24,8 +24,8 @@
         <div class="user__card-info">
             <h3 class="content-view__h3">Специализации</h3>
             <div class="link-specialization">
-                <?php if ($user['categories']) : ?>
-                    <?php foreach ($user['categories'] as $category) : ?>
+                <?php if ($user['selectedCategories']) : ?>
+                    <?php foreach ($user['selectedCategories'] as $category) : ?>
                         <a href="#" class="link-regular"><?= $category['name'] ?></a>
                     <?php endforeach;
                 else :
@@ -40,11 +40,13 @@
                 <a class="user__card-link--skype link-regular" href="#"><?= $user['skype'] ?></a>
             </div>
         </div>
-        <div class="user__card-photo">
-            <h3 class="content-view__h3">Фото работ</h3>
-            <a href="#"><img src="../../img/rome-photo.jpg" width="85" height="86" alt="Фото работы"></a>
-            <a href="#"><img src="../../img/smartphone-photo.png" width="85" height="86" alt="Фото работы"></a>
-            <a href="#"><img src="../../img/dotonbori-photo.png" width="85" height="86" alt="Фото работы"></a>
-        </div>
+        <?php if ($user['userPhotos']) : ?>
+            <div class="user__card-photo">
+                <h3 class="content-view__h3">Фото работ</h3>
+                <?php foreach ($user['userPhotos'] as $photo) : ?>
+                    <a href="#"><img src="../../portfolios/<?=$photo->photo ?>" width="85" height="86" alt="Фото работы"></a>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>

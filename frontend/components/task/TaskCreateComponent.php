@@ -23,7 +23,7 @@ class TaskCreateComponent extends Component
         $formData = Yii::$app->request->post() ?? [];
 
         if ($model->load($formData) && $model->validate()) {
-            return $model->save();
+            return $model->save() && $model->saveTaskFiles();
         }
 
         return false;
