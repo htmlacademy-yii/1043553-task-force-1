@@ -31,6 +31,7 @@
             <h3 class="content-view__h3">Вложений нет</h3>
         <?php endif; ?>
     </div>
+
     <?php if ($task['address']) : ?>
         <div class="content-view__location">
             <h3 class="content-view__h3">Расположение</h3>
