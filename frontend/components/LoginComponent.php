@@ -34,4 +34,17 @@ class LoginComponent extends Component
         }
         return ['loginResult' => false, 'error' => $userLoginForm->getErrorMessage()];
     }
+
+    public function loginVkUser($vkUser): bool
+    {
+        if (User::userWithEmailOrVkIdExists($vkUser['id'], $vkUser['email'])) {
+            return Yii::$app->user->login(User::findOne(['email' => $vkUser['email']]));
+        }
+
+        $register = RegisterComponent::registerVkUser($vkUser);
+        if ($register['registerResult']) {
+            return Yii::$app->user->login($register['user']);
+        }
+        return false;
+    }
 }

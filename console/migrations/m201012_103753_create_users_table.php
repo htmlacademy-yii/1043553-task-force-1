@@ -14,13 +14,14 @@ class m201012_103753_create_users_table extends Migration
     {
         $this->createTable('{{%users}}', [
             'id' => $this->primaryKey(),
+            'vk_id' => $this->integer()->defaultValue(null),
             'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
             'last_active' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
 
-            'name' => $this->string()->notNull()->unique(),
+            'name' => $this->string()->notNull(),
             'avatar' => $this->string()->defaultValue(\frontend\models\User::DEFAULT_USER_PHOTO),
             'description' => $this->text(),
-            'city_id' => $this->integer()->notNull(),
+            'city_id' => $this->integer()->defaultValue(null),
             'birthday' => $this->dateTime()->defaultValue(null),
             'current_role' => $this->tinyInteger()->defaultValue(\frontend\models\User::ROLE_CUSTOMER_CODE),
 

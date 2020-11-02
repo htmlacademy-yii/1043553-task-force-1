@@ -194,6 +194,10 @@ AppAsset::register($this);
         </footer>
         <?= $this->render('/layouts/components/modals'); ?>
     </div>
+    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?168"></script>
+    <script type="text/javascript">
+        VK.init({apiId: 7642465});
+    </script>
     <!--<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="/js/updateActiveItem.js"></script>

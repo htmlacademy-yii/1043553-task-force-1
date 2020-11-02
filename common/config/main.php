@@ -45,5 +45,15 @@ return [
         'authUserComponent' => [
             'class' => 'frontend\components\user\AuthUserComponent',
         ],
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'vkontakte' => [
+                    'class' => 'yii\authclient\clients\VKontakte',
+                    'clientId' => '7642898',
+                    'clientSecret' => 'oIgvSc6z2ev4YAJMCvDR',
+                ],
+            ],
+        ]
     ],
 ];

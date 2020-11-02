@@ -5,6 +5,7 @@ namespace frontend\components;
 use frontend\models\City;
 use frontend\models\forms\RegisterForm;
 use frontend\models\forms\UserLoginForm;
+use frontend\models\User;
 use Yii;
 use yii\base\Component;
 
@@ -27,7 +28,7 @@ class RegisterComponent extends Component
             'name' => $model->name ?? '',
             'password' => $model->password ?? '',
             'city' => $model->city ?? self::MOSCOW_ID
-            ];
+        ];
 
         $inputLabelTexts = [
             'email' => $errors['email'][0] ?? self::EMAIL_LABEL_DEFAULT_TEXT,
@@ -36,13 +37,13 @@ class RegisterComponent extends Component
             'city' => $errors['city'][0] ?? self::CITY_LABEL_DEFAULT_TEXT
         ];
 
-         return [
+        return [
             'model' => $model,
             'cities' => $cities,
             'errors' => $errors,
             'values' => $previousValues,
             'inputLabelTexts' => $inputLabelTexts
-         ];
+        ];
     }
 
     public function register(RegisterForm $model): bool
@@ -50,13 +51,13 @@ class RegisterComponent extends Component
         $formData = Yii::$app->request->post() ?? [];
 
         if (!$model->load($formData) or !$model->validate()) {
-             return false;
+            return false;
         }
 
         if ($model->register()) {
-             return self::loginAfterRegistration($model);
+            return self::loginAfterRegistration($model);
         }
-         return false;
+        return false;
     }
 
     private function loginAfterRegistration(RegisterForm $RegisterForm): bool
@@ -67,5 +68,23 @@ class RegisterComponent extends Component
         $user = $loginForm->getUser();
 
         return Yii::$app->user->login($user);
+    }
+
+
+    public static function registerVkUser($vkUser): array
+    {
+        $taskForceUser = new User();
+        $taskForceUser->vk_id = $vkUser['id'];
+        $taskForceUser->name = $vkUser['first_name'] . ' ' . $vkUser['last_name'];
+        $taskForceUser->email = $vkUser['email'];
+        $city = City::findOne(['name' => $vkUser['home_town']]);
+        if ($city) {
+            $taskForceUser->city_id = $city->id;
+        }
+        $taskForceUser->password_hash = password_hash(uniqid(), PASSWORD_DEFAULT);
+        return [
+            'registerResult' => $taskForceUser->save(false),
+            'user' => $taskForceUser
+        ];
     }
 }

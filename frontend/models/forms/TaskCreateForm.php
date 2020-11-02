@@ -46,7 +46,7 @@ class TaskCreateForm extends Model
             [['title', 'description', 'address'], 'string'],
             [['category'], 'exist', 'targetClass' => Category::className(), 'targetAttribute' => ['category' => 'id']],
             [['budget'], 'integer', 'min' => 1],
-            //[['lat', 'lon'], 'number', 'numberPattern' => '/^\d{2}\.{1}\d{6}$/'],
+            [['lat', 'lon'], 'number', 'numberPattern' => '/^\d{2}\.{1}\d{6}$/'],
             [['deadline'], 'date', 'format' => 'php:Y-m-d'],
             [
                 'files',

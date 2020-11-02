@@ -16,9 +16,7 @@ class YandexMapsComponent
 
     public function __construct(?string $address)
     {
-        $this->client = new Client([
-            'base_uri' => 'https://geocode-maps.yandex.ru/',
-        ]);
+
 
         $this->address = $address ?? '';
     }
