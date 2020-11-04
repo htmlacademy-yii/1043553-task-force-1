@@ -8,6 +8,7 @@ use frontend\components\response\ResponseVisibilityComponent;
 use frontend\components\traits\QueriesTrait;
 use frontend\components\user\UserRoleComponent;
 use frontend\models\Category;
+use frontend\models\ChatMessage;
 use frontend\models\Task;
 use frontend\models\User;
 
@@ -40,6 +41,7 @@ class TasksHistoryComponent
             $tasksClone[$key]['current_status'] = TaskStatusComponent::detectTaskStatus($task);
             $tasksClone[$key]['category'] = Category::findOne($task->category_id)->name;
             $tasksClone[$key]['partner'] = $this->findUserTaskPartner($task);
+            $tasksClone[$key]['newMessages'] = ChatMessage::find(['task_id' => $task['id'], 'viewed' => 0])->count();
         }
 
         $this->tasks = $tasksClone;

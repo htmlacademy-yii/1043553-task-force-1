@@ -5,7 +5,7 @@
             <?= $this->render('/tasks/components/actionButtons', ['actionButton' => $actionButton]); ?>
         <?php endif; ?>
     </div>
-    <b><?= 'Статус заказа : '. \frontend\components\task\TaskStatusComponent::detectTaskStatus($task) ?></b>
+    <b><?= 'Статус заказа : ' . \frontend\components\task\TaskStatusComponent::detectTaskStatus($task) ?></b>
     <?php if ($showResponses) : ?>
         <?= $this->render('/tasks/components/responses',
             ['responses' => $responses]); ?>
@@ -13,5 +13,7 @@
 </section>
 <section class="connect-desk">
     <?= $this->render('/tasks/components/customer', ['customer' => $customer]); ?>
-    <?= $this->render('/tasks/components/chat', ['task' => $task]); ?>
+    <?php if ($showChat) : ?>
+        <?= $this->render('/tasks/components/chat', ['task' => $task]); ?>
+    <?php endif; ?>
 </section>

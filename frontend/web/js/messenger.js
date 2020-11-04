@@ -4,7 +4,8 @@ Vue.component('chat', {
   props: ['task'],
   template: `<div><h3>Переписка</h3>
              <div class="chat__overflow">
-               <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.is_mine}">
+               <!--<div class="chat__message" v-for="item in messages" :class="{'chat__message&#45;&#45;out': item.is_mine}">-->
+               <div class="chat__message" v-for="item in messages" :class="{'chat__message--out': item.user_id == authUserId}">
                 <p class="chat__message-time">{{ item.created_at }}</p>
                 <p class="chat__message-text">{{ item.message }}</p>
                </div>
@@ -35,8 +36,9 @@ Vue.component('chat', {
         if (result.status !== 201) {
           return Promise.reject(new Error('Запрошенный ресурс не существует'));
         }
-
+        //console.log(result.json());
         return result.json();
+
 
       })
       .then(msg => {
@@ -60,6 +62,8 @@ Vue.component('chat', {
         return result.json();
       })
       .then(messages => {
+
+        console.log(authUserId);
         this.messages = messages;
       })
       .catch(err => {
