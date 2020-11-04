@@ -18,7 +18,6 @@ class UserProfileSettingsForm extends Model
     public $email;
     public $cityId;
     public $birthday;
-    //public $timestampBirthday;
     public $description;
     public $categories = [];
     public $password;
@@ -131,6 +130,21 @@ class UserProfileSettingsForm extends Model
             ['otherApp', 'trim'],
             ['otherApp', 'string', 'min' => 1],
             ['skype', 'match', 'pattern' => '/^[0-9a-zA-Z]{3,}$/'],
+            [
+                [
+                    'avatar',
+                    'name',
+                    'email',
+                    'cityId',
+                    'birthday',
+                    'description',
+                    'phone',
+                    'skype',
+                    'otherApp',
+                ],
+                'filter',
+                'filter' => '\yii\helpers\HtmlPurifier::process'
+            ]
         ];
     }
 

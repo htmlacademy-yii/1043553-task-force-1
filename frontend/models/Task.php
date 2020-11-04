@@ -119,6 +119,26 @@ class Task extends \yii\db\ActiveRecord
                 'targetClass' => City::className(),
                 'targetAttribute' => ['city_id' => 'id']
             ],
+            [
+                [
+                    'id',
+                    'created_at',
+                    'user_customer_id',
+                    'user_employee_id',
+                    'category_id',
+                    'city_id',
+                    'title',
+                    'description',
+                    'budget',
+                    'deadline',
+                    'current_status',
+                    'address',
+                    'lat',
+                    'lon',
+                ],
+                'filter',
+                'filter' => '\yii\helpers\HtmlPurifier::process'
+            ]
         ];
     }
 

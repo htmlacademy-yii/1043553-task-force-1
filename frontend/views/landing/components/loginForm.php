@@ -41,6 +41,8 @@ $form = ActiveForm::begin([
 </p>
 
 <a class="button" id="loginSubmit">Войти</a>
+<a class="button" href="https://oauth.vk.com/authorize?client_id=7642898&display=page&redirect_uri=http://localhost:8888/vk-login/&scope=email&response_type=code&v=5.124
+">Войти c вк</>
 
 <?php ActiveForm::end(); ?>
 <button class="form-modal-close" type="button">Закрыть</button>

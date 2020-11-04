@@ -10,7 +10,7 @@ use yii\helpers\Url;
     <title>TaskForce</title>
     <link rel="stylesheet" type="text/css" href="/css/normalize.css">
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
-
+    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?168"></script>
 </head>
 <body class="landing">
 <div class="table-layout">
@@ -121,6 +121,8 @@ use yii\helpers\Url;
     </section>
 </div>
 <div class="overlay"></div>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/login.js"></script>

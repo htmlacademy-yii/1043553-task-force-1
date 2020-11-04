@@ -6,8 +6,12 @@
                                     <a href="#" class="link-regular"><?= $task['category']; ?></a>
                                     <?= $task['created_at']; ?></span>
         </div>
-        <b class="new-task__price new-task__price--<?= $task['image']; ?> content-view-price"><?= $task['budget']; ?>
-            ₽</b>
+        <?php if ($task['budget']): ?>
+            <b class="new-task__price new-task__price--<?= $task['image']; ?> content-view-price"><?= $task['budget'] ?>
+                ₽</b>
+        <?php else: ?>
+            <b class="new-task__price new-task__price--<?= $task['image']; ?> content-view-price">цена не указана</b>
+        <?php endif; ?>
         <div class="new-task__icon new-task__icon--<?= $task['image']; ?> content-view-icon"></div>
     </div>
     <div class="content-view__description">
@@ -27,6 +31,7 @@
             <h3 class="content-view__h3">Вложений нет</h3>
         <?php endif; ?>
     </div>
+
     <?php if ($task['address']) : ?>
         <div class="content-view__location">
             <h3 class="content-view__h3">Расположение</h3>

@@ -55,6 +55,7 @@ class UserProfileComponent
         if (is_array($this->userProfileSettingsFormModel->categories)) {
             UsersCategories::deleteAll(['user_id' => $this->user->id]);
 
+            $this->user->current_role = User::ROLE_EMPLOYEE_CODE;
             return \Yii::$app->db->createCommand()
                 ->batchInsert(
                     'users_categories',

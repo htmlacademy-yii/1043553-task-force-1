@@ -12,6 +12,7 @@ use yii\web\IdentityInterface;
  * This is the model class for table "users".
  *
  * @property int $id
+ * @property int $vk_id
  * @property int $created_at
  * @property int $current_role
  * @property int|null $last_active
@@ -60,7 +61,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $reviewsCount;
     public $selectedCategories;
     public $photo;
-   // public $createdAt;
+    // public $createdAt;
     public $usersReviews;
     public $portfolio;
     public $passwordHash;
@@ -71,15 +72,10 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return $id === Yii::$app->user->getId();
     }
 
-    /*public function getUser()
+    public static function userWithEmailOrVkIdExists(int $id, string $email)
     {
-
-        if ($this->user === null) {
-            $this->user = User::findOne(['email' => $this->email]);
-        }
-
-        return $this->user;
-    }*/
+        return User::findOne(['vk_id' => $id]) or User::findOne(['email' => $email]);
+    }
 
     public static function findIdentity($id)
     {
