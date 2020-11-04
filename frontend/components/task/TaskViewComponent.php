@@ -6,6 +6,7 @@ use frontend\components\helpers\TimeOperations;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\forms\TasksFilterForm;
 use yii\base\Component;
+use yii\data\Pagination;
 
 
 class TaskViewComponent extends Component
@@ -36,8 +37,13 @@ class TaskViewComponent extends Component
         $tasksFilterFormModel = new TasksFilterForm();
         $query = $this->findNewTasksWithCategoryCityQuery();
         $query = TaskFilterComponent::applyFilters($tasksFilterFormModel, $query);
-        $data = $query->orderBy(['tasks.created_at' => SORT_DESC])->all();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+        $data = $query
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->orderBy(['tasks.created_at' => SORT_DESC])->all();
 
-        return ['data' => TimeOperations::addTimeInfo($data), 'model' => $tasksFilterFormModel];
+        return ['data' => TimeOperations::addTimeInfo($data), 'model' => $tasksFilterFormModel, 'pages' => $pages];
     }
 }

@@ -61,7 +61,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public $reviewsCount;
     public $selectedCategories;
     public $photo;
-    // public $createdAt;
     public $usersReviews;
     public $portfolio;
     public $passwordHash;
