@@ -5,7 +5,6 @@
 use yii\widgets\ActiveForm;
 
 $this->title = 'Создать задание - TaskForce';
-
 ?>
 
 <section class="create__task">

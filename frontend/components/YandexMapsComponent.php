@@ -10,23 +10,47 @@ class YandexMapsComponent
     private \Psr\Http\Message\ResponseInterface $response;
     private $responseData;
     private string $address;
+    private string $addressMd5;
 
     private const LOCATION_EXCEPTION = 'Введите валидный адрес. Невозможно определить координаты';
     public const YANDEX_MAPS_API_KEY = 'e666f398-c983-4bde-8f14-e3fec900592a';
+    public const YANDEX_MAPS_BASE_URI = 'https://geocode-maps.yandex.ru/';
 
     public function __construct(?string $address)
     {
-
-
+        $this->client = new Client([
+            'base_uri' => self::YANDEX_MAPS_BASE_URI,
+        ]);
         $this->address = $address ?? '';
+        $this->addressMd5 = md5($this->address);
     }
 
     public function getCoordinates(): array
     {
+        $cachedCoordinates = $this->getCoordinatesFromCache();
+
+        return $cachedCoordinates ?? $this->getCoordinatesFromApi();
+    }
+
+    private function getCoordinatesFromApi(): array
+    {
         $this->sendRequest(1);
         $this->getResponse();
 
-        return $this->findCoordinates($this->responseData['0']);
+        $coordinates = $this->findCoordinates($this->responseData['0']);
+        \Yii::$app->cache->set($this->addressMd5, $coordinates, 86400);
+
+        return $coordinates;
+    }
+
+    private function getCoordinatesFromCache(): ?array
+    {
+        $cachedCoordinates = \Yii::$app->cache->get($this->addressMd5);
+        if ($cachedCoordinates) {
+            return $cachedCoordinates;
+        }
+
+        return null;
     }
 
     private function findCoordinates($data): array
