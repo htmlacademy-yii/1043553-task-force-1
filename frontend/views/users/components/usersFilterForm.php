@@ -4,7 +4,7 @@
         'options' => [
             'class' => 'search-task__form',
             'name' => $model->formName(),
-            'id' => 'usersFilterForm'
+            'id' => 'filterForm'
         ]
     ]); ?>
     <fieldset class="search-task__categories">

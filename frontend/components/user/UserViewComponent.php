@@ -5,12 +5,13 @@ namespace frontend\components\user;
 use frontend\components\traits\QueriesTrait;
 use frontend\models\forms\UsersFilterForm;
 use yii\base\Component;
+use yii\data\Pagination;
 
 class UserViewComponent extends Component
 {
     use QueriesTrait;
 
-    private array $listOfUsers;
+    //private array $listOfUsers;
     private SelectedUserComponent $selectedUserComponent;
     public const DEFAULT_USER_PHOTO = 'default.jpg';
     public const NO_TASK_FOUND_MESSAGE = 'Отзыв добавлен без привязки к заданию';
@@ -26,10 +27,17 @@ class UserViewComponent extends Component
     public function getDataForUsersPage(UsersFilterForm $model): array
     {
         $query = $this->findUsersQuery();
-        $this->listOfUsers = UserFilterComponent::applyFilters($model, $query)->all();
-        $this->listOfUsers = $this->selectedUserComponent->addRelatedDataForEachUser($this->listOfUsers);
 
-        return $this->listOfUsers;
+        $query = UserFilterComponent::applyFilters($model, $query);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'defaultPageSize' => 5]);
+        $usersList = $query
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        $usersList = $this->selectedUserComponent->addRelatedDataForEachUser($usersList);
+
+        return ['usersList' => $usersList, 'pages' => $pages ];
     }
 
     public function __construct($config = [])

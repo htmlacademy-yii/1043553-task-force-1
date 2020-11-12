@@ -40,11 +40,12 @@ class TaskViewComponent extends Component
         $query = $this->findNewTasksWithCategoryCityQuery();
         $query = TaskFilterComponent::applyFilters($tasksFilterFormModel, $query);
         $countQuery = clone $query;
-        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+        $pages = new Pagination(['totalCount' => $countQuery->count(), 'defaultPageSize' => 5]);
         $data = $query
             ->offset($pages->offset)
             ->limit($pages->limit)
-            ->orderBy(['tasks.created_at' => SORT_DESC])->all();
+            ->orderBy(['tasks.created_at' => SORT_DESC])
+            ->all();
 
         return ['data' => TimeOperations::addTimeInfo($data), 'model' => $tasksFilterFormModel, 'pages' => $pages];
     }

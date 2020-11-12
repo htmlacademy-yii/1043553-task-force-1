@@ -6,7 +6,7 @@ foreach ($data as $user) :?>
     <div class="content-view__feedback-card user__search-wrapper">
         <div class="feedback-card__top">
             <div class="user__search-icon">
-                <a href="#"><img src="./img/<?= $user['photo'] ?>" width="65" height="65"></a>
+                <a href="#"><img src="../img/<?= $user['photo'] ?>" width="65" height="65"></a>
                 <span><?= $user['tasksCount'] ?> заданий</span>
                 <span><?= $user['reviewsCount'] ?> отзывов</span>
             </div>

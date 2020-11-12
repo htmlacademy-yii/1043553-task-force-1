@@ -213,6 +213,7 @@ AppAsset::register($this);
     </script>
     <script src="/js/messenger.js"></script>
     <script src="/js/dropzone.js"></script>
+    <script src="/js/pagination.js"></script>
 
     <script>
         Dropzone.autoDiscover = false;
