@@ -20,7 +20,7 @@
                                             href="<?= Url::to(['/users/show', 'id' => $task['partner']['id']]); ?>"
                                             class="link-regular"><?= $task['partner']['name'] ?></a>
                                 </p>
-                                <a href="#" class="my-list__bottom-chat  my-list__bottom-chat--new"><b>3</b></a>
+                                <a href="#" class="my-list__bottom-chat  my-list__bottom-chat--new"><b>><?= $task['newMessages']?></b></a>
                                 <?= $this->render('../../components/stars', ['vote' => $task['partner']['vote']]); ?>
                             </div>
                         </div>

@@ -9,7 +9,8 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'options' => [
             'class' => 'search-task__form',
-            'name' => $model->formName()
+            'name' => $model->formName(),
+            'id' => 'filterForm'
         ]
     ]); ?>
     <fieldset class="search-task__categories">

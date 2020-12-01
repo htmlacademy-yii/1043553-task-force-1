@@ -31,6 +31,7 @@ class Task extends \yii\db\ActiveRecord
     public $city;
     public $category;
     public $partner;
+    public $newMessages;
 
     public static function authorisedUserIsTaskCreator(Task $task): bool
     {

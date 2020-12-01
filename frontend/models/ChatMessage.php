@@ -26,7 +26,8 @@ class ChatMessage extends \yii\db\ActiveRecord
     {
         parent::__construct($config);
         $this->user_id = Yii::$app->user->getId();
-        $this->created_at = time();
+        $this->is_mine = User::idEqualAuthUserId($this->user_id);
+        \Yii::$app->session['authUserId'] = $this->user_id;
     }
 
     public static function getChatMessagesForSelectedTask(int $taskId)
@@ -59,7 +60,7 @@ class ChatMessage extends \yii\db\ActiveRecord
     {
         return [
             [['task_id', 'user_id', 'message'], 'required'],
-            [['task_id', 'user_id', 'is_mine'], 'integer'],
+            [['task_id', 'user_id'], 'integer'],
             [['created_at'], 'safe'],
             [['message'], 'string', 'max' => 255],
             [
@@ -112,6 +113,15 @@ class ChatMessage extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public static function getChatVisibility(Task $task): bool
+    {
+        if (Task::authorisedUserIsTaskCreator($task) or Task::authorisedUserIsTaskEmployee($task)) {
+            return true;
+        }
+
+        return false;
     }
 }
 

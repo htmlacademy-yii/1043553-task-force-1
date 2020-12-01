@@ -22,7 +22,14 @@ return [
             ]
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => 'yii\redis\Cache',
+            //'class' => 'yii\caching\FileCache',
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
         ],
         'taskViewComponent' => [
             'class' => 'frontend\components\task\TaskViewComponent',

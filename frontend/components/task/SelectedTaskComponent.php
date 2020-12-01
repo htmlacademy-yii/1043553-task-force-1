@@ -69,4 +69,9 @@ class SelectedTaskComponent
     {
         return $this->taskActionComponent->getActionButtonVisibility();
     }
+
+    public function getChatVisibility(): bool
+    {
+        return 0;
+    }
 }
